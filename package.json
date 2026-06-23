@@ -1,0 +1,26 @@
+{
+  "name": "logiikkateht-v-t",
+  "version": "1.0.0",
+  "description": "backend/node_modules/\r frontend/node_modules/",
+  "main": "index.js",
+  "scripts": {
+    "backend": "cd backend && npm start",
+    "frontend": "cd frontend && npm run dev",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TuomasHirv/LogiikkaTeht-v-t.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/TuomasHirv/LogiikkaTeht-v-t/issues"
+  },
+  "homepage": "https://github.com/TuomasHirv/LogiikkaTeht-v-t#readme",
+  "devDependencies": {
+    "concurrently": "^10.0.3"
+  }
+}
