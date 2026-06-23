@@ -1,4 +1,9 @@
-backend/node_modules/
-frontend/node_modules/
+# LogiikkaTehtävä sivu
 
-.env
+---
+
+### Ideana on tehdä sovellus, jossa voi tehdä tehtäviä logiikan aloilta:
+
+- Propositiologiikka
+- Luonnollinenpäättely
+- Predikaattilogiikka
