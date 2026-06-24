@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 import { useState, useEffect } from "react"
-
+import TaskItem from "./TaskItem"
 const TaskScreen = () => {
   const { moduleName } = useParams()
   const [tasks, setTasks] = useState([])
@@ -15,9 +15,7 @@ const TaskScreen = () => {
         if (!response.ok) {
           throw new Error("Couldn't fetch tasks")
         }
-        console.log(response.status)
         const data = await response.json()
-        console.log(data)
         setTasks(data)
       } catch (err) {
         console.log("Failed to fetch tasks:", err)
@@ -31,10 +29,13 @@ const TaskScreen = () => {
     return <h1>Module: {moduleName} </h1>
   }
   return (
-    <div>
+    <div className="task-screen">
+      <h2 style={{ backgroundColor: "#e2e8f0", maxWidth: "600px" }}>
+        {moduleName}
+      </h2>
       {tasks.map((task, index) => (
-        <div>
-          <h3>Question {index}</h3> <p>{task.question}</p>
+        <div key={task.id || index}>
+          <TaskItem key={task.id} task={task} />
         </div>
       ))}{" "}
     </div>

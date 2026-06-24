@@ -32,7 +32,8 @@ taskRouter.post("/", async (request, response) => {
 
 taskRouter.get("/:module", async (request, response) => {
   const term = request.params.module
-  const q = "SELECT type, question, metadata FROM tasks WHERE module_name = $1"
+  const q =
+    "SELECT type, question, metadata, id FROM tasks WHERE module_name = $1"
   try {
     const result = await db.query(q, [term])
     return response.json(result.rows)

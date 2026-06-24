@@ -104,3 +104,31 @@ kbd {
   font-size: 1.1rem;
   color: #2563eb; /* Clean blue accent color for logic symbols */
 }
+
+.task-screen {
+  background-color: #0f172a;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.task-card {
+  background-color: #cbd5e1;
+  border-radius: 8px;
+  max-width: 600px;
+}
+
+.buttonStyle {
+  color: white;
+  background-color: #334155;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.95rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  border: 1px solid #475569;
+  transition: background-color 0.2s ease;
+}
+
+.buttonStyle:hover {
+  background-color: #475569;
+}
