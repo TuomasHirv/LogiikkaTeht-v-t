@@ -17,6 +17,7 @@ import TaskScreen from "./components/TaskScreen"
 import NavBar from "./components/NavBar"
 import LoginScreen from "./components/LoginScreen"
 import RegisterScreen from "./components/RegisterScreen"
+import InstructionScreen from "./components/InstructionScreen"
 
 function App() {
   const token = useUserStore((state) => state.token)
@@ -35,6 +36,7 @@ function App() {
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/register" element={<RegisterScreen />} />
           <Route path="/tasks/:moduleName" element={<TaskScreen />} />
+          <Route path="/part/:id/:moduleName" element={<InstructionScreen />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

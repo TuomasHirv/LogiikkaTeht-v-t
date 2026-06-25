@@ -26,7 +26,7 @@ const NavBar = () => {
           {" "}
           Home{" "}
         </Link>
-        <Link to="/tasks/words-to-propositions" className="buttonStyle">
+        <Link to="/part/1/words-to-propositions" className="buttonStyle">
           {" "}
           Part 1{" "}
         </Link>
