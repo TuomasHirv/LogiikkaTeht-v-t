@@ -1,64 +1,69 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
+import { answerService } from "./services/answerService"
+import { userService } from "./services/userService"
 
 const useUserStore = create(
   persist(
     (set, get) => ({
       user: null,
-      completedTasks: [],
-      answers: [],
+      token: null,
+      answers: {},
       actions: {
         loginUser: async (username, password) => {
-          console.log(username, password)
           try {
-            const response = await fetch(
-              `http://localhost:5000/api/users/login`,
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  username: username,
-                  password: password,
-                }),
-              },
-            )
-            if (!response.ok) {
-              const errorData = await response.json()
-              throw new Error(errorData.error)
-            }
-            const data = await response.json()
-            const loggedUser = data.user
-            set(() => ({ user: loggedUser }))
+            const data = await userService.login(username, password)
+            set(() => ({ user: data.user, token: data.token }))
           } catch (error) {
             console.log("Error when logging in:", error.message)
           }
         },
         registerUser: async (username, password) => {
-          console.log(username, password)
           try {
-            const response = await fetch(`http://localhost:5000/api/users`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ username: username, password: password }),
-            })
-            if (!response.ok) {
-              const errorData = await response.json()
-              throw new Error(errorData.error)
-            }
-            const data = await response.json()
-            const loggedUser = data.user
-            set(() => ({ user: loggedUser }))
+            const data = await userService.register(username, password)
+            set(() => ({ user: data.user, token: data.token }))
           } catch (error) {
-            console.log("Error when registering:", error.message)
+            console.log("Error when logging in:", error.message)
           }
         },
         logoutUser: () =>
           set(() => ({ user: null, completedTasks: [], answers: [] })),
+
+        addAnswer: (taskId, answerText, isCorrect) => {
+          set((state) => ({
+            answers: {
+              ...state.answers,
+              [taskId]: {
+                submitted_answer: answerText,
+                is_correct: isCorrect,
+              },
+            },
+          }))
+        },
+
+        initialize: async () => {
+          try {
+            const currentToken = get().token
+            const responseData = await answerService.getAll()
+
+            const mappedAnswers = {}
+
+            responseData.answerList.forEach((a) => {
+              mappedAnswers[a.task_id] = {
+                submitted_answer: a.submitted_answer,
+                is_correct: a.is_correct,
+              }
+            })
+            set(() => ({ answers: mappedAnswers }))
+          } catch (error) {
+            console.log("Error storing answers:", error)
+          }
+        },
       },
     }),
     {
       name: "logic-app-storage",
-      partialize: (state) => ({ user: state.user }),
+      partialize: (state) => ({ user: state.user, token: state.token }),
     },
   ),
 )

@@ -1,6 +1,10 @@
 const userRouter = require("express").Router()
+const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 const db = require("../database/db")
+
+const JWT_secret = "JSON_ASOIDJAPOSJD"
+const dbFunc = require("../database/dbFunc.js")
 
 userRouter.post("/", async (request, response) => {
   const { username, password } = request.body
@@ -16,13 +20,12 @@ userRouter.post("/", async (request, response) => {
     }
     const hashedPassword = await bcrypt.hash(password, saltRounds)
 
-    const insertQ = `
-    INSERT INTO users (username, password_hash) 
-    VALUES ($1, $2) 
-    RETURNING id, username
-    `
-    const newUser = await db.query(insertQ, [username, hashedPassword])
-    return response.status(201).json({ user: newUser.rows[0] })
+    const newUser = await dbFunc.insertUser(username, hashedPassword)
+    const token = jwt.sign({ userId: newUser.id }, JWT_secret, {
+      expiresIn: "7d",
+    })
+
+    return response.status(201).json({ user: newUser, token: token })
   } catch (error) {
     console.log(error.message)
     return response.status(500).json({ error: "Internal server error" })
@@ -44,9 +47,13 @@ userRouter.post("/login", async (request, response) => {
     if (!match) {
       return response.status(401).json({ error: "incorrect password" })
     }
-    return response
-      .status(200)
-      .json({ user: { id: databaseUser.id, username: databaseUser.username } })
+    const token = jwt.sign({ userId: databaseUser.id }, JWT_secret, {
+      expiresIn: "7d",
+    })
+    return response.status(200).json({
+      user: { id: databaseUser.id, username: databaseUser.username },
+      token: token,
+    })
   } catch (error) {
     console.log(error.message)
     return response.status(500).json({ error: "Server error in login" })

@@ -1,5 +1,6 @@
 const taskRouter = require("express").Router()
 const db = require("../database/db")
+const dbFunc = require("../database/dbFunc.js")
 
 taskRouter.get("/", async (request, response) => {
   const q = "SELECT type, question, metadata FROM tasks"
@@ -15,14 +16,14 @@ taskRouter.get("/", async (request, response) => {
 taskRouter.post("/", async (request, response) => {
   const { type, module_name, question, correct_answer, metadata } = request.body
 
-  const q = `
-  INSERT INTO tasks (type, module_name, question, correct_answer, metadata)
-  VALUES ($1, $2, $3, $4, $5)
-  RETURNING id`
-  const values = [type, module_name, question, correct_answer, metadata]
-
   try {
-    const result = await db.query(q, values)
+    const result = await dbFunc.insertTask(
+      type,
+      module_name,
+      question,
+      correct_answer,
+      metadata,
+    )
     return response.status(201).json({ id: result.rows[0].id })
   } catch (err) {
     console.log("Couldn't save task:", err)

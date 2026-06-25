@@ -1,33 +1,52 @@
 import { useState, useEffect } from "react"
+import { answerService } from "../services/answerService"
 import { UseField } from "../hooks"
+import useUserStore, { useUserActions } from "../store"
 
 const TaskItem = ({ task }) => {
+  const token = useUserStore((state) => state.token)
+  const { addAnswer } = useUserActions()
   const { reset, ...answerInput } = UseField("text")
   const [feedback, setFeedback] = useState(null)
+  const allAnswers = useUserStore((state) => state.answers)
+  const savedAnswer = useUserStore((state) => state.answers[task.id])
+  useEffect(() => {
+    const lastSavedAnswer = savedAnswer?.submitted_answer
+    if (savedAnswer && answerInput.value !== lastSavedAnswer) {
+      setFeedback({
+        correct: savedAnswer.is_correct,
+        text: savedAnswer.is_correct ? "Pass" : "Fail",
+      })
+      answerInput.onChange({ target: { value: savedAnswer.submitted_answer } })
+    }
+  }, [task.id, savedAnswer])
+
   const submitAnswer = async (event) => {
     event.preventDefault()
     try {
-      console.log(task.id)
-      const response = await fetch(
-        `http://localhost:5000/api/answers/${task.id}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ answer: answerInput.value }),
-        },
+      const responseData = await answerService.submit(
+        task.id,
+        answerInput.value,
       )
-      const data = await response.json()
-      if (response.status === 422) {
-        setFeedback({ correct: false, text: "Error in syntax" })
-      } else {
-        setFeedback({
-          correct: data.correct,
-          text: data.correct ? "Pass" : "Fail",
-        })
-      }
+      addAnswer(task.id, answerInput.value, responseData.correct)
+      setFeedback({
+        correct: responseData.correct,
+        text: responseData.correct ? "Pass" : "Fail",
+      })
     } catch (error) {
       console.log("Failed to submit answer:", error.message)
-      setFeedback({ correct: false, text: "Server failed to evaluate answer" })
+
+      if (error.response && error.response.status === 422) {
+        setFeedback({
+          correct: false,
+          text: "Error in syntax",
+        })
+      } else {
+        setFeedback({
+          correct: false,
+          text: "Server failed to evaluate answer",
+        })
+      }
     }
   }
 

@@ -1,5 +1,7 @@
 import "./App.css"
+import { useEffect } from "react"
 import { UseField } from "./hooks"
+import useUserStore, { useUserActions } from "./store"
 import {
   BrowserRouter as Router,
   Routes,
@@ -17,7 +19,13 @@ import LoginScreen from "./components/LoginScreen"
 import RegisterScreen from "./components/RegisterScreen"
 
 function App() {
-  const { reset: reset, ...proposition } = UseField("text")
+  const token = useUserStore((state) => state.token)
+  const { initialize } = useUserActions()
+  useEffect(() => {
+    if (token) {
+      initialize()
+    }
+  }, [token, initialize])
   return (
     <div>
       <NavBar />
