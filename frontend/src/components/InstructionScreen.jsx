@@ -25,24 +25,26 @@ const InstructionScreen = () => {
           ))}
         </p>
       </div>
-      <div className="space-y-4">
+      <div>
         {content.paragraphs.map((par, index) => (
           <div
             key={index}
             className="flex flex-row sm:items-center p-4 rounded-lg gap-0"
             style={{ backgroundColor: "#e2e8f0" }}
           >
+            <p className="text-gray-700 max-w-xl text-sm md:text-base leading-relaxed m-0">
+              {par}
+            </p>
             <code
               className="font-mono font-bold text-lg md:text-2xl px-6 py-4 rounded-lg shadow-sm border border-blue-200 m-0"
               style={{ backgroundColor: "#cbd5e1", color: "#1e293b" }}
             >
-              {par}
               {content.examples[index]}
             </code>
           </div>
         ))}
       </div>
-      <Link to={taskLink} className="buttonStyle">
+      <Link to={taskLink} className="buttonStyle mt-6 inline-block">
         {" "}
         Tasks{" "}
       </Link>

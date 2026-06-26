@@ -18,7 +18,7 @@ import NavBar from "./components/NavBar"
 import LoginScreen from "./components/LoginScreen"
 import RegisterScreen from "./components/RegisterScreen"
 import InstructionScreen from "./components/InstructionScreen"
-
+import SubFormulaTask from "./components/SubFormulaTask"
 function App() {
   const token = useUserStore((state) => state.token)
   const { initialize } = useUserActions()
@@ -37,6 +37,7 @@ function App() {
           <Route path="/register" element={<RegisterScreen />} />
           <Route path="/tasks/:moduleName" element={<TaskScreen />} />
           <Route path="/part/:id/:moduleName" element={<InstructionScreen />} />
+          <Route path="/testing" element={<SubFormulaTask />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
