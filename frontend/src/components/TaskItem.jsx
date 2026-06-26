@@ -54,8 +54,14 @@ const TaskItem = ({ task }) => {
     <div className="task-card">
       <h3>{task.question}</h3>
       <form onSubmit={submitAnswer}>
-        <input {...answerInput} />
-        <button type="submit"> Submit Answer </button>
+        <input {...answerInput} className="bg-white text-black" />
+        <button
+          type="submit"
+          className="border-black border-2 rounded hover:bg-green-700"
+        >
+          {" "}
+          Submit Answer{" "}
+        </button>
       </form>
       {feedback && (
         <p

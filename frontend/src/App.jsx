@@ -35,8 +35,14 @@ function App() {
           <Route path="/" element={<HomeScreen />} />
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/register" element={<RegisterScreen />} />
-          <Route path="/tasks/:moduleName" element={<TaskScreen />} />
-          <Route path="/part/:id/:moduleName" element={<InstructionScreen />} />
+          <Route
+            path="/part/:id/section/:section/tasks/:moduleName"
+            element={<TaskScreen />}
+          />
+          <Route
+            path="/part/:id/section/:section"
+            element={<InstructionScreen />}
+          />
           <Route path="/testing" element={<SubFormulaTask />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

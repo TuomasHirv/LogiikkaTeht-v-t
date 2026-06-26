@@ -1,24 +1,26 @@
 import React from "react"
 import { partInstructions } from "../content/partInstructions"
-import { useParams, useNavigate, Link } from "react-router-dom"
+import { useParams, Link } from "react-router-dom"
 const InstructionScreen = () => {
-  const { id, moduleName } = useParams()
-  const content = partInstructions[id]
-  const taskLink = `/tasks/${moduleName}`
+  const { id, section } = useParams()
+  const content = partInstructions[id][section]
   if (!content) {
     return <p> NOT DONE YET</p>
   }
-
+  const moduleName = content.moduleName
+  const taskLink = `http://localhost:5173/part/${id}/section/${section}/tasks/${moduleName}`
   return (
-    <div className="task-screen">
-      <h2 style={{ backgroundColor: "#e2e8f0", maxWidth: "600px" }}>
-        {content.title}
-      </h2>
-      <h3 style={{ backgroundColor: "#e2e8f0", maxWidth: "600px" }}>
-        {content.introduction}
-      </h3>
-      <div>
-        <p style={{ backgroundColor: "#e2e8f0" }}>
+    <div className="max-w-5xl mx-auto p-6 bg-white shadow rounded-lg border border-gray-200 max-h-[90vh] overflow-y-auto">
+      <div className="text-black text-xl py-2 text-center">
+        <h1 style={{ backgroundColor: "#e2e8f0" }}>{content.title}</h1>
+      </div>
+      <div className="text-black">
+        <h3 style={{ backgroundColor: "#e2e8f0", maxWidth: "600px" }}>
+          {content.introduction}
+        </h3>
+      </div>
+      <div className="w-fit bg-white border-2 border-black rounded px-3">
+        <p className="text-black">
           Definitions:
           {content.definitions.map((def, index) => (
             <li key={index}>{def}</li>
@@ -29,25 +31,34 @@ const InstructionScreen = () => {
         {content.paragraphs.map((par, index) => (
           <div
             key={index}
-            className="flex flex-row sm:items-center p-4 rounded-lg gap-0"
+            className="flex flex-row sm:items-center p-4 rounded-lg gap-0 text-black bg-white"
             style={{ backgroundColor: "#e2e8f0" }}
           >
-            <p className="text-gray-700 max-w-xl text-sm md:text-base leading-relaxed m-0">
+            <p className="text-black max-w-xl text-sm md:text-base leading-relaxed m-0 text-black">
               {par}
             </p>
-            <code
-              className="font-mono font-bold text-lg md:text-2xl px-6 py-4 rounded-lg shadow-sm border border-blue-200 m-0"
-              style={{ backgroundColor: "#cbd5e1", color: "#1e293b" }}
-            >
+            <code className="bg-white border-2 border-black rounded px-1 ml-2">
               {content.examples[index]}
             </code>
           </div>
         ))}
       </div>
-      <Link to={taskLink} className="buttonStyle mt-6 inline-block">
-        {" "}
-        Tasks{" "}
-      </Link>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          paddingRight: "1.5rem",
+        }}
+        className="text-white"
+      >
+        <Link
+          to={taskLink}
+          className="bg-green-950 hover:bg-green-700 rounded shadow buttonStyle mt-6 inline-block"
+        >
+          {" "}
+          Tasks{" "}
+        </Link>
+      </div>
     </div>
   )
 }

@@ -1,134 +1,15 @@
+@import "tailwindcss";
 html,
-body {
+body,
+#root {
+  background-color: #0f172a; /* Slate 900 */
+  color: #f1f5f9; /* Slate 100 */
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-.fullscreen-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-  height: 100vh;
-  width: 100vw;
-  margin: 0;
-  padding: 0;
-  background-color: #0f172a;
-  box-sizing: border-box;
-}
-
-.massive-input {
-  width: 80%;
-  max-width: 800px;
-  background: transparent;
-  border: none;
-  border-bottom: 3px solid #38bdf8;
-  color: #f8fafc;
-  font-size: 3rem;
-  font-weight: bold;
-  text-align: center;
-  outline: none;
-  padding: 10px;
-  transition: border-color 0.2s;
-}
-
-.massive-input:focus {
-  border-bottom-color: #60a5fa;
-}
-.info-tile {
-  background-color: #f8fafc; /* Soft, clean off-white (Slate 50) */
-  color: #1e293b; /* Dark slate for readable text */
-  padding: 1.5rem 2rem;
-  border-radius: 12px;
-  box-shadow:
-    0 10px 25px -5px rgba(0, 0, 0, 0.3),
-    0 8px 10px -6px rgba(0, 0, 0, 0.3);
-  max-width: 500px;
-  width: 90%;
-  text-align: center;
-}
-.info-tile h1 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.5rem;
-  color: #0f172a; /* Extra bold dark slate */
-}
-
-.info-tile .subtitle {
-  margin: 0 0 1.25rem 0;
-  font-size: 0.95rem;
-  color: #64748b; /* Muted gray text */
-}
-
-/* Two-Column Grid Alignment for Shortcuts */
-.symbol-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
-  text-align: left;
-  background-color: #f1f5f9; /* Slightly darker inside grid for contrast */
-  padding: 1rem;
-  border-radius: 8px;
-}
-
-/* Spans the full width if an item sits alone (like the longer implication shortcut) */
-.symbol-grid .grid-item:nth-child(4) {
-  grid-column: span 2;
-}
-
-.grid-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  color: #334155;
-}
-
-/* Keyboard badge style for the typed text strings */
-kbd {
-  background-color: #e2e8f0;
-  border: 1px solid #cbd5e1;
-  border-radius: 4px;
-  padding: 0.15rem 0.4rem;
-  font-family: monospace;
-  font-weight: bold;
-  color: #0f172a;
-}
-
-/* Enhances readability of output symbols */
-.symbol {
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: #2563eb; /* Clean blue accent color for logic symbols */
-}
-
-.task-screen {
-  background-color: #0f172a;
   min-height: 100vh;
-  padding: 2rem;
 }
-
-.task-card {
-  background-color: #cbd5e1;
-  border-radius: 8px;
-  max-width: 600px;
-}
-
-.buttonStyle {
-  color: white;
-  background-color: #334155;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 0.95rem;
-  padding: 0.6rem 1.2rem;
-  border-radius: 4px;
-  border: 1px solid #475569;
-  transition: background-color 0.2s ease;
-}
-
-.buttonStyle:hover {
-  background-color: #475569;
+@layer components {
+  .nav-btn-primary {
+    @apply bg-blue-500 hover:bg-emerald-600 rounded text-black border-2 border-black flex items-center justify-center min-w-20 min-h-10;
+  }
 }

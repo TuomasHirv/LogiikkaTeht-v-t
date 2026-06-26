@@ -7,42 +7,29 @@ const NavBar = () => {
   const { logoutUser } = useUserActions()
   const navigate = useNavigate()
   return (
-    <nav
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "80px",
-        backgroundColor: "#0d5de0",
-        alignItems: "center",
-        display: "flex",
-        boxSizing: "border-box",
-        padding: "0 2rem",
-      }}
-    >
+    <nav className="fixed top-0 left-0 w-full h-20 bg-blue-300 flex items-center box-border px-8">
       <div style={{ display: "flex", gap: "1.5rem" }}>
-        <Link to="/" className="buttonStyle">
+        <Link to="/" className="nav-btn-primary">
           {" "}
           Home{" "}
         </Link>
-        <Link to="/part/1/words-to-propositions" className="buttonStyle">
+        <Link to="/part/1/section/1" className="nav-btn-primary">
           {" "}
           Part 1{" "}
         </Link>
         {!user ? (
           <div style={{ display: "flex", gap: "0.75rem" }}>
-            <Link to="/login" className="buttonStyle">
+            <Link to="/login" className="nav-btn-primary">
               {" "}
               Login{" "}
             </Link>
-            <Link to="/register" className="buttonStyle">
+            <Link to="/register" className="nav-btn-primary">
               {" "}
               Register{" "}
             </Link>
           </div>
         ) : (
-          <button className="buttonStyle" onClick={logoutUser}>
+          <button className="nav-btn-primary" onClick={logoutUser}>
             {" "}
             Log out
           </button>

@@ -11,8 +11,11 @@ const TextField = ({ onLock }) => {
   }
   return (
     <form onSubmit={handleLock}>
-      <input {...textInput} />
-      <button type="submit"> ok </button>
+      <input {...textInput} className="bg-white" />
+      <button type="submit" className="border-2 border-black rounded">
+        {" "}
+        ok{" "}
+      </button>
     </form>
   )
 }
@@ -45,18 +48,15 @@ const Node = ({ node, onChange }) => {
   }
   return (
     <div>
-      <p
-        style={{
-          backgroundColor: "#e5e5e5",
-          padding: "0.1rem 0.2rem",
-          borderRadius: "6px",
-          margin: 2,
-        }}
-      >
+      <p className="bg-white rounded text-2xl">
         {!node.children
           ? nodeParts.map((part, index) =>
               /[¬∧∨→↔]/.test(part) ? (
-                <button key={index} onClick={() => handleSplit(part)}>
+                <button
+                  key={index}
+                  className="bg-gray-600 hover:bg-gray-700 rounded"
+                  onClick={() => handleSplit(part)}
+                >
                   {part}
                 </button>
               ) : (
