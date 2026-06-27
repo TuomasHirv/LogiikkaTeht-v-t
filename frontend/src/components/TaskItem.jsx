@@ -53,6 +53,10 @@ const TaskItem = ({ task }) => {
   return (
     <div className="task-card">
       <h3>{task.question}</h3>
+      <div className="border-black border-2 border-dotted w-fit rounded mt-0.5 ">
+        {task?.metadata?.definitions &&
+          task.metadata.definitions.map((def, index) => <li>{def}</li>)}
+      </div>
       <form onSubmit={submitAnswer}>
         <input {...answerInput} className="bg-white text-black" />
         <button

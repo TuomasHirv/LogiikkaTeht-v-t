@@ -54,7 +54,7 @@ const TaskScreen = () => {
         {continued && (
           <Link
             to={instructionLink}
-            className="bg-green-950 hover:bg-green-700 rounded shadow buttonStyle mt-6 inline-block"
+            className="bg-green-950 hover:bg-green-700 rounded shadow buttonStyle mt-6 inline-block text-2xl"
           >
             {" "}
             Next section{" "}
@@ -79,7 +79,7 @@ const TaskScreen = () => {
       {continued && (
         <Link
           to={instructionLink}
-          className="bg-green-950 hover:bg-green-700 rounded shadow buttonStyle mt-6 inline-block"
+          className="bg-green-950 hover:bg-green-700 rounded shadow buttonStyle mt-6 inline-block text-2xl"
         >
           {" "}
           Next section{" "}

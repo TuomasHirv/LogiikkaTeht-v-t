@@ -34,7 +34,7 @@ const createTasksTable = async () => {
       type VARCHAR(50) NOT NULL,
       module_name TEXT NOT NULL,
       question TEXT NOT NULL,
-      correct_answer TEXT NOT NULL,
+      correct_answer JSONB DEFAULT '{}'::jsonb,
       metadata JSONB DEFAULT '{}'::jsonb
     );
   `

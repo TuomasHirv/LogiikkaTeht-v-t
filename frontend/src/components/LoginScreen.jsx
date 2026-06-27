@@ -20,15 +20,22 @@ const LoginScreen = () => {
     resetPassword()
   }
   return (
-    <div>
-      <form onSubmit={loginFunc}>
-        <p>Username</p>
-        <input {...username} />
-        <p>password</p>
-        <input {...password} />
-        <button type="submit"> Log in </button>
-      </form>
-    </div>
+    <>
+      <h2 className="bg-white rounded w-fit text-5xl ml-8 mt-2 text-black pb-2">
+        Login
+      </h2>
+      <div className="bg-white rounded border-black border-2 center justify-center max-w-80 min-h-40 ml-8 mt-6">
+        <form onSubmit={loginFunc}>
+          <p className="text-black text-2xl">Username</p>
+          <input {...username} className="bg-gray-300 text-black" />
+          <p className="text-black text-2xl">Password</p>
+          <input {...password} className="bg-gray-300 text-black" />
+          <div className="border-black border-2 rounded hover:bg-green-700 text-black w-fit ml-65 mt-4">
+            <button type="submit"> Log in </button>
+          </div>
+        </form>
+      </div>
+    </>
   )
 }
 
