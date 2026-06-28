@@ -71,4 +71,25 @@ const insertUser = async (username, passwordHash) => {
   }
 }
 
-module.exports = { insertAnswer, insertTask, insertUser, getAllUserAnswers }
+const getAnswerAndModule = async (task_id) => {
+  const q = `
+  SELECT correct_answer, module_name FROM tasks WHERE id = $1`
+
+  const info = await db.query(q, [task_id])
+  const rows = info.rows[0]
+  console.log(rows)
+  if (rows.module_name === "words-to-propositions") {
+    return { answer: rows.correct_answer.answers, moduleName: rows.module_name }
+  }
+  if (rows.module_name === "subformula") {
+    return { answer: rows.correct_answer, moduleName: rows.module_name }
+  }
+}
+
+module.exports = {
+  insertAnswer,
+  insertTask,
+  insertUser,
+  getAllUserAnswers,
+  getAnswerAndModule,
+}

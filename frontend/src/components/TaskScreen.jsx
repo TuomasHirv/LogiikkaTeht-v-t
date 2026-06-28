@@ -43,6 +43,11 @@ const TaskScreen = () => {
         <h2 className="bg-white rounded text-black w-fit text-4xl">
           {moduleName}
         </h2>
+        <p className="text-black w-fit text-xl">
+          Break down these formulas in to smaller subformulas by pressing on the
+          operator symbols. When there are only atomic formulas left submit your
+          answer.
+        </p>
         {tasks.map((task, index) => (
           <div
             key={task.id || index}
