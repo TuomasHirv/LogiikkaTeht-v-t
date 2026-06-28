@@ -60,7 +60,15 @@ const tasks = [
     question: "¬(P → Q)",
     correct_answer: {
       text: "¬(P → Q)",
-      children: [{ text: "(P → Q)", children: { text: "P", children: null } }],
+      children: [
+        {
+          text: "(P → Q)",
+          children: [
+            { text: "P", children: null },
+            { text: "Q", children: null },
+          ],
+        },
+      ],
     },
     metadata: {},
   },

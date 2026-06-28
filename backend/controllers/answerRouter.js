@@ -1,16 +1,23 @@
 const answerRouter = require("express").Router()
 const validatePropositional = require("../utils/correctness")
-const db = require("../database/db")
 const dbFunc = require("../database/dbFunc.js")
 const evaluator = require("../utils/matchAnswer.js")
 const authenticateToken = require("../middleware/auth.js")
 
-async function wordsToPropositionsHelper(answer, taskId, response) {
+const serializeSubmittedAnswer = (answer) => JSON.stringify(answer)
+
+async function wordsToPropositionsHelper(answer, taskId, userId, response) {
   try {
     if (!validatePropositional(answer)) {
       return response.status(422).json({ error: "Syntax error" })
     }
     const accepted = await evaluator.matchPropositions(answer, taskId)
+    await dbFunc.insertAnswer(
+      userId,
+      taskId,
+      serializeSubmittedAnswer(answer),
+      accepted,
+    )
     if (accepted) {
       return response.status(200).json({ correct: true, answer: answer })
     }
@@ -20,9 +27,15 @@ async function wordsToPropositionsHelper(answer, taskId, response) {
   }
 }
 
-async function subFormulaHelper(answer, taskId, dbAnswer, response) {
+async function subFormulaHelper(answer, taskId, dbAnswer, userId, response) {
   try {
     const accepted = await evaluator.matchSubFormula(answer, taskId, dbAnswer)
+    await dbFunc.insertAnswer(
+      userId,
+      taskId,
+      serializeSubmittedAnswer(answer),
+      accepted,
+    )
     if (accepted) {
       return response.status(200).json({ correct: true, answer: answer })
     }
@@ -43,21 +56,17 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
   console.log("Before switch:", answerModuleName)
   switch (answerModuleName.moduleName) {
     case "words-to-propositions":
-      return await wordsToPropositionsHelper(answer, taskId, response)
+      return await wordsToPropositionsHelper(answer, taskId, userId, response)
     case "subformula":
-      try {
-        const accepted = await evaluator.matchSubFormula(
-          answer,
-          taskId,
-          answerModuleName.answer,
-        )
-        if (accepted) {
-          return response.status(200).json({ correct: true, answer: answer })
-        }
-        return response.status(200).json({ correct: false, answer: answer })
-      } catch (error) {
-        return response.status(500).json({ error: "internal server error" })
-      }
+      return await subFormulaHelper(
+        answer,
+        taskId,
+        answerModuleName.answer,
+        userId,
+        response,
+      )
+    default:
+      return response.status(400).json({ error: "Unsupported module" })
   }
 })
 

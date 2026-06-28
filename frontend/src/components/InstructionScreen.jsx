@@ -31,15 +31,15 @@ const InstructionScreen = () => {
         {content.paragraphs.map((par, index) => (
           <div
             key={index}
-            className="flex flex-row sm:items-center p-4 rounded-lg gap-0 text-black bg-white"
+            className="flex flex-col sm:flex-row sm:items-start p-4 rounded-lg gap-2 text-black bg-white whitespace-pre-wrap"
             style={{ backgroundColor: "#e2e8f0" }}
           >
-            <p className="text-black max-w-xl text-sm md:text-base leading-relaxed m-0 text-black">
+            <p className="text-black max-w-xl text-sm md:text-base leading-relaxed m-0">
               {par}
             </p>
-            <code className="bg-white border-2 border-black rounded px-1 ml-2">
+            <pre className="bg-white border-2 border-black rounded px-2 py-1 ml-0 sm:ml-2 overflow-x-auto whitespace-pre-wrap font-mono">
               {content.examples[index]}
-            </code>
+            </pre>
           </div>
         ))}
       </div>

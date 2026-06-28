@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react"
-import { answerService } from "../services/answerService"
 import { UseField } from "../hooks"
+import { buildSavedAnswerFeedback } from "../hooks/savedAnswer"
+import { submitTaskAnswer } from "../hooks/submitAnswer"
+import AnswerFeedback from "./AnswerFeedback"
 import useUserStore, { useUserActions } from "../store"
 
 const TaskItem = ({ task }) => {
@@ -12,42 +14,28 @@ const TaskItem = ({ task }) => {
   const savedAnswer = useUserStore((state) => state.answers[task.id])
   useEffect(() => {
     const lastSavedAnswer = savedAnswer?.submitted_answer
-    if (savedAnswer && answerInput.value !== lastSavedAnswer) {
-      setFeedback({
-        correct: savedAnswer.is_correct,
-        text: savedAnswer.is_correct ? "Pass" : "Fail",
-      })
-      answerInput.onChange({ target: { value: savedAnswer.submitted_answer } })
+    const savedFeedback = buildSavedAnswerFeedback(savedAnswer)
+
+    if (
+      !savedFeedback ||
+      typeof lastSavedAnswer !== "string" ||
+      answerInput.value === lastSavedAnswer
+    ) {
+      return
     }
+
+    setFeedback(savedFeedback)
+    answerInput.onChange({ target: { value: savedAnswer.submitted_answer } })
   }, [task.id, savedAnswer])
 
   const submitAnswer = async (event) => {
-    event.preventDefault()
-    try {
-      const responseData = await answerService.submit(
-        task.id,
-        answerInput.value,
-      )
-      addAnswer(task.id, answerInput.value, responseData.correct)
-      setFeedback({
-        correct: responseData.correct,
-        text: responseData.correct ? "Pass" : "Fail",
-      })
-    } catch (error) {
-      console.log("Failed to submit answer:", error.message)
-
-      if (error.response && error.response.status === 422) {
-        setFeedback({
-          correct: false,
-          text: "Error in syntax",
-        })
-      } else {
-        setFeedback({
-          correct: false,
-          text: "Server failed to evaluate answer",
-        })
-      }
-    }
+    await submitTaskAnswer({
+      event,
+      taskId: task.id,
+      submittedAnswer: answerInput.value,
+      addAnswer,
+      setFeedback,
+    })
   }
 
   return (
@@ -55,7 +43,9 @@ const TaskItem = ({ task }) => {
       <h3>{task.question}</h3>
       <div className="border-black border-2 border-dotted w-fit rounded mt-0.5 ">
         {task?.metadata?.definitions &&
-          task.metadata.definitions.map((def, index) => <li>{def}</li>)}
+          task.metadata.definitions.map((def, index) => (
+            <li key={index}>{def}</li>
+          ))}
       </div>
       <form onSubmit={submitAnswer}>
         <input {...answerInput} className="bg-white text-black" />
@@ -67,17 +57,7 @@ const TaskItem = ({ task }) => {
           Submit Answer{" "}
         </button>
       </form>
-      {feedback && (
-        <p
-          style={{
-            color: feedback.text.includes("Pass") ? "#16a34a" : "#dc2626",
-            fontSize: "1.4rem",
-          }}
-        >
-          {" "}
-          {feedback.text} {feedback.text.includes("Pass") ? " ✓ " : " ✗ "}
-        </p>
-      )}
+      <AnswerFeedback feedback={feedback} />
     </div>
   )
 }

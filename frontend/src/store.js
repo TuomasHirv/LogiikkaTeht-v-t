@@ -3,6 +3,18 @@ import { persist } from "zustand/middleware"
 import { answerService } from "./services/answerService"
 import { userService } from "./services/userService"
 
+const normalizeSubmittedAnswer = (submittedAnswer) => {
+  if (typeof submittedAnswer !== "string") {
+    return submittedAnswer
+  }
+
+  try {
+    return JSON.parse(submittedAnswer)
+  } catch {
+    return submittedAnswer
+  }
+}
+
 const useUserStore = create(
   persist(
     (set, get) => ({
@@ -27,7 +39,7 @@ const useUserStore = create(
           }
         },
         logoutUser: () =>
-          set(() => ({ user: null, completedTasks: [], answers: [] })),
+          set(() => ({ user: null, completedTasks: [], answers: {} })),
 
         addAnswer: (taskId, answerText, isCorrect) => {
           set((state) => ({
@@ -50,7 +62,7 @@ const useUserStore = create(
 
             responseData.answerList.forEach((a) => {
               mappedAnswers[a.task_id] = {
-                submitted_answer: a.submitted_answer,
+                submitted_answer: normalizeSubmittedAnswer(a.submitted_answer),
                 is_correct: a.is_correct,
               }
             })

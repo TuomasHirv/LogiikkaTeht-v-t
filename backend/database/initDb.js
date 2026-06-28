@@ -67,7 +67,7 @@ const createAnswersTable = async () => {
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     task_id UUID NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
-    submitted_answer TEXT NOT NULL,
+    submitted_answer JSONB NOT NULL,
     is_correct BOOLEAN NOT NULL,
     completed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     
