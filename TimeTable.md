@@ -9,3 +9,5 @@ Tasks is a simple description of what has been completed and doesn't necessarily
 | 24.06 |   example set of tasks, Navbar, usermanagement, zustand-store. Backend stuff too    |    7 |
 | 25.06 |              Created possibility for splitting propositions in a task.              |    6 |
 | 26.06 | Made proposition task connect to part 1. More info screens. Updated css to tailwind |  6.5 |
+| 28.06 |               Fixed answers table. Added checking to subformula tasks               |    6 |
+| 29.06 |          Made progress on creating a truth table task. Isnt connected yet           |    4 |

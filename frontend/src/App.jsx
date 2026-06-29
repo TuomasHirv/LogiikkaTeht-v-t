@@ -19,6 +19,7 @@ import LoginScreen from "./components/LoginScreen"
 import RegisterScreen from "./components/RegisterScreen"
 import InstructionScreen from "./components/InstructionScreen"
 import SubFormulaTask from "./components/SubFormulaTask"
+import TruthTableTask from "./components/TruthTableTask"
 function App() {
   const token = useUserStore((state) => state.token)
   const { initialize } = useUserActions()
@@ -43,7 +44,7 @@ function App() {
             path="/part/:id/section/:section"
             element={<InstructionScreen />}
           />
-          <Route path="/testing" element={<SubFormulaTask />} />
+          <Route path="/testing" element={<TruthTableTask />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
