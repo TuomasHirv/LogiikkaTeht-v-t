@@ -11,3 +11,4 @@ Tasks is a simple description of what has been completed and doesn't necessarily
 | 26.06 | Made proposition task connect to part 1. More info screens. Updated css to tailwind |  6.5 |
 | 28.06 |               Fixed answers table. Added checking to subformula tasks               |    6 |
 | 29.06 |          Made progress on creating a truth table task. Isnt connected yet           |    4 |
+| 03.07 |            TT tasks are connected. Refractored task Screen. Fixed stuff             |    6 |
