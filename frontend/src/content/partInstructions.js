@@ -71,7 +71,7 @@ export const partInstructions = {
         "Tautology = Formula that is true on every row",
         "Contradiction = Formula that is false on every row",
       ],
-      moduleName: "subformula",
+      moduleName: "Truth-Table-Task",
     },
   },
 }
