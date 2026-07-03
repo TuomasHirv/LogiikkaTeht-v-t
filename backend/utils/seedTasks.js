@@ -131,6 +131,7 @@ const tasks = [
         ["¬P ∨ Q", "1", "0", "1", "1"],
       ],
     },
+    metadata: { start: ["P", "Q"] },
   },
   {
     type: "create-truth-table",
@@ -143,6 +144,7 @@ const tasks = [
         ["P → Q", "1", "0", "1", "1"],
       ],
     },
+    metadata: { start: ["P", "Q"] },
   },
   {
     type: "create-truth-table",
@@ -155,6 +157,7 @@ const tasks = [
         ["P ∧ ¬P", "0", "0", "0", "0"],
       ],
     },
+    metadata: { start: ["P"] },
   },
   {
     type: "create-truth-table",
@@ -167,6 +170,7 @@ const tasks = [
         ["P ∨ ¬P", "1", "1", "1", "1"],
       ],
     },
+    metadata: { start: ["P"] },
   },
   {
     type: "create-truth-table-difficult",
@@ -183,6 +187,7 @@ const tasks = [
         ["(P → Q) ↔ (¬Q → ¬P)", "1", "1", "1", "1"],
       ],
     },
+    metadata: { start: ["P", "Q"] },
   },
   {
     type: "create-truth-table",
@@ -196,6 +201,7 @@ const tasks = [
         ["¬(P ∧ Q)", "0", "1", "1", "1"],
       ],
     },
+    metadata: { start: ["P", "Q"] },
   },
   {
     type: "create-truth-table",
@@ -210,6 +216,7 @@ const tasks = [
         ["¬P ∨ ¬Q", "0", "1", "1", "1"],
       ],
     },
+    metadata: { start: ["P", "Q"] },
   },
   {
     type: "create-truth-table",
@@ -224,6 +231,7 @@ const tasks = [
         ["(P ∨ Q) ∧ ¬P", "0", "0", "1", "0"],
       ],
     },
+    metadata: { start: ["P", "Q"] },
   },
   {
     type: "create-truth-table-difficult",
@@ -239,6 +247,7 @@ const tasks = [
         ["(P ∧ Q) ∨ (P ∧ R)", "1", "1", "1", "0", "0", "0", "0", "0"],
       ],
     },
+    metadata: { start: ["P", "Q", "R"] },
   },
   {
     type: "create-truth-table-difficult",
@@ -266,6 +275,7 @@ const tasks = [
         ],
       ],
     },
+    metadata: { start: ["P", "Q", "R"] },
   },
   {
     type: "create-truth-table-difficult",
@@ -281,6 +291,7 @@ const tasks = [
         ["(P ↔ Q) ∨ (P ↔ R)", "1", "1", "1", "0", "0", "1", "1", "1"],
       ],
     },
+    metadata: { start: ["P", "Q", "R"] },
   },
 
   {

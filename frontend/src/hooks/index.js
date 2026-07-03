@@ -1,7 +1,11 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
-export const UseField = (type) => {
-  const [value, setValue] = useState("")
+export const UseField = (type, initValue = "") => {
+  const [value, setValue] = useState(initValue || "")
+  useEffect(() => {
+    setValue(initValue || "")
+  }, [initValue])
+
   const processInput = (input) => {
     return input
       .replace(/\band\b(\s+)/gi, "∧ ")

@@ -45,6 +45,24 @@ async function subFormulaHelper(answer, taskId, dbAnswer, userId, response) {
   }
 }
 
+async function truthTableHelper(answer, taskId, userId, response) {
+  try {
+    const accepted = await evaluator.matchTruthTable(answer, taskId)
+    await dbFunc.insertAnswer(
+      userId,
+      taskId,
+      serializeSubmittedAnswer(answer),
+      accepted,
+    )
+    if (accepted) {
+      return response.status(200).json({ correct: true, answer: answer })
+    }
+    return response.status(200).json({ correct: false, answer: answer })
+  } catch (error) {
+    return response.status(500).json({ error: "internal server error" })
+  }
+}
+
 answerRouter.post("/:id", authenticateToken, async (request, response) => {
   const taskId = request.params.id
   console.log("BACKEND RECEIVED TASK ID:", taskId)
@@ -53,7 +71,6 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
 
   const userId = request.userId
   const answerModuleName = await dbFunc.getAnswerAndModule(taskId)
-  console.log("Before switch:", answerModuleName)
   switch (answerModuleName.moduleName) {
     case "words-to-propositions":
       return await wordsToPropositionsHelper(answer, taskId, userId, response)
@@ -65,6 +82,8 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         userId,
         response,
       )
+    case "Truth-Table-Task":
+      return await truthTableHelper(answer, taskId, userId, response)
     default:
       return response.status(400).json({ error: "Unsupported module" })
   }

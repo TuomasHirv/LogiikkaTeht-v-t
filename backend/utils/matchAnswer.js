@@ -14,11 +14,10 @@ const matchPropositions = async (userAnswer, taskId) => {
   })
   return found
 }
-const matchSubFormula = async (userObject, taskId, correctAnswer) => {
-  console.log("Correcasodjas", correctAnswer)
+const matchSubFormula = async (userObject, answerId) => {
   const q = `SELECT correct_answer FROM tasks WHERE id = $1`
-  const databaseAnswer = await db.query(q, [taskId])
-  const databaseObject = databaseAnswer.rows[0].correct_answer
+  const dbAnswer = await db.query(q, [answerId])
+  const correctAnswer = dbAnswer.rows[0].correct_answer
   const accepted = recurseChildren(userObject, correctAnswer)
   if (accepted) {
     return true
@@ -50,7 +49,9 @@ function recurseChildren(object, node) {
   for (const cNode of node.children) {
     let found = false
     for (const child of object.children) {
-      if (cNode.text === child.text) {
+      const correctText = cNode.text.trim().replace(/\s+/g, "")
+      const userText = child.text.trim().replace(/\s+/g, "")
+      if (correctText === userText) {
         found = true
         const correct = recurseChildren(child, cNode)
         if (!correct) {
@@ -66,5 +67,23 @@ function recurseChildren(object, node) {
 
   return true
 }
+const normalizeRow = (row) => row.map((cell) => cell.trim().replace(/\s+/g, ""))
 
-module.exports = { matchPropositions, matchSubFormula }
+const matchTruthTable = async (userTable, taskId) => {
+  const q = `SELECT correct_answer FROM tasks WHERE id = $1`
+  const databaseAnswer = await db.query(q, [taskId])
+  const correctTable = databaseAnswer.rows[0].correct_answer.answer
+  if (correctTable.length !== userTable.length) {
+    return false
+  }
+  const normCorrect = correctTable.map(normalizeRow)
+  const normUser = userTable.map(normalizeRow)
+  const value = normCorrect.every((a) =>
+    normUser.some(
+      (b) => a.length === b.length && a.every((val, i) => val === b[i]),
+    ),
+  )
+  return value
+}
+
+module.exports = { matchPropositions, matchSubFormula, matchTruthTable }

@@ -84,6 +84,9 @@ const getAnswerAndModule = async (task_id) => {
   if (rows.module_name === "subformula") {
     return { answer: rows.correct_answer, moduleName: rows.module_name }
   }
+  if (rows.module_name === "Truth-Table-Task") {
+    return { answer: rows.correct_answer.answer, moduleName: rows.module_name }
+  }
 }
 
 module.exports = {

@@ -1,9 +1,12 @@
 import { useParams, Link } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { partInstructions } from "../content/partInstructions"
+import { taskInstructions } from "../content/taskInstructions"
+
 import TaskItem from "./TaskItem"
 import SubFormulaTask from "./SubFormulaTask"
 import TruthTableTask from "./TruthTableTask"
+
 const TaskScreen = () => {
   const { moduleName, id, section } = useParams()
   const nextSection = Number(section) + 1
@@ -37,83 +40,53 @@ const TaskScreen = () => {
   if (loading) {
     return <h1>Module: {moduleName} </h1>
   }
-  if (moduleName === "subformula") {
-    return (
-      <div className="max-w-5xl mx-auto p-6 bg-white shadow rounded-lg border border-gray-200 max-h-[90vh] overflow-y-auto">
-        <h2 className="bg-white rounded text-black w-fit text-4xl">
-          {moduleName}
-        </h2>
-        <p className="text-black w-fit text-xl">
-          Break down these formulas in to smaller subformulas by pressing on the
-          operator symbols. When there are only atomic formulas left submit your
-          answer.
-        </p>
-        {tasks.map((task, index) => (
-          <div
-            key={task.id || index}
-            className="bg-gray-500 p-3 border-black border-2"
-          >
-            <SubFormulaTask key={task.id} task={task} />
-          </div>
-        ))}{" "}
-        {continued && (
-          <Link
-            to={instructionLink}
-            className="bg-green-950 hover:bg-green-700 rounded shadow buttonStyle mt-6 inline-block text-2xl"
-          >
-            {" "}
-            Next section{" "}
-          </Link>
-        )}
-      </div>
-    )
+  const getTaskComponent = () => {
+    switch (moduleName) {
+      case "words-to-propositions":
+        return TaskItem
+      case "Truth-Table-Task":
+        return TruthTableTask
+      case "subformula":
+        return SubFormulaTask
+      default:
+        return TaskItem
+    }
   }
-  if (moduleName === "words-to-propositions") {
-    return (
-      <div className="max-w-5xl mx-auto p-6 bg-white shadow rounded-lg border border-gray-200 max-h-[90vh] overflow-y-auto">
-        <h2 className="bg-white rounded text-black w-fit text-4xl">
-          {moduleName}
-        </h2>
-        {tasks.map((task, index) => (
-          <div
-            key={task.id || index}
-            className="bg-gray-500 p-3 border-black border-2"
-          >
-            <TaskItem key={task.id} task={task} />
-          </div>
-        ))}{" "}
-        {continued && (
-          <Link
-            to={instructionLink}
-            className="bg-green-950 hover:bg-green-700 rounded shadow buttonStyle mt-6 inline-block text-2xl"
-          >
-            {" "}
-            Next section{" "}
-          </Link>
-        )}
-      </div>
-    )
-  }
-  if (moduleName === "Truth-Table-Task") {
-    return (
-      <div>
-        {tasks.map((task, index) => (
-          <div key={task.id || index}>
-            <TruthTableTask key={task.id} task={task} />
-          </div>
-        ))}{" "}
-        {continued && (
-          <Link
-            to={instructionLink}
-            className="bg-green-950 hover:bg-green-700 rounded shadow buttonStyle mt-6 inline-block text-2xl"
-          >
-            {" "}
-            Next section{" "}
-          </Link>
-        )}
-      </div>
-    )
-  }
+
+  const TaskComponent = getTaskComponent()
+  return (
+    <div className="max-w-5xl mx-auto p-6 bg-white shadow rounded-lg border border-gray-200 max-h-[90vh] overflow-y-auto">
+      <h2 className="bg-white rounded text-black w-fit text-4xl">
+        {moduleName}
+      </h2>
+
+      <p className="text-black w-fit text-xl border-2 border-dotted">
+        {taskInstructions[moduleName].instruction}
+      </p>
+
+      {tasks.map((task, index) => (
+        <div
+          key={task.id || index}
+          className={
+            moduleName === "Truth-Table-Task"
+              ? ""
+              : "bg-gray-500 p-3 border-black border-2"
+          }
+        >
+          <TaskComponent task={task} />
+        </div>
+      ))}
+
+      {continued && (
+        <Link
+          to={instructionLink}
+          className="bg-green-950 hover:bg-green-700 rounded shadow buttonStyle mt-6 inline-block text-2xl"
+        >
+          Next section
+        </Link>
+      )}
+    </div>
+  )
 }
 
 export default TaskScreen

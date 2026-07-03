@@ -1,5 +1,10 @@
-import { useState, useRef, forwardRef } from "react"
+import { useState, useEffect, useRef, forwardRef } from "react"
 import { UseField } from "../hooks"
+import useUserStore, { useUserActions } from "../store"
+import AnswerFeedback from "./AnswerFeedback"
+import { submitTaskAnswer } from "../hooks/submitAnswer"
+import { buildSavedAnswerFeedback } from "../hooks/savedAnswer"
+
 {
   /* Mapping of input fields and using arrows to navigate the array are AI coded  */
 }
@@ -12,7 +17,7 @@ const DIRECTIONS = {
 
 const TruthTableField = forwardRef(
   ({ submitFunc, x, y, value, isHead, onNavigate }, ref) => {
-    const { reset: reset, ...textInput } = UseField("text")
+    const { reset: reset, ...textInput } = UseField("text", value)
     const [locked, setLocked] = useState(false)
     const bgClass = isHead ? "bg-amber-100" : "bg-gray-300"
 
@@ -39,6 +44,12 @@ const TruthTableField = forwardRef(
             {...textInput}
             ref={ref}
             onKeyDown={handleKeyDown}
+            onBlur={() => {
+              if (textInput.value) {
+                setLocked(true)
+                submitFunc(textInput.value, x, y)
+              }
+            }}
             className={`${bgClass} text-black text-xl border-black border-2 w-25 h-7`}
           />
         </form>
@@ -57,11 +68,36 @@ const TruthTableField = forwardRef(
   },
 )
 
-const TruthTable = () => {
-  const [inputFields, setInputFields] = useState([
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-  ])
+const TruthTable = ({ task, start }) => {
+  const { addAnswer } = useUserActions()
+  const savedAnswer = useUserStore((state) => state.answers[task.id])
+  const [feedback, setFeedback] = useState(null)
+  if (savedAnswer) {
+    console.log(savedAnswer)
+  }
+
+  const [inputFields, setInputFields] = useState(() =>
+    start.map((str) => [str, "", "", "", ""]),
+  )
+  useEffect(() => {
+    const savedFeedback = buildSavedAnswerFeedback(savedAnswer)
+    if (!savedFeedback) {
+      return
+    }
+
+    setFeedback(savedFeedback)
+    setInputFields(savedAnswer.submitted_answer)
+  }, [task.id, savedAnswer])
+
+  const submitAnswer = async (event) => {
+    await submitTaskAnswer({
+      event,
+      taskId: task.id,
+      submittedAnswer: inputFields,
+      addAnswer,
+      setFeedback,
+    })
+  }
 
   const fieldRefs = useRef({})
 
@@ -80,10 +116,7 @@ const TruthTable = () => {
   }
 
   const resetFields = () => {
-    setInputFields([
-      ["", "", "", "", ""],
-      ["", "", "", "", ""],
-    ])
+    setInputFields(() => start.map((str) => [str, "", "", "", ""]))
   }
 
   const submitValue = (text, x, y) => {
@@ -144,7 +177,7 @@ const TruthTable = () => {
         )}
       </div>
       <div className="text-black absolute -right-14 border-black border-2 rounded hover:bg-green-700">
-        <button onClick={() => console.log(inputFields)}>Submit</button>
+        <button onClick={submitAnswer}>Submit</button>
       </div>
       <button
         onClick={resetFields}
@@ -152,6 +185,7 @@ const TruthTable = () => {
       >
         Reset
       </button>
+      <AnswerFeedback feedback={feedback} />
     </div>
   )
 }
