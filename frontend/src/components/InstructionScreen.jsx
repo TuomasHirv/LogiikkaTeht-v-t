@@ -1,6 +1,7 @@
 import React from "react"
 import { partInstructions } from "../content/partInstructions"
 import { useParams, Link } from "react-router-dom"
+import ReactMarkdown from "react-markdown"
 const InstructionScreen = () => {
   const { id, section } = useParams()
   const content = partInstructions[id][section]
@@ -34,9 +35,9 @@ const InstructionScreen = () => {
             className="flex flex-col sm:flex-row sm:items-start p-4 rounded-lg gap-2 text-black bg-white whitespace-pre-wrap"
             style={{ backgroundColor: "#e2e8f0" }}
           >
-            <p className="text-black max-w-xl text-sm md:text-base leading-relaxed m-0">
-              {par}
-            </p>
+            <div className="text-black max-w-xl text-sm md:text-base leading-relaxed m-0">
+              <ReactMarkdown>{par}</ReactMarkdown>
+            </div>
             <pre className="bg-white border-2 border-black rounded px-2 py-1 ml-0 sm:ml-2 overflow-x-auto whitespace-pre-wrap font-mono">
               {content.examples[index]}
             </pre>
