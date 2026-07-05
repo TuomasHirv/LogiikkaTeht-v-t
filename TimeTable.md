@@ -12,3 +12,5 @@ Tasks is a simple description of what has been completed and doesn't necessarily
 | 28.06 |               Fixed answers table. Added checking to subformula tasks               |    6 |
 | 29.06 |          Made progress on creating a truth table task. Isnt connected yet           |    4 |
 | 03.07 |            TT tasks are connected. Refractored task Screen. Fixed stuff             |    6 |
+| 04.07 |         Tried to figure out how to implement equivalence tasks. Fixed stuff         |    5 |
+| 05.07 |            Created equivalence tasks. Acceptance criteria was difficult.            |    7 |

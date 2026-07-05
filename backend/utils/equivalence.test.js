@@ -1,3 +1,5 @@
+// This file is AI coded
+
 const test = require("node:test")
 const assert = require("node:assert/strict")
 
@@ -35,4 +37,12 @@ test("rejects non-equivalent propositions", () => {
 
 test("rejects invalid input", () => {
   assert.equal(areLogicallyEquivalent("A→", "¬A∨B"), false)
+})
+
+test("Accepts double negation elimination", () => {
+  assert.equal(areLogicallyEquivalent("¬¬A", "A"), true)
+})
+
+test("Accepts double negation elimination", () => {
+  assert.equal(areLogicallyEquivalent("¬¬P ∨ ¬¬Q", "P ∨ ¬¬Q"), true)
 })

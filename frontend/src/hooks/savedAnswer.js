@@ -34,3 +34,30 @@ export const parseSavedSubFormulaAnswer = (submittedAnswer) => {
 
   return JSON.parse(JSON.stringify(parsedAnswer))
 }
+
+export const parseSavedEliminationAnswer = (submittedAnswer) => {
+  if (!submittedAnswer) {
+    return null
+  }
+
+  let parsedAnswer = submittedAnswer
+
+  if (typeof submittedAnswer === "string") {
+    try {
+      parsedAnswer = JSON.parse(submittedAnswer)
+    } catch {
+      return null
+    }
+  }
+
+  if (!Array.isArray(parsedAnswer)) {
+    return null
+  }
+
+  const onlyStrings = parsedAnswer.filter((step) => typeof step === "string")
+  if (onlyStrings.length === 0) {
+    return null
+  }
+
+  return [...onlyStrings]
+}

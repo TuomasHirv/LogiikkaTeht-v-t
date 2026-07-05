@@ -1,5 +1,5 @@
 const db = require("../database/db")
-
+const matchText = require("./matchTree")
 const matchPropositions = async (userAnswer, taskId) => {
   const q = `SELECT correct_answer FROM tasks WHERE id = $1`
   const databaseAnswer = await db.query(q, [taskId])
@@ -86,4 +86,34 @@ const matchTruthTable = async (userTable, taskId) => {
   return value
 }
 
-module.exports = { matchPropositions, matchSubFormula, matchTruthTable }
+const matchEquivalenceAnswer = (answerList, excluded) => {
+  const lastAnswer = answerList[answerList.length - 1]
+  for (i = 0; i < excluded.length; i++) {
+    if (lastAnswer.includes(excluded[i])) {
+      console.log("DOESNT FIT THE RULE")
+      return false
+    }
+  }
+
+  let accepted = false
+  for (i = 1; i < answerList.length; i++) {
+    accepted = matchText(answerList[i - 1], answerList[i])
+    console.log(
+      "First text:",
+      answerList[i - 1],
+      "Second text:",
+      answerList[i],
+      "Result:",
+      accepted,
+    )
+  }
+  console.log("Accepted by matchText?", accepted)
+  return accepted
+}
+
+module.exports = {
+  matchPropositions,
+  matchSubFormula,
+  matchTruthTable,
+  matchEquivalenceAnswer,
+}

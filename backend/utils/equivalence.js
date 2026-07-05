@@ -1,3 +1,5 @@
+// this file is AI generated
+
 const createTree = require("./createTree")
 
 function isTree(node) {
@@ -77,7 +79,10 @@ function areLogicallyEquivalent(leftInput, rightInput) {
     return false
   }
 
-  const variables = [...collectVariables(leftTree), ...collectVariables(rightTree)]
+  const variables = [
+    ...collectVariables(leftTree),
+    ...collectVariables(rightTree),
+  ]
 
   const seen = new Set()
   const uniqueVariables = []

@@ -1,9 +1,15 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { UseField } from "../hooks"
-import TruthTableField from "./TruthTableField"
+import useUserStore, { useUserActions } from "../store"
+import AnswerFeedback from "./AnswerFeedback"
+import { submitTaskAnswer } from "../hooks/submitAnswer"
+import {
+  buildSavedAnswerFeedback,
+  parseSavedEliminationAnswer,
+} from "../hooks/savedAnswer"
 
 const Line = ({ initValue, index, change }) => {
-  const { reset: reset, ...lineInput } = UseField("text", initValue)
+  const { reset: _reset, ...lineInput } = UseField("text", initValue)
 
   return (
     <input
@@ -19,29 +25,74 @@ const Line = ({ initValue, index, change }) => {
 }
 
 const EliminationTask = ({ task }) => {
-  const start = task.question
-  const [propositions, setPropositions] = useState([start, ""])
+  const { addAnswer } = useUserActions()
+  const start = task?.question || ""
+  const taskId = task?.id
+  const savedAnswer = useUserStore((state) => state.answers[taskId])
+  const [feedback, setFeedback] = useState(null)
+  const createInitialPropositions = (initial) => [initial, ""]
+  const [propositions, setPropositions] = useState(() =>
+    createInitialPropositions(start),
+  )
+
+  useEffect(() => {
+    setPropositions(createInitialPropositions(start))
+    setFeedback(null)
+  }, [start, taskId])
+
+  useEffect(() => {
+    const savedFeedback = buildSavedAnswerFeedback(savedAnswer)
+    const parsedSavedAnswer = parseSavedEliminationAnswer(
+      savedAnswer?.submitted_answer,
+    )
+
+    if (!savedFeedback || !parsedSavedAnswer) {
+      return
+    }
+
+    setFeedback(savedFeedback)
+    setPropositions(parsedSavedAnswer)
+  }, [taskId, savedAnswer])
 
   const resetPropositions = () => {
-    setPropositions([start, ""])
+    setPropositions(createInitialPropositions(start))
+    setFeedback(null)
   }
-  const submitAnswer = () => {
+
+  const submitAnswer = async (event) => {
+    if (!taskId) {
+      return
+    }
+
     const answer = propositions.filter((prop) => prop.trim() !== "")
-    console.log(answer)
+    await submitTaskAnswer({
+      event,
+      taskId,
+      submittedAnswer: answer,
+      addAnswer,
+      setFeedback,
+    })
   }
 
   const changePropositions = (text, i) => {
-    setPropositions(
-      propositions.map((original, index) => (index === i ? text : original)),
-    )
+    setPropositions((previous) => {
+      if (previous[i] === text) {
+        return previous
+      }
+      return previous.map((original, index) => (index === i ? text : original))
+    })
   }
+
   const addRemoveLine = (add) => {
     if (add) {
-      setPropositions([...propositions, ""])
+      setPropositions((previous) => [...previous, ""])
     } else {
-      if (propositions.length > 1) setPropositions(propositions.slice(0, -1))
+      setPropositions((previous) =>
+        previous.length > 1 ? previous.slice(0, -1) : previous,
+      )
     }
   }
+
   return (
     <>
       <div className="border border-dotted border-black rounded text-xl w-fit">
@@ -85,6 +136,9 @@ const EliminationTask = ({ task }) => {
             </button>
           )}
         </div>
+      </div>
+      <div>
+        <AnswerFeedback feedback={feedback} />
       </div>
     </>
   )

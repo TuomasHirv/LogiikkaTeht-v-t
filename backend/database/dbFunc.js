@@ -87,6 +87,10 @@ const getAnswerAndModule = async (task_id) => {
   if (rows.module_name === "Truth-Table-Task") {
     return { answer: rows.correct_answer.answer, moduleName: rows.module_name }
   }
+  if (rows.module_name === "Equivalence-Rules-Task") {
+    return { answer: rows.correct_answer.remove, moduleName: rows.module_name }
+  }
+  console.log("Module name isnt in presets:", rows.module_name)
 }
 
 module.exports = {

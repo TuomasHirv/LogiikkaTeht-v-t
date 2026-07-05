@@ -1,3 +1,5 @@
+// This file is AI generated
+
 const ruleCheck = require("./matchRuleChange")
 const createTree = require("./createTree")
 const areLogicallyEquivalent = require("./equivalence")
@@ -45,11 +47,11 @@ function isSingleStepValid(tree1, tree2) {
     ruleCheck.matchBiconditionalElimination(oldNode, newNode) ||
     ruleCheck.matchDoubleNegation(oldNode, newNode) ||
     ruleCheck.matchImplicationElimination(oldNode, newNode) ||
-    ruleCheck.matchImplicationRule(oldNode, newNode)
+    ruleCheck.matchDeMorgan(oldNode, newNode)
   )
 }
 
-function matchAnswer(currentText, prevText) {
+function matchText(prevText, currentText) {
   const prevTree = createTree(prevText)
   const currentTree = createTree(currentText)
   if (!currentTree || !prevTree) return false
@@ -59,4 +61,4 @@ function matchAnswer(currentText, prevText) {
   return isSingleStepValid(prevTree, currentTree)
 }
 
-module.exports = matchAnswer
+module.exports = matchText
