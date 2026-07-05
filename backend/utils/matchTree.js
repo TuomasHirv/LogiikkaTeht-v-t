@@ -1,5 +1,6 @@
 const ruleCheck = require("./matchRuleChange")
 const createTree = require("./createTree")
+const areLogicallyEquivalent = require("./equivalence")
 
 function areEqual(a, b) {
   if (!a || !b) return false
@@ -52,6 +53,8 @@ function matchAnswer(currentText, prevText) {
   const prevTree = createTree(prevText)
   const currentTree = createTree(currentText)
   if (!currentTree || !prevTree) return false
+
+  if (!areLogicallyEquivalent(prevTree, currentTree)) return false
 
   return isSingleStepValid(prevTree, currentTree)
 }

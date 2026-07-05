@@ -11,4 +11,8 @@ export const taskInstructions = {
     instruction:
       "Create a truth table for every proposition given. You can break them down with the subformula editor. Use 1 and 0 for true and false",
   },
+  "Equivalence-Rules-Task": {
+    instruction:
+      "Change these propositions to fit the given task. Only change one symbol at a time using one of the given rules. Make sure that the propositions are always equivalent",
+  },
 }

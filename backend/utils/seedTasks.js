@@ -378,6 +378,57 @@ const tasks = [
     },
     metadata: {},
   },
+  {
+    type: "proposition-change",
+    module_name: "Equivalence-Rules-Task",
+    question: "¬¬P ∨ ¬¬Q",
+    correct_answer: { remove: ["¬"] },
+    metadata: { end_goal: "Remove all ¬ (negations)" },
+  },
+  {
+    type: "proposition-change",
+    module_name: "Equivalence-Rules-Task",
+    question: "P → Q",
+    correct_answer: { remove: ["→"] },
+    metadata: { end_goal: "Remove all → (implications)" },
+  },
+  {
+    type: "proposition-change",
+    module_name: "Equivalence-Rules-Task",
+    question: "¬(P ∧ Q)",
+    correct_answer: { remove: ["∧"] },
+    metadata: { end_goal: "Remove all ∧ (conjunctions)" },
+  },
+  {
+    type: "proposition-change",
+    module_name: "Equivalence-Rules-Task",
+    question: "P ∧ (Q → R)",
+    correct_answer: { remove: ["→"] },
+    metadata: { end_goal: "Remove all → (implications)" },
+  },
+  {
+    type: "proposition-change",
+    module_name: "Equivalence-Rules-Task",
+    question: "P ∨ ¬(Q ∧ R)",
+    correct_answer: { remove: ["∧"] },
+    metadata: { end_goal: "Remove all ∧ (conjunctions)" },
+  },
+  {
+    type: "proposition-change",
+    module_name: "Equivalence-Rules-Task",
+    question: "¬(P → Q)",
+    correct_answer: { remove: ["→", "∨"] },
+    metadata: { end_goal: "Remove all → (implications) and ∨ (conjunctions)" },
+  },
+  {
+    type: "proposition-change",
+    module_name: "Equivalence-Rules-Task",
+    question: "P ↔ Q",
+    correct_answer: { remove: ["→", "↔"] },
+    metadata: {
+      end_goal: "Remove all → (implications) and ↔ (biconditionals)",
+    },
+  },
 ]
 
 const seedDatabase = async () => {

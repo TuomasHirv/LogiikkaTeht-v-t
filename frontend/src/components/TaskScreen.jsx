@@ -6,7 +6,7 @@ import { taskInstructions } from "../content/taskInstructions"
 import TaskItem from "./TaskItem"
 import SubFormulaTask from "./SubFormulaTask"
 import TruthTableTask from "./TruthTableTask"
-
+import EliminationTask from "./EliminationTask"
 const TaskScreen = () => {
   const { moduleName, id, section } = useParams()
   const nextSection = Number(section) + 1
@@ -48,6 +48,8 @@ const TaskScreen = () => {
         return TruthTableTask
       case "subformula":
         return SubFormulaTask
+      case "Equivalence-Rules-Task":
+        return EliminationTask
       default:
         return TaskItem
     }
