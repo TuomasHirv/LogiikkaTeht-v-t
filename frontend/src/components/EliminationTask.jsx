@@ -1,3 +1,4 @@
+import React from "react"
 import { useEffect, useState } from "react"
 import { UseField } from "../hooks"
 import useUserStore, { useUserActions } from "../store"
@@ -10,17 +11,20 @@ import {
 
 const Line = ({ initValue, index, change }) => {
   const { reset: _reset, ...lineInput } = UseField("text", initValue)
-
+  if (index === 0) {
+    return <div className="flex bg-amber-100 text-black"> {initValue} </div>
+  }
   return (
-    <input
-      className="text-black"
-      {...lineInput}
-      onBlur={() => {
-        if (lineInput.value) {
-          change(lineInput.value, index)
-        }
-      }}
-    />
+    <div className="flex bg-white text-black">
+      <input
+        {...lineInput}
+        onBlur={() => {
+          if (lineInput.value) {
+            change(lineInput.value, index)
+          }
+        }}
+      />
+    </div>
   )
 }
 
@@ -65,6 +69,11 @@ const EliminationTask = ({ task }) => {
     }
 
     const answer = propositions.filter((prop) => prop.trim() !== "")
+    answer.splice(0, 1, task.question)
+    if (answer.length > 6) {
+      setFeedback({ corect: false, text: "input is too long" })
+      return
+    }
     await submitTaskAnswer({
       event,
       taskId,
@@ -101,12 +110,13 @@ const EliminationTask = ({ task }) => {
       <div className="relative w-fit">
         <div className="grid border border-black">
           {propositions.map((prop, index) => (
-            <Line
-              key={index}
-              initValue={prop}
-              index={index}
-              change={changePropositions}
-            />
+            <React.Fragment key={index}>
+              <Line
+                initValue={prop}
+                index={index}
+                change={changePropositions}
+              />
+            </React.Fragment>
           ))}
         </div>
         <div className="text-black absolute -right-14 border-black border-2 rounded bg-green-700 hover:bg-green-400">

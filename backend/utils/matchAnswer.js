@@ -1,18 +1,22 @@
 const db = require("../database/db")
 const matchText = require("./matchTree")
+const areLogicallyEquivalent = require("./equivalence")
+
+const normalizeProposition = (proposition) =>
+  proposition.replace(/\s+/g, "").toLowerCase()
+
 const matchPropositions = async (userAnswer, taskId) => {
   const q = `SELECT correct_answer FROM tasks WHERE id = $1`
   const databaseAnswer = await db.query(q, [taskId])
   const correctAnswerList = databaseAnswer.rows[0].correct_answer.answers
-  const cleanedUserAnswer = userAnswer.replace(/\s+/g, "").toLowerCase()
-  let found = false
-  correctAnswerList.forEach((ans) => {
-    const cleaned = ans.replace(/\s+/g, "").toLowerCase()
-    if (cleaned === cleanedUserAnswer) {
-      found = true
-    }
-  })
-  return found
+  const normalizedUserAnswer = normalizeProposition(userAnswer)
+
+  return correctAnswerList.some((answer) =>
+    areLogicallyEquivalent(
+      normalizeProposition(answer),
+      normalizedUserAnswer,
+    ),
+  )
 }
 const matchSubFormula = async (userObject, answerId) => {
   const q = `SELECT correct_answer FROM tasks WHERE id = $1`

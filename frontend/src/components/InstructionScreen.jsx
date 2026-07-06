@@ -8,7 +8,7 @@ const InstructionScreen = () => {
   if (!content) {
     return <p> NOT DONE YET</p>
   }
-  const moduleName = content.moduleName
+  const moduleName = content?.moduleName
   const taskLink = `http://localhost:5173/part/${id}/section/${section}/tasks/${moduleName}`
   return (
     <div className="max-w-5xl mx-auto p-6 bg-white shadow rounded-lg border border-gray-200 max-h-[90vh] overflow-y-auto">
@@ -52,13 +52,15 @@ const InstructionScreen = () => {
         }}
         className="text-white"
       >
-        <Link
-          to={taskLink}
-          className="bg-green-950 hover:bg-green-700 rounded shadow buttonStyle mt-6 inline-block text-2xl"
-        >
-          {" "}
-          Tasks{" "}
-        </Link>
+        {moduleName && (
+          <Link
+            to={taskLink}
+            className="bg-green-950 hover:bg-green-700 rounded shadow buttonStyle mt-6 inline-block text-2xl"
+          >
+            {" "}
+            Tasks{" "}
+          </Link>
+        )}
       </div>
     </div>
   )
