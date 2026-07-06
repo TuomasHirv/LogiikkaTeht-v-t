@@ -5,6 +5,8 @@ const initDB = require("./database/initDb")
 const taskRouter = require("./controllers/taskRouter")
 const answerRouter = require("./controllers/answerRouter")
 const userRouter = require("./controllers/userRouter")
+require("dotenv").config()
+
 app.use(cors())
 app.use(express.json())
 
