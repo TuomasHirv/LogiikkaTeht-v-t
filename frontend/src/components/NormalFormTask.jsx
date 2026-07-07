@@ -51,11 +51,11 @@ const NormalFormTask = ({ task }) => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-white shadow rounded-lg border border-gray-200 overflow-y-auto">
-      <div className="border border-black bg-gray-500 p-3">
+    <div className=" overflow-y-auto">
+      <div className="border border-black  p-3">
         <PreSetSubFormula text={activeTask.question} />
       </div>
-      <div className="py-2 pr-16 pb-12">
+      <div className="pr-9 pb-9 border-2 border-dotted w-fit rounded ">
         <TruthTable
           task={activeTask}
           start={activeTask.metadata.start}
@@ -68,14 +68,13 @@ const NormalFormTask = ({ task }) => {
         </div>
       )}
       <form onSubmit={submitAnswer} className="flex items-center gap-2">
-        <label className="text-black">Normal form:</label>
         <input
           {...normalFormInput}
-          className="bg-white text-black border-black border rounded px-3 py-2 text-lg min-w-[28rem]"
+          className="bg-white text-black border-black border rounded px-3 py-2 text-lg min-w-md"
         />
         <button
           type="submit"
-          className="border-black border-2 rounded hover:bg-green-700 text-black px-2 py-1"
+          className="border-black border-2 rounded bg-green-700 hover:bg-green-400 text-black px-2 py-1"
         >
           Submit answer
         </button>

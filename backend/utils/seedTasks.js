@@ -479,7 +479,7 @@ const tasks = [
     },
     metadata: {
       start: ["P", "Q", "R"],
-      end_goal: "Write the final answer in DNF.",
+      end_goal: "Write the final answer in CNF.",
     },
   },
   {
@@ -492,7 +492,7 @@ const tasks = [
     },
     metadata: {
       start: ["P", "Q", "R"],
-      end_goal: "Write the final answer in DNF.",
+      end_goal: "Write the final answer in CNF.",
     },
   },
   {
@@ -505,7 +505,7 @@ const tasks = [
     },
     metadata: {
       start: ["P", "Q", "R"],
-      end_goal: "Write the final answer in DNF.",
+      end_goal: "Write the final answer in CNF.",
     },
   },
   {
@@ -518,7 +518,7 @@ const tasks = [
     },
     metadata: {
       start: ["P", "Q", "R"],
-      end_goal: "Write the final answer in DNF.",
+      end_goal: "Write the final answer in CNF.",
     },
   },
   {
@@ -531,7 +531,7 @@ const tasks = [
     },
     metadata: {
       start: ["P", "Q", "R", "S"],
-      end_goal: "Write the final answer in DNF.",
+      end_goal: "Write the final answer in CNF.",
     },
   },
 ]

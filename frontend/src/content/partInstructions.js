@@ -177,7 +177,7 @@ export const partInstructions = {
         "Clause = A single disjunction of literals within a CNF formula",
         "Truth-Table Method = Deriving a normal form by reading DNF off the rows equal to 1 or CNF off the rows equal to 0 (with each literal's sign flipped) of a formula's truth table",
       ],
-      moduleName: "Normal-Forms-Task",
+      moduleName: "TT-method-Conversion",
     },
   },
 }

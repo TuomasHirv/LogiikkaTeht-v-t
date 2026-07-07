@@ -15,8 +15,8 @@ export const taskInstructions = {
     instruction:
       "Change these propositions to fit the given task. Only change one symbol at a time using one of the given rules. Make sure that the propositions are always equivalent",
   },
-  "Normal-Forms-Task": {
+  "TT-method-Conversion": {
     instruction:
-      "Build the truth table and write the normal form answer (DNF or CNF) in the extra field.",
+      "Build the truth table and write the normal form answer (DNF or CNF) in the extra field. Remember to create the answer from the truth table line by line.",
   },
 }
