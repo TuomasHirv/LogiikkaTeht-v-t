@@ -52,6 +52,15 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         taskId,
         response,
       )
+    case "Equivalence-method-Transform":
+      return await routerHelper.equivalenceFormHelper(
+        answer,
+        answerModuleName.answer,
+        userId,
+        taskId,
+        response,
+      )
+
     default:
       return response.status(400).json({ error: "Unsupported module" })
   }

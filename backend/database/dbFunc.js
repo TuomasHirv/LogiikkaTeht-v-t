@@ -96,6 +96,12 @@ const getAnswerAndModule = async (task_id) => {
       moduleName: rows.module_name,
     }
   }
+  if (rows.module_name === "Equivalence-method-Transform") {
+    return {
+      answer: [rows.correct_answer.remove, rows.correct_answer.form],
+      moduleName: rows.module_name,
+    }
+  }
   console.log("Module name isnt in presets:", rows.module_name)
 }
 

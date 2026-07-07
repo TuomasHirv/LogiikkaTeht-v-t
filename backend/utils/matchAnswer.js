@@ -154,10 +154,37 @@ function matchArrays(userClauses, correctAnswer) {
   return true
 }
 
+function checkIfCorrectForm(text, form) {
+  try {
+    if (form === "CNF") {
+      const tokens = formChecker.toTokens(text)
+      const result = formChecker.parseCNF(tokens, 0)
+      if (result) {
+        return true
+      }
+      return false
+    } else if (form === "DNF") {
+      const tokens = formChecker.toTokens(text)
+      const result = formChecker.parseDNF(tokens, 0)
+      if (result) {
+        return true
+      }
+      return false
+    }
+    console.log("Form doesnt conform to expectations:", form)
+    return false
+  } catch (error) {
+    console.log("Something is wrong with the text")
+    console.log(error)
+    return false
+  }
+}
+
 module.exports = {
   matchPropositions,
   matchSubFormula,
   matchTruthTable,
   matchEquivalenceAnswer,
   matchTTFormAnswer,
+  checkIfCorrectForm,
 }
