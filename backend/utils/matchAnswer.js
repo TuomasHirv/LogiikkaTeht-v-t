@@ -1,7 +1,7 @@
 const db = require("../database/db")
 const matchText = require("./matchTree")
 const areLogicallyEquivalent = require("./equivalence")
-
+const formChecker = require("../utils/textToForm")
 const normalizeProposition = (proposition) =>
   proposition.replace(/\s+/g, "").toLowerCase()
 
@@ -12,10 +12,7 @@ const matchPropositions = async (userAnswer, taskId) => {
   const normalizedUserAnswer = normalizeProposition(userAnswer)
 
   return correctAnswerList.some((answer) =>
-    areLogicallyEquivalent(
-      normalizeProposition(answer),
-      normalizedUserAnswer,
-    ),
+    areLogicallyEquivalent(normalizeProposition(answer), normalizedUserAnswer),
   )
 }
 const matchSubFormula = async (userObject, answerId) => {
@@ -111,8 +108,50 @@ const matchEquivalenceAnswer = (answerList, excluded) => {
       accepted,
     )
   }
-  console.log("Accepted by matchText?", accepted)
   return accepted
+}
+
+const matchTTFormAnswer = (text, form, correctAnswer) => {
+  try {
+    if (form === "CNF") {
+      const tokens = formChecker.toTokens(text)
+      const result = formChecker.parseCNF(tokens, 0)
+      const userClauses = result.clauses
+      return matchArrays(userClauses, correctAnswer)
+    } else if (form === "DNF") {
+      const tokens = formChecker.toTokens(text)
+      const result = formChecker.parseDNF(tokens, 0)
+      const userClauses = result.clauses
+      return matchArrays(userClauses, correctAnswer)
+    }
+    console.log("Form doesnt conform to expectations:", form)
+    return false
+  } catch (error) {
+    console.log("Something is wrong with the text")
+    console.log(error)
+    return false
+  }
+}
+
+function matchArrays(userClauses, correctAnswer) {
+  if (userClauses.length !== correctAnswer.length) {
+    return false
+  }
+  for (let i = 0; i < correctAnswer.length; i++) {
+    let found = false
+    const curr = [...correctAnswer[i]].sort()
+    for (let j = 0; j < userClauses.length; j++) {
+      const compared = [...userClauses[j]].sort()
+      if (JSON.stringify(compared) === JSON.stringify(curr)) {
+        found = true
+        break
+      }
+    }
+    if (!found) {
+      return false
+    }
+  }
+  return true
 }
 
 module.exports = {
@@ -120,4 +159,5 @@ module.exports = {
   matchSubFormula,
   matchTruthTable,
   matchEquivalenceAnswer,
+  matchTTFormAnswer,
 }

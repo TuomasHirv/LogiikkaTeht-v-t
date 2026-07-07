@@ -84,9 +84,39 @@ async function equivalenceRuleHelper(answer, rule, userId, taskId, response) {
   }
 }
 
+async function TTFormHelper(
+  answer,
+  correctAnswerAndForm,
+  userId,
+  taskId,
+  response,
+) {
+  try {
+    const accepted = evaluator.matchTTFormAnswer(
+      answer,
+      correctAnswerAndForm[1],
+      correctAnswerAndForm[0],
+    )
+    await dbFunc.insertAnswer(
+      userId,
+      taskId,
+      serializeSubmittedAnswer(answer),
+      accepted,
+    )
+    if (accepted) {
+      return response.status(200).json({ correct: true, answer: answer })
+    }
+    return response.status(200).json({ correct: false, answer: answer })
+  } catch (error) {
+    console.log(error)
+    return response.status(500).json({ error: "internal server error" })
+  }
+}
+
 module.exports = {
   wordsToPropositionsHelper,
   subFormulaHelper,
   truthTableHelper,
   equivalenceRuleHelper,
+  TTFormHelper,
 }

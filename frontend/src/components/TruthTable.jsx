@@ -13,31 +13,32 @@ const TruthTable = ({ task, start, showSubmitButton = true }) => {
   const { addAnswer } = useUserActions()
   const savedAnswer = useUserStore((state) => state.answers[task.id])
   const [feedback, setFeedback] = useState(null)
-  if (savedAnswer) {
-    console.log(savedAnswer)
-  }
 
   const [inputFields, setInputFields] = useState(() =>
     start.map((str) => [str, "", "", "", ""]),
   )
   useEffect(() => {
-    const savedFeedback = buildSavedAnswerFeedback(savedAnswer)
-    if (!savedFeedback) {
-      return
-    }
+    if (showSubmitButton) {
+      const savedFeedback = buildSavedAnswerFeedback(savedAnswer)
+      if (!savedFeedback) {
+        return
+      }
 
-    setFeedback(savedFeedback)
-    setInputFields(savedAnswer.submitted_answer)
+      setFeedback(savedFeedback)
+      setInputFields(savedAnswer.submitted_answer)
+    }
   }, [task.id, savedAnswer])
 
   const submitAnswer = async (event) => {
-    await submitTaskAnswer({
-      event,
-      taskId: task.id,
-      submittedAnswer: inputFields,
-      addAnswer,
-      setFeedback,
-    })
+    if (showSubmitButton) {
+      await submitTaskAnswer({
+        event,
+        taskId: task.id,
+        submittedAnswer: inputFields,
+        addAnswer,
+        setFeedback,
+      })
+    }
   }
 
   const fieldRefs = useRef({})

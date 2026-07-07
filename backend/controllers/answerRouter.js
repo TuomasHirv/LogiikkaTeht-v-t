@@ -44,6 +44,14 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         taskId,
         response,
       )
+    case "TT-method-Conversion":
+      return await routerHelper.TTFormHelper(
+        answer,
+        answerModuleName.answer,
+        userId,
+        taskId,
+        response,
+      )
     default:
       return response.status(400).json({ error: "Unsupported module" })
   }

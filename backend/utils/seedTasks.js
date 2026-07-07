@@ -435,7 +435,11 @@ const tasks = [
     module_name: "TT-method-Conversion",
     question: "(P ∨ Q) ∧ R",
     correct_answer: {
-      groups: ["(P ∧ Q ∧ R)", "(P ∧ ¬Q ∧ R)", "(¬P ∧ Q ∧ R)"],
+      groups: [
+        ["P", "Q", "R"],
+        ["P", "¬Q", "R"],
+        ["¬P", "Q", "R"],
+      ],
       form: "DNF",
     },
     metadata: {
@@ -448,7 +452,10 @@ const tasks = [
     module_name: "TT-method-Conversion",
     question: "P ∧ (Q ↔ R)",
     correct_answer: {
-      groups: ["(P ∧ Q ∧ R)", "(P ∧ ¬Q ∧ ¬R)"],
+      groups: [
+        ["P", "Q", "R"],
+        ["P", "¬Q", "¬R"],
+      ],
       form: "DNF",
     },
     metadata: {
@@ -461,7 +468,12 @@ const tasks = [
     module_name: "TT-method-Conversion",
     question: "(P ∨ ¬Q) ∧ (Q ∨ R)",
     correct_answer: {
-      groups: ["(P ∧ Q ∧ R)", "(P ∧ Q ∧ ¬R), (P ∧ ¬Q ∧ R),  (¬P ∧ ¬Q ∧ R)"],
+      groups: [
+        ["P", "Q", "R"],
+        ["P", "Q", "¬R"],
+        ["P", "¬Q", "R"],
+        ["¬P", "¬Q", "R"],
+      ],
       form: "DNF",
     },
     metadata: {
@@ -474,7 +486,7 @@ const tasks = [
     module_name: "TT-method-Conversion",
     question: "P → (Q ∨ R)",
     correct_answer: {
-      groups: ["(¬P ∨ Q ∨ R)"],
+      groups: [["¬P", "Q", "R"]],
       form: "CNF",
     },
     metadata: {
@@ -487,7 +499,11 @@ const tasks = [
     module_name: "TT-method-Conversion",
     question: "P ∨ (Q ∧ R)",
     correct_answer: {
-      groups: ["(P ∨ ¬Q ∨ R)", "(P ∨ Q ∨ ¬R)", "(P ∨ Q ∨ R)"],
+      groups: [
+        ["P", "¬Q,", "R)"],
+        ["P", "Q", "¬R"],
+        ["P", "Q", "R"],
+      ],
       form: "CNF",
     },
     metadata: {
@@ -500,7 +516,11 @@ const tasks = [
     module_name: "TT-method-Conversion",
     question: "P ∨ (Q ∧ R)",
     correct_answer: {
-      groups: ["(P ∨ ¬Q ∨ R)", "(P ∨ Q ∨ ¬R)", "(P ∨ Q ∨ R)"],
+      groups: [
+        ["P", "¬Q", "R"],
+        ["P", "Q", "¬R)"],
+        ["P", "Q", "R"],
+      ],
       form: "CNF",
     },
     metadata: {
@@ -513,7 +533,10 @@ const tasks = [
     module_name: "TT-method-Conversion",
     question: "(P ↔ Q) ∨ R",
     correct_answer: {
-      groups: ["(¬P ∨ Q ∨ R)", "(P ∨ ¬Q ∨ R)"],
+      groups: [
+        ["¬P", "Q", "R"],
+        ["P", "¬Q", "R"],
+      ],
       form: "CNF",
     },
     metadata: {
@@ -526,7 +549,11 @@ const tasks = [
     module_name: "TT-method-Conversion",
     question: "(P ∨ Q) → (R ∨ S)",
     correct_answer: {
-      groups: ["(¬P ∨ ¬Q ∨ R ∨ S)", "(¬P ∨ Q ∨ R ∨ S)", "(P ∨ ¬Q ∨ R ∨ S)"],
+      groups: [
+        ["¬P", "¬Q", "R", "S"],
+        ["¬P", "Q", "R", "S"],
+        ["P", "¬Q", "R", "S)"],
+      ],
       form: "CNF",
     },
     metadata: {

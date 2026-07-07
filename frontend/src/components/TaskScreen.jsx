@@ -7,7 +7,7 @@ import TaskItem from "./TaskItem"
 import SubFormulaTask from "./SubFormulaTask"
 import TruthTableTask from "./TruthTableTask"
 import EliminationTask from "./EliminationTask"
-import NormalFormTask, { PRESET_NORMAL_FORM_TASK } from "./NormalFormTask"
+import NormalFormTask from "./NormalFormTask"
 const TaskScreen = () => {
   const { moduleName, id, section } = useParams()
   const nextSection = Number(section) + 1
@@ -41,14 +41,6 @@ const TaskScreen = () => {
   if (loading) {
     return <h1>Module: {moduleName} </h1>
   }
-
-  const presetTasksByModule = {
-    "Normal-Forms-Task": [PRESET_NORMAL_FORM_TASK],
-  }
-  const tasksToRender = tasks.length
-    ? tasks
-    : (presetTasksByModule[moduleName] ?? [])
-
   const getTaskComponent = () => {
     switch (moduleName) {
       case "words-to-propositions":
@@ -77,7 +69,7 @@ const TaskScreen = () => {
         {taskInstructions[moduleName]?.instruction ?? "No instructions found."}
       </p>
 
-      {tasksToRender.map((task, index) => (
+      {tasks.map((task, index) => (
         <div
           key={task.id || index}
           className={

@@ -7,18 +7,8 @@ import { submitTaskAnswer } from "../hooks/submitAnswer"
 import AnswerFeedback from "./AnswerFeedback"
 import useUserStore, { useUserActions } from "../store"
 
-export const PRESET_NORMAL_FORM_TASK = {
-  id: "preset-normal-form-task",
-  question: "P ∧ (Q ∨ R)",
-  metadata: {
-    start: ["P", "Q", "R"],
-    end_goal: "Write the final answer in DNF.",
-  },
-}
-
 const NormalFormTask = ({ task }) => {
-  const activeTask = task || PRESET_NORMAL_FORM_TASK
-  const taskId = activeTask.id
+  const taskId = task.id
   const { addAnswer } = useUserActions()
   const savedAnswer = useUserStore((state) => state.answers[taskId])
   const { reset: _reset, ...normalFormInput } = UseField("text")
@@ -53,18 +43,18 @@ const NormalFormTask = ({ task }) => {
   return (
     <div className=" overflow-y-auto">
       <div className="border border-black  p-3">
-        <PreSetSubFormula text={activeTask.question} />
+        <PreSetSubFormula text={task.question} />
       </div>
       <div className="pr-9 pb-9 border-2 border-dotted w-fit rounded ">
         <TruthTable
-          task={activeTask}
-          start={activeTask.metadata.start}
+          task={task}
+          start={task.metadata.start}
           showSubmitButton={false}
         />
       </div>
-      {activeTask?.metadata?.end_goal && (
+      {task?.metadata?.end_goal && (
         <div className="border border-dotted border-black rounded text-black w-fit mb-2 px-2 py-1">
-          {activeTask.metadata.end_goal}
+          {task.metadata.end_goal}
         </div>
       )}
       <form onSubmit={submitAnswer} className="flex items-center gap-2">

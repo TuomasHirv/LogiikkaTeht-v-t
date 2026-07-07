@@ -8,7 +8,8 @@
     "backend": "cd backend && npm start",
     "frontend": "cd frontend && npm run dev",
     "dev": "npm run docker:up && concurrently \"npm run backend\" \"npm run frontend\"",
-    "test": "npm --prefix backend test"
+    "test": "npm --prefix backend test",
+    "seed": "npm --prefix backend seed"
   },
   "repository": {
     "type": "git",
