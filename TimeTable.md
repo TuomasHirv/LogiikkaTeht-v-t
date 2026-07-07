@@ -15,4 +15,4 @@ Tasks is a simple description of what has been completed and doesn't necessarily
 | 04.07 |         Tried to figure out how to implement equivalence tasks. Fixed stuff         |    5 |                  |
 | 05.07 |            Created equivalence tasks. Acceptance criteria was difficult.            |    7 | Part 1 is in MVP |
 | 06.07 |                           Made some refractoring on files                           |    2 |                  |
-| 07.07 |             +proposition -> CNF using Truth Tables. Made tests and such             |    7 | Part 2 started   |
+| 07.07 |    +proposition -> CNF using Truth Tables. Also now Equivalence transformations     |  8.5 | Part 2 started   |
