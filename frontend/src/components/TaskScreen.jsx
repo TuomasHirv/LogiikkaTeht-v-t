@@ -7,6 +7,7 @@ import TaskItem from "./TaskItem"
 import SubFormulaTask from "./SubFormulaTask"
 import TruthTableTask from "./TruthTableTask"
 import EliminationTask from "./EliminationTask"
+import NormalFormTask, { PRESET_NORMAL_FORM_TASK } from "./NormalFormTask"
 const TaskScreen = () => {
   const { moduleName, id, section } = useParams()
   const nextSection = Number(section) + 1
@@ -40,6 +41,14 @@ const TaskScreen = () => {
   if (loading) {
     return <h1>Module: {moduleName} </h1>
   }
+
+  const presetTasksByModule = {
+    "Normal-Forms-Task": [PRESET_NORMAL_FORM_TASK],
+  }
+  const tasksToRender = tasks.length
+    ? tasks
+    : (presetTasksByModule[moduleName] ?? [])
+
   const getTaskComponent = () => {
     switch (moduleName) {
       case "words-to-propositions":
@@ -50,6 +59,8 @@ const TaskScreen = () => {
         return SubFormulaTask
       case "Equivalence-Rules-Task":
         return EliminationTask
+      case "Normal-Forms-Task":
+        return NormalFormTask
       default:
         return TaskItem
     }
@@ -63,14 +74,15 @@ const TaskScreen = () => {
       </h2>
 
       <p className="text-black w-fit text-xl border-2 border-dotted">
-        {taskInstructions[moduleName].instruction}
+        {taskInstructions[moduleName]?.instruction ?? "No instructions found."}
       </p>
 
-      {tasks.map((task, index) => (
+      {tasksToRender.map((task, index) => (
         <div
           key={task.id || index}
           className={
-            moduleName === "Truth-Table-Task"
+            moduleName === "Truth-Table-Task" ||
+            moduleName === "Normal-Forms-Task"
               ? ""
               : "bg-gray-500 p-3 border-black border-2"
           }

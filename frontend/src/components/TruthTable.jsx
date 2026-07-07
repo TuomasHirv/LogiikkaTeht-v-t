@@ -9,7 +9,7 @@ import { buildSavedAnswerFeedback } from "../hooks/savedAnswer"
   /* Mapping of input fields and using arrows to navigate the array are AI coded  */
 }
 
-const TruthTable = ({ task, start }) => {
+const TruthTable = ({ task, start, showSubmitButton = true }) => {
   const { addAnswer } = useUserActions()
   const savedAnswer = useUserStore((state) => state.answers[task.id])
   const [feedback, setFeedback] = useState(null)
@@ -117,9 +117,11 @@ const TruthTable = ({ task, start }) => {
           )),
         )}
       </div>
-      <div className="text-black absolute -right-14 border-black border-2 rounded hover:bg-green-700">
-        <button onClick={submitAnswer}>Submit</button>
-      </div>
+      {showSubmitButton && (
+        <div className="text-black absolute -right-14 border-black border-2 rounded hover:bg-green-700">
+          <button onClick={submitAnswer}>Submit</button>
+        </div>
+      )}
       <button
         onClick={resetFields}
         className="absolute right-0  bg-red-500 text-black border-black border-2 rounded hover:bg-red-700"

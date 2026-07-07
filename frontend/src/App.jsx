@@ -18,7 +18,7 @@ import NavBar from "./components/NavBar"
 import LoginScreen from "./components/LoginScreen"
 import RegisterScreen from "./components/RegisterScreen"
 import InstructionScreen from "./components/InstructionScreen"
-import EliminationTask from "./components/EliminationTask"
+import NormalFormTask from "./components/NormalFormTask"
 function App() {
   const token = useUserStore((state) => state.token)
   const { initialize } = useUserActions()
@@ -43,7 +43,7 @@ function App() {
             path="/part/:id/section/:section"
             element={<InstructionScreen />}
           />
-          <Route path="/testing" element={<EliminationTask />} />
+          <Route path="/testing" element={<NormalFormTask />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

@@ -15,25 +15,31 @@ const NavBar = () => {
         </Link>
         <Link to="/part/1/section/1" className="nav-btn-primary">
           {" "}
-          Part 1{" "}
+          Intro{" "}
         </Link>
-        {!user ? (
-          <div style={{ display: "flex", gap: "0.75rem" }}>
-            <Link to="/login" className="nav-btn-primary">
+        <Link to="/part/2/section/1" className="nav-btn-primary">
+          {" "}
+          Resolution method{" "}
+        </Link>
+        <div className="flex right">
+          {!user ? (
+            <div style={{ display: "flex", gap: "0.75rem" }}>
+              <Link to="/login" className="nav-btn-primary">
+                {" "}
+                Login{" "}
+              </Link>
+              <Link to="/register" className="nav-btn-primary">
+                {" "}
+                Register{" "}
+              </Link>
+            </div>
+          ) : (
+            <button className="nav-btn-primary" onClick={logoutUser}>
               {" "}
-              Login{" "}
-            </Link>
-            <Link to="/register" className="nav-btn-primary">
-              {" "}
-              Register{" "}
-            </Link>
-          </div>
-        ) : (
-          <button className="nav-btn-primary" onClick={logoutUser}>
-            {" "}
-            Log out
-          </button>
-        )}
+              Log out
+            </button>
+          )}
+        </div>
       </div>
     </nav>
   )

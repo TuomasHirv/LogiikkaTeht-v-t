@@ -1,3 +1,4 @@
+require("dotenv").config()
 const db = require("../database/db")
 // I have designed the database structure my self. Many of the tasks are AI-generated.
 const tasks = [
@@ -427,6 +428,110 @@ const tasks = [
     correct_answer: { remove: ["→", "↔"] },
     metadata: {
       end_goal: "Remove all → (implications) and ↔ (biconditionals)",
+    },
+  },
+  {
+    type: "DNF-to-CNF",
+    module_name: "TT-method-Conversion",
+    question: "(P ∨ Q) ∧ R",
+    correct_answer: {
+      groups: ["(P ∧ Q ∧ R)", "(P ∧ ¬Q ∧ R)", "(¬P ∧ Q ∧ R)"],
+      form: "DNF",
+    },
+    metadata: {
+      start: ["P", "Q", "R"],
+      end_goal: "Write the final answer in DNF.",
+    },
+  },
+  {
+    type: "DNF-to-CNF",
+    module_name: "TT-method-Conversion",
+    question: "P ∧ (Q ↔ R)",
+    correct_answer: {
+      groups: ["(P ∧ Q ∧ R)", "(P ∧ ¬Q ∧ ¬R)"],
+      form: "DNF",
+    },
+    metadata: {
+      start: ["P", "Q", "R"],
+      end_goal: "Write the final answer in DNF.",
+    },
+  },
+  {
+    type: "DNF-to-CNF",
+    module_name: "TT-method-Conversion",
+    question: "(P ∨ ¬Q) ∧ (Q ∨ R)",
+    correct_answer: {
+      groups: ["(P ∧ Q ∧ R)", "(P ∧ Q ∧ ¬R), (P ∧ ¬Q ∧ R),  (¬P ∧ ¬Q ∧ R)"],
+      form: "DNF",
+    },
+    metadata: {
+      start: ["P", "Q", "R"],
+      end_goal: "Write the final answer in DNF.",
+    },
+  },
+  {
+    type: "DNF-to-CNF",
+    module_name: "TT-method-Conversion",
+    question: "P → (Q ∨ R)",
+    correct_answer: {
+      groups: ["(¬P ∨ Q ∨ R)"],
+      form: "CNF",
+    },
+    metadata: {
+      start: ["P", "Q", "R"],
+      end_goal: "Write the final answer in DNF.",
+    },
+  },
+  {
+    type: "DNF-to-CNF",
+    module_name: "TT-method-Conversion",
+    question: "P ∨ (Q ∧ R)",
+    correct_answer: {
+      groups: ["(P ∨ ¬Q ∨ R)", "(P ∨ Q ∨ ¬R)", "(P ∨ Q ∨ R)"],
+      form: "CNF",
+    },
+    metadata: {
+      start: ["P", "Q", "R"],
+      end_goal: "Write the final answer in DNF.",
+    },
+  },
+  {
+    type: "DNF-to-CNF",
+    module_name: "TT-method-Conversion",
+    question: "P ∨ (Q ∧ R)",
+    correct_answer: {
+      groups: ["(P ∨ ¬Q ∨ R)", "(P ∨ Q ∨ ¬R)", "(P ∨ Q ∨ R)"],
+      form: "CNF",
+    },
+    metadata: {
+      start: ["P", "Q", "R"],
+      end_goal: "Write the final answer in DNF.",
+    },
+  },
+  {
+    type: "DNF-to-CNF",
+    module_name: "TT-method-Conversion",
+    question: "(P ↔ Q) ∨ R",
+    correct_answer: {
+      groups: ["(¬P ∨ Q ∨ R)", "(P ∨ ¬Q ∨ R)"],
+      form: "CNF",
+    },
+    metadata: {
+      start: ["P", "Q", "R"],
+      end_goal: "Write the final answer in DNF.",
+    },
+  },
+  {
+    type: "DNF-to-CNF",
+    module_name: "TT-method-Conversion",
+    question: "(P ∨ Q) → (R ∨ S)",
+    correct_answer: {
+      groups: ["(¬P ∨ ¬Q ∨ R ∨ S)", "(¬P ∨ Q ∨ R ∨ S)", "(P ∨ ¬Q ∨ R ∨ S)"],
+      form: "CNF",
+    },
+    metadata: {
+      start: ["P", "Q", "R", "S"],
+      end_goal: "Write the final answer in DNF.",
     },
   },
 ]
