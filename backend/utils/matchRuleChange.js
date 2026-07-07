@@ -109,10 +109,88 @@ function matchDeMorgan(oldNode, newNode) {
 
   return false
 }
+function matchOrDistribution(oldNode, newNode) {
+  if (oldNode.type !== "OR") return false
+
+  const [left, right] = oldNode.children
+
+  // A ∨ (B ∧ C): the AND can be on either side of the OR
+  let A, B, C
+  if (right && right.type === "AND") {
+    A = left
+    ;[B, C] = right.children
+  } else if (left && left.type === "AND") {
+    A = right
+    ;[B, C] = left.children
+  } else {
+    return false
+  }
+
+  if (newNode.type !== "AND") return false
+  const [nLeft, nRight] = newNode.children
+  if (!nLeft || !nRight || nLeft.type !== "OR" || nRight.type !== "OR")
+    return false
+
+  // (A ∨ B) ∧ (A ∨ C), allowing B/C to land in either order
+  const forward =
+    areEqual(nLeft.children[0], A) &&
+    areEqual(nLeft.children[1], B) &&
+    areEqual(nRight.children[0], A) &&
+    areEqual(nRight.children[1], C)
+
+  const swapped =
+    areEqual(nLeft.children[0], A) &&
+    areEqual(nLeft.children[1], C) &&
+    areEqual(nRight.children[0], A) &&
+    areEqual(nRight.children[1], B)
+
+  return forward || swapped
+}
+
+function matchAndDistribution(oldNode, newNode) {
+  if (oldNode.type !== "AND") return false
+
+  const [left, right] = oldNode.children
+
+  // A ∧ (B ∨ C): the OR can be on either side of the AND
+  let A, B, C
+  if (right && right.type === "OR") {
+    A = left
+    ;[B, C] = right.children
+  } else if (left && left.type === "OR") {
+    A = right
+    ;[B, C] = left.children
+  } else {
+    return false
+  }
+
+  if (newNode.type !== "OR") return false
+  const [nLeft, nRight] = newNode.children
+  if (!nLeft || !nRight || nLeft.type !== "AND" || nRight.type !== "AND")
+    return false
+
+  // (A ∧ B) ∨ (A ∧ C), allowing B/C to land in either order
+  const forward =
+    areEqual(nLeft.children[0], A) &&
+    areEqual(nLeft.children[1], B) &&
+    areEqual(nRight.children[0], A) &&
+    areEqual(nRight.children[1], C)
+
+  const swapped =
+    areEqual(nLeft.children[0], A) &&
+    areEqual(nLeft.children[1], C) &&
+    areEqual(nRight.children[0], A) &&
+    areEqual(nRight.children[1], B)
+
+  return forward || swapped
+}
+
 module.exports = {
   matchImplicationRule,
   matchDoubleNegation,
   matchImplicationElimination,
   matchBiconditionalElimination,
   matchDeMorgan,
+  matchOrDistribution,
+  matchAndDistribution,
 }

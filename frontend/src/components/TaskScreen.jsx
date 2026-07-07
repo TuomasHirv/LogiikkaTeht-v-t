@@ -51,6 +51,8 @@ const TaskScreen = () => {
         return SubFormulaTask
       case "Equivalence-Rules-Task":
         return EliminationTask
+      case "Equivalence-method-Transform":
+        return EliminationTask
       case "TT-method-Conversion":
         return NormalFormTask
       default:

@@ -47,7 +47,9 @@ function isSingleStepValid(tree1, tree2) {
     ruleCheck.matchBiconditionalElimination(oldNode, newNode) ||
     ruleCheck.matchDoubleNegation(oldNode, newNode) ||
     ruleCheck.matchImplicationElimination(oldNode, newNode) ||
-    ruleCheck.matchDeMorgan(oldNode, newNode)
+    ruleCheck.matchDeMorgan(oldNode, newNode) ||
+    ruleCheck.matchAndDistribution ||
+    ruleCheck.matchOrDistribution
   )
 }
 

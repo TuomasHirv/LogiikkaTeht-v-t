@@ -13,10 +13,14 @@ export const taskInstructions = {
   },
   "Equivalence-Rules-Task": {
     instruction:
-      "Change these propositions to fit the given task. Only change one symbol at a time using one of the given rules. Make sure that the propositions are always equivalent",
+      "Change these propositions to fit the given task. Only apply one instance of a rule at a time. Make sure that the propositions are always equivalent",
   },
   "TT-method-Conversion": {
     instruction:
       "Build the truth table and write the normal form answer (DNF or CNF) in the extra field. Remember to create the answer from the truth table line by line.",
+  },
+  "Equivalence-method-Transform": {
+    instruction:
+      "Change these propositions to expected normal form. Only apply one instance of a rule at a time. Make sure that the propositions are always equivalent. Remember rules of distribution",
   },
 }
