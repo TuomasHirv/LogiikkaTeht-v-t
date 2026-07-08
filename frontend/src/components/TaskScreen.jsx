@@ -8,6 +8,8 @@ import SubFormulaTask from "./SubFormulaTask"
 import TruthTableTask from "./TruthTableTask"
 import EliminationTask from "./EliminationTask"
 import NormalFormTask from "./NormalFormTask"
+import ResolutionTask from "./ResolutionTask"
+
 const TaskScreen = () => {
   const { moduleName, id, section } = useParams()
   const nextSection = Number(section) + 1
@@ -55,6 +57,8 @@ const TaskScreen = () => {
         return EliminationTask
       case "TT-method-Conversion":
         return NormalFormTask
+      case "Resolution-Introduction":
+        return ResolutionTask
       default:
         return TaskItem
     }

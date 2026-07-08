@@ -23,4 +23,8 @@ export const taskInstructions = {
     instruction:
       "Change these propositions to expected normal form. Only apply one instance of a rule at a time. Make sure that the propositions are always equivalent. Remember rules of distribution",
   },
+  "Resolution-Introduction": {
+    instruction:
+      "Remember to use the clause format like: {A, ¬B} (assumption) or after a resolution step: {A, ¬B} (lines: 1,2) to reference where that step takes place.",
+  },
 }

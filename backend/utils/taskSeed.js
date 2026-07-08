@@ -607,6 +607,60 @@ const tasks = [
     correct_answer: { remove: ["→", "↔"], form: "CNF" },
     metadata: { end_goal: "Create CNF from this" },
   },
+  {
+    type: "Resolution-task",
+    module_name: "Resolution-Introduction",
+    question: "(P) ∧ (¬P)",
+    correct_answer: { empty: true, clauses: [] },
+  },
+  {
+    type: "Resolution-task",
+    module_name: "Resolution-Introduction",
+    question: "(P) ∧ (¬P ∨ Q)",
+    correct_answer: { empty: false, clauses: ["{P}", "{¬P, Q}", "{Q}"] },
+  },
+  {
+    type: "Resolution-task",
+    module_name: "Resolution-Introduction",
+    question: "(P) ∧ (¬P ∨ Q) ∧ (¬Q)",
+    correct_answer: { empty: true, clauses: [] },
+  },
+  {
+    type: "Resolution-task",
+    module_name: "Resolution-Introduction",
+    question: "(¬P ∨ Q) ∧ (¬Q ∨ R) ∧ (P)",
+    correct_answer: {
+      empty: false,
+      clauses: ["{¬P, Q}", "{¬Q, R}", "{P}", "{Q}", "{R}"],
+    },
+  },
+  {
+    type: "Resolution-task",
+    module_name: "Resolution-Introduction",
+    question: "(¬P ∨ Q) ∧ (¬Q ∨ R) ∧ (P) ∧ (¬R)",
+    correct_answer: { empty: true, clauses: [] },
+  },
+  {
+    type: "Resolution-task",
+    module_name: "Resolution-Introduction",
+    question: "(P ∨ Q) ∧ (¬P ∨ Q) ∧ (¬Q)",
+    correct_answer: { empty: true, clauses: [] },
+  },
+  {
+    type: "Resolution-task",
+    module_name: "Resolution-Introduction",
+    question: "(P ∨ Q ∨ R) ∧ (¬P ∨ Q) ∧ (¬Q) ∧ (¬R ∨ P)",
+    correct_answer: { empty: true, clauses: [] },
+  },
+  {
+    type: "Resolution-task",
+    module_name: "Resolution-Introduction",
+    question: "(P ∨ Q) ∧ (¬Q ∨ R) ∧ (¬P ∨ R)",
+    correct_answer: {
+      empty: false,
+      clauses: ["{P, Q}", "{¬Q, R}", "{¬P, R}", "{P, R}", "{Q, R}", "{R}"],
+    },
+  },
 ]
 
 module.exports = tasks
