@@ -44,7 +44,7 @@ describe("Testing ValidateResolution", () => {
 
     it("parses the empty clause", () => {
       const result = VRfunc.parseClauseToSet("{}")
-      assert.equal(result.size, 0)
+      assert.equal(result.size, 1)
     })
 
     it("parses a single-literal clause", () => {
@@ -131,7 +131,7 @@ describe("Testing ValidateResolution", () => {
       const result = VRfunc.parseClauseList(list)
 
       assert.strictEqual(result.length, 1)
-      assert.deepStrictEqual([...result[0].clause], [])
+      assert.deepStrictEqual([...result[0].clause], ["∅"])
       assert.strictEqual(result[0].justification, "assumption")
     })
 
@@ -164,6 +164,90 @@ describe("Testing ValidateResolution", () => {
       const result = VRfunc.parseClauseList(list)
 
       assert.deepStrictEqual([...result[0].clause], ["¬P"])
+    })
+  })
+  describe("stepCheck", () => {
+    it("returns false for valid non-empty resolution", () => {
+      const ref1 = new Set(["A", "B"])
+      const ref2 = new Set(["¬A", "C"])
+      const result = new Set(["B", "C"])
+
+      assert.equal(VRfunc.stepCheck(result, ref1, ref2), false)
+    })
+
+    it("returns true when result is the empty set (∅)", () => {
+      const ref1 = new Set(["A"])
+      const ref2 = new Set(["¬A"])
+      const result = new Set(["∅"])
+
+      assert.equal(VRfunc.stepCheck(result, ref1, ref2), true)
+    })
+
+    it("throws if no literals were changed from ref1", () => {
+      const ref1 = new Set(["A"])
+      const ref2 = new Set(["¬A"])
+      const result = new Set(["A"])
+
+      assert.throws(
+        () => VRfunc.stepCheck(result, ref1, ref2),
+        /No literals were changed from ref1/,
+      )
+    })
+
+    it("throws if complement is missing", () => {
+      const ref1 = new Set(["A"])
+      const ref2 = new Set(["B"])
+      const result = new Set(["B"])
+
+      assert.throws(
+        () => VRfunc.stepCheck(result, ref1, ref2),
+        /Couldn't match complement/,
+      )
+    })
+
+    it("throws if empty set is present but step is invalid", () => {
+      const ref1 = new Set(["A"])
+      const ref2 = new Set(["B"]) // no complement
+      const result = new Set(["∅"])
+
+      assert.throws(() => VRfunc.stepCheck(result, ref1, ref2))
+    })
+  })
+  describe("validateResolutionSteps", () => {
+    it("counts assumptions correctly", () => {
+      const clauseList = [
+        { clause: new Set(["A"]), justification: "assumption" },
+        { clause: new Set(["B"]), justification: "assumption" },
+      ]
+
+      assert.equal(VRfunc.validateResolutionSteps(clauseList), 2)
+    })
+
+    it("handles a valid resolution that produces ∅", () => {
+      const clauseList = [
+        { clause: new Set(["A"]), justification: "assumption" }, // 0
+        { clause: new Set(["¬A"]), justification: "assumption" }, // 1
+        {
+          clause: new Set(["∅"]),
+          justification: [0, 1],
+        },
+      ]
+
+      // still just returns assumption count
+      assert.equal(VRfunc.validateResolutionSteps(clauseList), 2)
+    })
+
+    it("throws on invalid step even if ∅ is present", () => {
+      const clauseList = [
+        { clause: new Set(["A"]), justification: "assumption" },
+        { clause: new Set(["B"]), justification: "assumption" },
+        {
+          clause: new Set(["∅"]), // invalid derivation
+          justification: [0, 1],
+        },
+      ]
+
+      assert.throws(() => VRfunc.validateResolutionSteps(clauseList))
     })
   })
 })

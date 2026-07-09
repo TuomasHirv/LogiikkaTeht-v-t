@@ -180,6 +180,14 @@ function checkIfCorrectForm(text, form) {
   }
 }
 
+function matchResolutionTask(userList, assumptionCount, requiredClauses) {
+  try {
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
+
 module.exports = {
   matchPropositions,
   matchSubFormula,

@@ -52,8 +52,12 @@ function parseVariable(tokens, index) {
 }
 
 function parseClauseToSet(clauseText) {
-  const inner = clauseText.trim().slice(1, -1).trim()
-  if (inner === "") return new Set()
+  const cleaned = clauseText.replace(/\s+/g, "")
+  if (cleaned === "∅") {
+    return new Set("∅")
+  }
+  const inner = cleaned.slice(1, -1)
+  if (inner === "") return new Set("∅")
 
   const literals = inner.split(",").map((part) => {
     const tokens = toTokens(part.trim())
@@ -102,10 +106,110 @@ function parseClauseList(listInput) {
   return clauseList
 }
 
+const normalize = (lit) => (lit.startsWith("¬") ? lit.slice(1) : lit)
+
+function stepCheck(result, ref1, ref2) {
+  let diff = 0
+  let changedLiteral = null
+  let emptySetFound = false
+  if (result.has("∅")) {
+    emptySetFound = true
+  }
+
+  for (const literal of ref1) {
+    if (result.has(literal)) continue
+
+    if (diff > 1) {
+      throw new Error("Too many differences in a single step")
+    }
+    if (literal.startsWith("¬")) {
+      if (!ref2.has(literal.slice(1))) {
+        throw new Error(
+          `Couldn't match complement for ${literal} in ${[...ref2]}`,
+        )
+      }
+    } else {
+      if (!ref2.has("¬" + literal)) {
+        throw new Error(
+          `Couldn't match complement for ${literal} in ${[...ref2]}`,
+        )
+      }
+    }
+    if (changedLiteral === null) {
+      changedLiteral = literal
+    } else if (normalize(literal) !== normalize(changedLiteral)) {
+      throw new Error(
+        `Trying to change another literal ${literal} instead of ${changedLiteral}`,
+      )
+    }
+
+    diff++
+  }
+
+  if (diff === 0) {
+    throw new Error("No literals were changed from ref1")
+  }
+
+  diff = 0
+  for (const literal of ref2) {
+    if (result.has(literal)) continue
+
+    if (diff > 1) {
+      throw new Error("Too many differences in a single step")
+    }
+    if (normalize(literal) !== normalize(changedLiteral)) {
+      throw new Error(
+        `Trying to change another literal ${literal} instead of ${changedLiteral}`,
+      )
+    }
+    if (literal.startsWith("¬")) {
+      if (!ref1.has(literal.slice(1))) {
+        throw new Error(
+          `Couldn't match complement for ${literal} in ${[...ref1]}`,
+        )
+      }
+    } else {
+      if (!ref1.has("¬" + literal)) {
+        throw new Error(
+          `Couldn't match complement for ${literal} in ${[...ref1]}`,
+        )
+      }
+    }
+
+    diff++
+  }
+
+  if (diff === 0) {
+    throw new Error("No literals were changed from ref2")
+  }
+
+  return emptySetFound
+}
+
+function validateResolutionSteps(clauseList) {
+  let assumptionCount = 0
+  let i = 0
+  while (i < clauseList.length) {
+    const clause = clauseList[i]
+    if (clause.justification === "assumption") {
+      assumptionCount++
+      i++
+      continue
+    }
+    const ref1 = clauseList[clause.justification[0]].clause
+    const ref2 = clauseList[clause.justification[1]].clause
+    const acceptedStep = stepCheck(clause.clause, ref1, ref2)
+    i++
+  }
+  return assumptionCount
+}
+
 module.exports = {
   toTokens,
   parseClauseToSet,
   parseReferencedLines,
   parseUserClause,
   parseClauseList,
+  stepCheck,
+  validateResolutionSteps,
 }
