@@ -60,7 +60,8 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         taskId,
         response,
       )
-
+    case "Resolution-Introduction":
+      console.log("Received")
     default:
       return response.status(400).json({ error: "Unsupported module" })
   }

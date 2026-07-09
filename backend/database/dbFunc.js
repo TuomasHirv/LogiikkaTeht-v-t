@@ -77,32 +77,43 @@ const getAnswerAndModule = async (task_id) => {
 
   const info = await db.query(q, [task_id])
   const rows = info.rows[0]
-  console.log(rows)
-  if (rows.module_name === "words-to-propositions") {
-    return { answer: rows.correct_answer.answers, moduleName: rows.module_name }
+  switch (rows.module_name) {
+    case "words-to-propositions":
+      return {
+        answer: rows.correct_answer.answers,
+        moduleName: rows.module_name,
+      }
+    case "subformula":
+      return { answer: rows.correct_answer, moduleName: rows.module_name }
+    case "Truth-Table-Task":
+      return {
+        answer: rows.correct_answer.answer,
+        moduleName: rows.module_name,
+      }
+    case "Equivalence-Rules-Task":
+      return {
+        answer: rows.correct_answer.remove,
+        moduleName: rows.module_name,
+      }
+    case "TT-method-Conversion":
+      return {
+        answer: [rows.correct_answer.groups, rows.correct_answer.form],
+        moduleName: rows.module_name,
+      }
+    case "Equivalence-method-Transform":
+      return {
+        answer: [rows.correct_answer.remove, rows.correct_answer.form],
+        moduleName: rows.module_name,
+      }
+    case "Resolution-Introduction":
+      return {
+        answer: [rows.correct_answer.empty, rows.correct_answer.clauses],
+        moduleName: rows.module_name,
+      }
+    default:
+      console.log("Module name isnt in presets:", rows.module_name)
+      throw new Error("Module name isnt in presets:", rows.module_name)
   }
-  if (rows.module_name === "subformula") {
-    return { answer: rows.correct_answer, moduleName: rows.module_name }
-  }
-  if (rows.module_name === "Truth-Table-Task") {
-    return { answer: rows.correct_answer.answer, moduleName: rows.module_name }
-  }
-  if (rows.module_name === "Equivalence-Rules-Task") {
-    return { answer: rows.correct_answer.remove, moduleName: rows.module_name }
-  }
-  if (rows.module_name === "TT-method-Conversion") {
-    return {
-      answer: [rows.correct_answer.groups, rows.correct_answer.form],
-      moduleName: rows.module_name,
-    }
-  }
-  if (rows.module_name === "Equivalence-method-Transform") {
-    return {
-      answer: [rows.correct_answer.remove, rows.correct_answer.form],
-      moduleName: rows.module_name,
-    }
-  }
-  console.log("Module name isnt in presets:", rows.module_name)
 }
 
 module.exports = {

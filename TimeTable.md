@@ -16,3 +16,4 @@ Tasks is a simple description of what has been completed and doesn't necessarily
 | 05.07 |            Created equivalence tasks. Acceptance criteria was difficult.            |    7 | Part 1 is in MVP |
 | 06.07 |                           Made some refractoring on files                           |    2 |                  |
 | 07.07 |    +proposition -> CNF using Truth Tables. Also now Equivalence transformations     |  8.5 | Part 2 started   |
+| 08.07 |     Frontend for Res method. Difficulties in evaluating answers. Planned it out     |    4 |                  |
