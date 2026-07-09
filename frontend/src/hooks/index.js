@@ -19,6 +19,7 @@ export const UseField = (type, initValue = "") => {
       .replace(/\bsiis\b(\s+)/gi, "→ ")
       .replace(/<->(\s+)/g, "↔ ")
       .replace(/->(\s+)/g, "→ ")
+      .replace(/\{\s*\}/g, "∅")
   }
   const onChange = (event) => {
     const processedText = processInput(event.target.value)

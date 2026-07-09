@@ -181,7 +181,12 @@ function checkIfCorrectForm(text, form) {
   }
 }
 
-function matchResolutionTask(userList, assumptionCount, requiredClauses) {
+function matchResolutionTask(
+  userList,
+  assumptionCount,
+  requiredClauses,
+  correctAssumptions,
+) {
   try {
     console.log(
       "Users input:",
@@ -190,8 +195,13 @@ function matchResolutionTask(userList, assumptionCount, requiredClauses) {
       assumptionCount,
       "Clauses required:",
       requiredClauses,
+      "Correct assumptions:",
+      correctAssumptions,
     )
-    const clauseList = resolutionChecker.parseClauseList(userList)
+    const clauseList = resolutionChecker.parseClauseList(
+      userList,
+      correctAssumptions,
+    )
     console.log("CREATED LIST OF CLAUSES:", clauseList)
     const foundEmptyClause = resolutionChecker.validateResolutionSteps(
       clauseList,
@@ -207,13 +217,13 @@ function matchResolutionTask(userList, assumptionCount, requiredClauses) {
       requiredClauses.length === 1 && requiredClauses[0][0] === "∅"
 
     if (requiresEmpty) {
-      return foundEmptyClause && hasAllRequired
+      return { accepted: foundEmptyClause && hasAllRequired, text: "" }
     }
 
-    return hasAllRequired
+    return { accepted: hasAllRequired, text: "" }
   } catch (error) {
     console.log(error)
-    return false
+    return { accepted: false, text: error.text }
   }
 }
 function sameClause(setClause, arrClause) {

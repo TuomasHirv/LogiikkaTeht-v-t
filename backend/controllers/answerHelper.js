@@ -148,19 +148,21 @@ async function resolutionHelper(answer, reqClauses, userId, taskId, response) {
   try {
     const requiredClauses = reqClauses[0]
     const assumptionCount = reqClauses[1]
+    const correctAssumptions = reqClauses[2]
     console.log(reqClauses)
     const accepted = evaluator.matchResolutionTask(
       answer,
       assumptionCount,
       requiredClauses,
+      correctAssumptions,
     )
     await dbFunc.insertAnswer(
       userId,
       taskId,
       serializeSubmittedAnswer(answer),
-      accepted,
+      accepted.accepted,
     )
-    if (accepted) {
+    if (accepted.accepted) {
       return response.status(200).json({ correct: true, answer: answer })
     }
     return response.status(200).json({ correct: false, answer: answer })

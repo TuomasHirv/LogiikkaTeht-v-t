@@ -27,4 +27,7 @@ export const taskInstructions = {
     instruction:
       "Remember to use the clause format like: {A, ¬B} (assumption) or after a resolution step: {A, ¬B} (lines: 1,2) to reference where that step takes place.",
   },
+  "Resolution-Refutation": {
+    instruction: "Remember to use the clause format.",
+  },
 }

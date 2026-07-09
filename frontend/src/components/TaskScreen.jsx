@@ -59,6 +59,8 @@ const TaskScreen = () => {
         return NormalFormTask
       case "Resolution-Introduction":
         return ResolutionTask
+      case "Resolution-Refutation":
+        return ResolutionTask
       default:
         return TaskItem
     }

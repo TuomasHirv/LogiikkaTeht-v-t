@@ -691,6 +691,67 @@ const tasks = [
       ],
     },
   },
+  // 1 — Modus Ponens, holds, simplest possible refutation
+  {
+    type: "Resolution-task",
+    module_name: "Resolution-Refutation",
+    question: "Premises: (P) ∧ (¬P ∨ Q)\nProve: Q",
+    correct_answer: {
+      clauses: [["∅"]],
+      assumption_count: 3,
+      assumptions: [["P"], ["¬P", "Q"], ["¬Q"]],
+    },
+  },
+  {
+    type: "Resolution-task",
+    module_name: "Resolution-Refutation",
+    question: "Premises: (¬P ∨ Q) ∧ (¬Q ∨ R) ∧ (P)\nProve: R",
+    correct_answer: {
+      clauses: [["∅"]],
+      assumption_count: 4,
+      assumptions: [["¬P", "Q"], ["¬Q", "R"], ["P"], ["¬R"]],
+    },
+  },
+  {
+    type: "Resolution-task",
+    module_name: "Resolution-Refutation",
+    question: "Premises: (P ∨ Q) ∧ (¬P)\nProve: Q",
+    correct_answer: {
+      clauses: [["∅"]],
+      assumption_count: 3,
+      assumptions: [["P", "Q"], ["¬P"], ["¬Q"]],
+    },
+  },
+  {
+    type: "Resolution-task",
+    module_name: "Resolution-Refutation",
+    question: "Premises: (P) ∧ (Q)\nProve: ¬P",
+    correct_answer: {
+      clauses: [["P"], ["Q"]],
+      assumption_count: 3,
+      assumptions: [["P"], ["Q"], ["P"]],
+    },
+  },
+  {
+    type: "Resolution-task",
+    module_name: "Resolution-Refutation",
+    question: "Premises: (P ∨ Q) ∧ (¬P ∨ R) ∧ (¬Q ∨ R)\nProve: R",
+    correct_answer: {
+      clauses: [["∅"]],
+      assumption_count: 4,
+      assumptions: [["P", "Q"], ["¬P", "R"], ["¬Q", "R"], ["¬R"]],
+    },
+  },
+  {
+    type: "Resolution-task",
+    module_name: "Resolution-Refutation",
+    question: "Premises: (P ∨ Q) ∧ (R)\nProve: P",
+    correct_answer: {
+      clauses: [["Q"], ["R"], ["¬P"]],
+      assumption_count: 3,
+      assumptions: [["P", "Q"], ["R"], ["¬P"]],
+    },
+  },
 ]
 
 module.exports = tasks

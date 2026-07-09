@@ -23,7 +23,7 @@ function toTokens(clause) {
       continue
     }
     throw new Error(
-      `Invalid character "${ch}" at position ${i}. Only ∨, ∧, ¬, ( ) and letters are allowed.`,
+      `Invalid character "${ch}". Only ¬, { } and letters are allowed.`,
     )
   }
   return tokens
@@ -67,23 +67,36 @@ function parseClauseToSet(clauseText) {
   return new Set(literals)
 }
 
-function parseReferencedLines(justificationText) {
+function parseReferencedLines(justificationText, position) {
   const stripped = justificationText.slice(1, -1)
   if (stripped === "assumption") {
     return "assumption"
   }
   const correct = stripped.match(/\d+/g)
   if (!correct) {
-    throw new Error("Justification wasnt an assumption or a correct reference")
+    throw new Error(
+      `Justification wasnt an assumption or a correct reference ${stripped}`,
+    )
   }
   if (correct.length !== 2) {
     throw new Error("Justification was an incorrect length:", correct)
   }
   const referencedLines = correct.map(Number)
+  if (referencedLines[0] >= position || referencedLines[1] >= position) {
+    throw new Error("Referenced line has to be before the result")
+  }
   return referencedLines
 }
 
-function parseUserClause(input) {
+function sameClause(setClause, arrClause) {
+  if (setClause.size !== arrClause.length) return false
+  for (const lit of arrClause) {
+    if (!setClause.has(lit)) return false
+  }
+  return true
+}
+
+function parseUserClause(input, correctAssumptions, position) {
   const clean = input.replace(/\s/g, "")
   const match = clean.match(/^(\{.*?\}|∅)\s*(\(.*?\))$/)
   if (!match) {
@@ -92,15 +105,26 @@ function parseUserClause(input) {
   const clausePart = match[1]
   const justificationPart = match[2]
   const clauseSet = parseClauseToSet(clausePart)
-  const referencedLines = parseReferencedLines(justificationPart)
+  const referencedLines = parseReferencedLines(justificationPart, position)
+  if (referencedLines === "assumption") {
+    const isValidAssumption = correctAssumptions.some((assumption) =>
+      sameClause(clauseSet, assumption),
+    )
+
+    if (!isValidAssumption) {
+      throw new Error(
+        `Clause ${[...clauseSet].join(",")} is not a valid assumption`,
+      )
+    }
+  }
   return { clause: clauseSet, justification: referencedLines }
 }
 
-function parseClauseList(listInput) {
+function parseClauseList(listInput, correctAssumptions) {
   const clauseList = []
   let i = 0
   while (i < listInput.length) {
-    clauseList.push(parseUserClause(listInput[i]))
+    clauseList.push(parseUserClause(listInput[i], correctAssumptions, i))
     i++
   }
   return clauseList
@@ -215,7 +239,7 @@ function validateResolutionSteps(clauseList, allowedAssumptionsCount) {
     foundEmptyClause = stepCheck(clause.clause, ref1, ref2)
     i++
   }
-  if (assumptionCount > allowedAssumptionsCount) {
+  if (assumptionCount !== allowedAssumptionsCount) {
     throw new Error("Too many assumptions used")
   }
   return foundEmptyClause

@@ -92,7 +92,7 @@ const ResolutionTask = ({ task }) => {
     <div>
       <div className=" rounded text-xl w-fit">{task?.question}</div>
       <div className="bg-gray-500 rounded text-black w-fit">
-        Either create an empty clause or create all possible clauses from the
+        Either create an empty clause or create all meaningful clauses from the
         given proposition.
       </div>
       <div className="relative w-fit">
