@@ -109,10 +109,23 @@ function parseClauseList(listInput) {
 const normalize = (lit) => (lit.startsWith("¬") ? lit.slice(1) : lit)
 
 function stepCheck(result, ref1, ref2) {
+  const combined = new Set([...ref1, ...ref2])
+
+  for (const literal of result) {
+    if (literal === "∅") continue
+
+    if (!combined.has(literal)) {
+      throw new Error(`Invalid literal ${literal} introduced in result`)
+    }
+  }
+
   let diff = 0
   let changedLiteral = null
   let emptySetFound = false
   if (result.has("∅")) {
+    if (result.size !== 1) {
+      throw new Error("Empty set must be the only literal in the clause")
+    }
     emptySetFound = true
   }
 
@@ -186,9 +199,10 @@ function stepCheck(result, ref1, ref2) {
   return emptySetFound
 }
 
-function validateResolutionSteps(clauseList) {
+function validateResolutionSteps(clauseList, allowedAssumptionsCount) {
   let assumptionCount = 0
   let i = 0
+  let foundEmptyClause = false
   while (i < clauseList.length) {
     const clause = clauseList[i]
     if (clause.justification === "assumption") {
@@ -198,10 +212,13 @@ function validateResolutionSteps(clauseList) {
     }
     const ref1 = clauseList[clause.justification[0]].clause
     const ref2 = clauseList[clause.justification[1]].clause
-    const acceptedStep = stepCheck(clause.clause, ref1, ref2)
+    foundEmptyClause = stepCheck(clause.clause, ref1, ref2)
     i++
   }
-  return assumptionCount
+  if (assumptionCount > allowedAssumptionsCount) {
+    throw new Error("Too many assumptions used")
+  }
+  return foundEmptyClause
 }
 
 module.exports = {

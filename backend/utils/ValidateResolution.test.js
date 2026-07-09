@@ -214,16 +214,20 @@ describe("Testing ValidateResolution", () => {
     })
   })
   describe("validateResolutionSteps", () => {
-    it("counts assumptions correctly", () => {
+    it("returns false when no empty clause is derived", () => {
       const clauseList = [
-        { clause: new Set(["A"]), justification: "assumption" },
-        { clause: new Set(["B"]), justification: "assumption" },
+        { clause: new Set(["A", "B"]), justification: "assumption" }, // 0
+        { clause: new Set(["¬A", "C"]), justification: "assumption" }, // 1
+        {
+          clause: new Set(["B", "C"]),
+          justification: [0, 1],
+        },
       ]
 
-      assert.equal(VRfunc.validateResolutionSteps(clauseList), 2)
+      assert.equal(VRfunc.validateResolutionSteps(clauseList, 2), false)
     })
 
-    it("handles a valid resolution that produces ∅", () => {
+    it("returns true when empty clause (∅) is derived", () => {
       const clauseList = [
         { clause: new Set(["A"]), justification: "assumption" }, // 0
         { clause: new Set(["¬A"]), justification: "assumption" }, // 1
@@ -233,21 +237,79 @@ describe("Testing ValidateResolution", () => {
         },
       ]
 
-      // still just returns assumption count
-      assert.equal(VRfunc.validateResolutionSteps(clauseList), 2)
+      assert.equal(VRfunc.validateResolutionSteps(clauseList, 2), true)
     })
 
-    it("throws on invalid step even if ∅ is present", () => {
+    it("throws if too many assumptions are used", () => {
       const clauseList = [
         { clause: new Set(["A"]), justification: "assumption" },
         { clause: new Set(["B"]), justification: "assumption" },
+      ]
+
+      assert.throws(
+        () => VRfunc.validateResolutionSteps(clauseList, 1),
+        /Too many assumptions used/,
+      )
+    })
+
+    it("does not throw if assumptions equal allowed count", () => {
+      const clauseList = [
+        { clause: new Set(["A"]), justification: "assumption" },
+        { clause: new Set(["B"]), justification: "assumption" },
+      ]
+
+      assert.equal(VRfunc.validateResolutionSteps(clauseList, 2), false)
+    })
+
+    it("throws on invalid resolution step", () => {
+      const clauseList = [
+        { clause: new Set(["A"]), justification: "assumption" }, // 0
+        { clause: new Set(["B"]), justification: "assumption" }, // 1
         {
-          clause: new Set(["∅"]), // invalid derivation
+          clause: new Set(["A", "B"]), // invalid
           justification: [0, 1],
         },
       ]
 
-      assert.throws(() => VRfunc.validateResolutionSteps(clauseList))
+      assert.throws(() => VRfunc.validateResolutionSteps(clauseList, 2))
+    })
+
+    it("returns result of the LAST step only", () => {
+      const clauseList = [
+        { clause: new Set(["A"]), justification: "assumption" }, // 0
+        { clause: new Set(["¬A"]), justification: "assumption" }, // 1
+        { clause: new Set(["¬B"]), justification: "assumption" },
+        { clause: new Set(["B", "C"]), justification: "assumption" },
+        {
+          clause: new Set(["∅"]),
+          justification: [0, 1],
+        },
+        {
+          clause: new Set(["C"]),
+          justification: [2, 3],
+        },
+      ]
+      assert.equal(VRfunc.validateResolutionSteps(clauseList, 4), false)
+    })
+    it("throws if a new literal is introduced", () => {
+      const ref1 = new Set(["A"])
+      const ref2 = new Set(["¬A"])
+      const result = new Set(["X"]) // 🚨 invalid
+
+      assert.throws(
+        () => VRfunc.stepCheck(result, ref1, ref2),
+        /Invalid literal/,
+      )
+    })
+    it("throws if result mixes ∅ with other literals", () => {
+      const ref1 = new Set(["A"])
+      const ref2 = new Set(["¬A"])
+      const result = new Set(["∅", "A"])
+
+      assert.throws(
+        () => VRfunc.stepCheck(result, ref1, ref2),
+        /Empty set must be the only literal/,
+      )
     })
   })
 })
