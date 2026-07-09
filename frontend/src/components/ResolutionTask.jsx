@@ -1,6 +1,13 @@
 import React from "react"
 import { useEffect, useState } from "react"
 import { UseField } from "../hooks"
+import { submitTaskAnswer } from "../hooks/submitAnswer"
+import useUserStore, { useUserActions } from "../store"
+import {
+  buildSavedAnswerFeedback,
+  parseSavedEliminationAnswer,
+} from "../hooks/savedAnswer"
+import AnswerFeedback from "./AnswerFeedback"
 
 const Line = ({ initValue, index, change }) => {
   const { reset: _reset, ...lineInput } = UseField("text", initValue)
@@ -21,8 +28,25 @@ const Line = ({ initValue, index, change }) => {
 }
 
 const ResolutionTask = ({ task }) => {
+  const { addAnswer } = useUserActions()
+  const [feedback, setFeedback] = useState(null)
+  const savedAnswer = useUserStore((state) => state.answers[task.id])
   const start = task?.question || ""
   const [clauses, setClauses] = useState([""])
+
+  useEffect(() => {
+    const savedFeedback = buildSavedAnswerFeedback(savedAnswer)
+    const parsedSavedAnswer = parseSavedEliminationAnswer(
+      savedAnswer?.submitted_answer,
+    )
+
+    if (!savedFeedback || !parsedSavedAnswer) {
+      return
+    }
+
+    setFeedback(savedFeedback)
+    setClauses(parsedSavedAnswer)
+  }, [task.id, savedAnswer])
 
   const changeClauses = (text, i) => {
     setClauses((previous) => {
@@ -43,7 +67,7 @@ const ResolutionTask = ({ task }) => {
     }
   }
   const submitAnswer = async (event) => {
-    if (!taskId) {
+    if (!task.id) {
       return
     }
     const answer = clauses.filter((cl) => cl.trim() !== "")
@@ -51,9 +75,13 @@ const ResolutionTask = ({ task }) => {
       setFeedback({ corect: false, text: "input is too long" })
       return
     }
+    if (answer.length < 1) {
+      setFeedback({ corect: false, text: "input is too short" })
+      return
+    }
     await submitTaskAnswer({
       event,
-      taskId,
+      taskId: task.id,
       submittedAnswer: answer,
       addAnswer,
       setFeedback,
@@ -97,6 +125,9 @@ const ResolutionTask = ({ task }) => {
             <button onClick={submitAnswer}>Submit</button>
           </div>
         </div>
+      </div>
+      <div>
+        <AnswerFeedback feedback={feedback} />
       </div>
     </div>
   )

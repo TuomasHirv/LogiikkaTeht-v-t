@@ -2,6 +2,7 @@ const db = require("../database/db")
 const matchText = require("./matchTree")
 const areLogicallyEquivalent = require("./equivalence")
 const formChecker = require("../utils/textToForm")
+const resolutionChecker = require("../utils/ValidateResolution")
 const normalizeProposition = (proposition) =>
   proposition.replace(/\s+/g, "").toLowerCase()
 
@@ -182,10 +183,53 @@ function checkIfCorrectForm(text, form) {
 
 function matchResolutionTask(userList, assumptionCount, requiredClauses) {
   try {
+    console.log(
+      "Users input:",
+      userList,
+      "Amount of assumptions allowed:",
+      assumptionCount,
+      "Clauses required:",
+      requiredClauses,
+    )
+    const clauseList = resolutionChecker.parseClauseList(userList)
+    console.log("CREATED LIST OF CLAUSES:", clauseList)
+    const foundEmptyClause = resolutionChecker.validateResolutionSteps(
+      clauseList,
+      assumptionCount,
+    )
+
+    const hasAllRequired = containsAllRequiredClauses(
+      clauseList,
+      requiredClauses,
+    )
+
+    const requiresEmpty =
+      requiredClauses.length === 1 && requiredClauses[0][0] === "∅"
+
+    if (requiresEmpty) {
+      return foundEmptyClause && hasAllRequired
+    }
+
+    return hasAllRequired
   } catch (error) {
     console.log(error)
     return false
   }
+}
+function sameClause(setClause, arrClause) {
+  if (setClause.size !== arrClause.length) return false
+
+  for (const lit of arrClause) {
+    if (!setClause.has(lit)) return false
+  }
+
+  return true
+}
+
+function containsAllRequiredClauses(clauseList, requiredClauses) {
+  return requiredClauses.every((required) =>
+    clauseList.some((c) => sameClause(c.clause, required)),
+  )
 }
 
 module.exports = {
@@ -195,4 +239,5 @@ module.exports = {
   matchEquivalenceAnswer,
   matchTTFormAnswer,
   checkIfCorrectForm,
+  matchResolutionTask,
 }

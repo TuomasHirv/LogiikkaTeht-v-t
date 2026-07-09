@@ -611,19 +611,31 @@ const tasks = [
     type: "Resolution-task",
     module_name: "Resolution-Introduction",
     question: "(P) ∧ (¬P)",
-    correct_answer: { clauses: [["∅"]] },
+    correct_answer: {
+      clauses: [["∅"]],
+      assumption_count: 2,
+      assumptions: [["P"], ["¬P"]],
+    },
   },
   {
     type: "Resolution-task",
     module_name: "Resolution-Introduction",
     question: "(P) ∧ (¬P ∨ Q)",
-    correct_answer: { clauses: [["P"], ["Q"]] },
+    correct_answer: {
+      clauses: [["P"], ["Q"]],
+      assumption_count: 2,
+      assumptions: [["P"], ["¬P", "Q"]],
+    },
   },
   {
     type: "Resolution-task",
     module_name: "Resolution-Introduction",
     question: "(P) ∧ (¬P ∨ Q) ∧ (¬Q)",
-    correct_answer: { clauses: [["∅"]] },
+    correct_answer: {
+      clauses: [["∅"]],
+      assumption_count: 3,
+      assumptions: [["P"], ["¬P", "Q"], ["¬Q"]],
+    },
   },
   {
     type: "Resolution-task",
@@ -631,25 +643,39 @@ const tasks = [
     question: "(¬P ∨ Q) ∧ (¬Q ∨ R) ∧ (P)",
     correct_answer: {
       clauses: [["P"], ["Q"], ["R"]],
+      assumption_count: 3,
+      assumptions: [["¬P", "Q"], ["¬Q", "R"], ["P"]],
     },
   },
   {
     type: "Resolution-task",
     module_name: "Resolution-Introduction",
     question: "(¬P ∨ Q) ∧ (¬Q ∨ R) ∧ (P) ∧ (¬R)",
-    correct_answer: { clauses: [["∅"]] },
+    correct_answer: {
+      clauses: [["∅"]],
+      assumption_count: 4,
+      assumptions: [["¬P", "Q"], ["¬Q", "R"], ["P"], ["¬R"]],
+    },
   },
   {
     type: "Resolution-task",
     module_name: "Resolution-Introduction",
     question: "(P ∨ Q) ∧ (¬P ∨ Q) ∧ (¬Q)",
-    correct_answer: { clauses: [["∅"]] },
+    correct_answer: {
+      clauses: [["∅"]],
+      assumption_count: 3,
+      assumptions: [["P", "Q"], ["¬P", "Q"], ["¬Q"]],
+    },
   },
   {
     type: "Resolution-task",
     module_name: "Resolution-Introduction",
     question: "(P ∨ Q ∨ R) ∧ (¬P ∨ Q) ∧ (¬Q) ∧ (¬R ∨ P)",
-    correct_answer: { clauses: [["∅"]] },
+    correct_answer: {
+      clauses: [["∅"]],
+      assumption_count: 4,
+      assumptions: [["P", "Q", "R"], ["¬P", "Q"], ["¬Q"], ["¬R", "P"]],
+    },
   },
   {
     type: "Resolution-task",
@@ -657,6 +683,12 @@ const tasks = [
     question: "(P ∨ Q) ∧ (¬Q ∨ R) ∧ (¬P ∨ R)",
     correct_answer: {
       clauses: [["P", "Q"], ["R"]],
+      assumption_count: 3,
+      assumptions: [
+        ["P", "Q"],
+        ["¬Q", "R"],
+        ["¬P", "R"],
+      ],
     },
   },
 ]

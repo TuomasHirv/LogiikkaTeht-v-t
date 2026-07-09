@@ -85,7 +85,7 @@ function parseReferencedLines(justificationText) {
 
 function parseUserClause(input) {
   const clean = input.replace(/\s/g, "")
-  const match = clean.match(/^(\{.*?\})\s*(\(.*?\))$/)
+  const match = clean.match(/^(\{.*?\}|∅)\s*(\(.*?\))$/)
   if (!match) {
     throw new Error("Line doesnt match to expected text")
   }

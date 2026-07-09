@@ -107,7 +107,11 @@ const getAnswerAndModule = async (task_id) => {
       }
     case "Resolution-Introduction":
       return {
-        answer: [rows.correct_answer.empty, rows.correct_answer.clauses],
+        answer: [
+          rows.correct_answer.clauses,
+          rows.correct_answer.assumption_count,
+          rows.correct_answer.assumptions,
+        ],
         moduleName: rows.module_name,
       }
     default:

@@ -144,6 +144,32 @@ async function equivalenceFormHelper(
   }
 }
 
+async function resolutionHelper(answer, reqClauses, userId, taskId, response) {
+  try {
+    const requiredClauses = reqClauses[0]
+    const assumptionCount = reqClauses[1]
+    console.log(reqClauses)
+    const accepted = evaluator.matchResolutionTask(
+      answer,
+      assumptionCount,
+      requiredClauses,
+    )
+    await dbFunc.insertAnswer(
+      userId,
+      taskId,
+      serializeSubmittedAnswer(answer),
+      accepted,
+    )
+    if (accepted) {
+      return response.status(200).json({ correct: true, answer: answer })
+    }
+    return response.status(200).json({ correct: false, answer: answer })
+  } catch (error) {
+    console.log(error)
+    return response.status(500).json({ error: "internal server error" })
+  }
+}
+
 module.exports = {
   wordsToPropositionsHelper,
   subFormulaHelper,
@@ -151,4 +177,5 @@ module.exports = {
   equivalenceRuleHelper,
   TTFormHelper,
   equivalenceFormHelper,
+  resolutionHelper,
 }
