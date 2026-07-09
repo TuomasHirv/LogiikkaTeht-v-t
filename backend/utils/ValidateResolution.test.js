@@ -101,4 +101,69 @@ describe("Testing ValidateResolution", () => {
       assert.throws(() => VRfunc.parseUserClause("P, Q (assumption)")) // missing braces
     })
   })
+  describe("Parsing whole list", () => {
+    it("parses multiple valid clauses correctly", () => {
+      const list = [
+        "{P, Q} (assumption)",
+        "{Q} (lines: 1,2)",
+        "{ P , ¬Q }   ( lines: 2 , 3 )",
+      ]
+
+      const result = VRfunc.parseClauseList(list)
+
+      assert.strictEqual(result.length, 3)
+
+      // Clause 1
+      assert.deepStrictEqual([...result[0].clause], ["P", "Q"])
+      assert.strictEqual(result[0].justification, "assumption")
+
+      // Clause 2
+      assert.deepStrictEqual([...result[1].clause], ["Q"])
+      assert.deepStrictEqual(result[1].justification, [1, 2])
+
+      // Clause 3 (with negation + whitespace)
+      assert.deepStrictEqual([...result[2].clause], ["P", "¬Q"])
+      assert.deepStrictEqual(result[2].justification, [2, 3])
+    })
+
+    it("handles empty clause", () => {
+      const list = ["{} (assumption)"]
+      const result = VRfunc.parseClauseList(list)
+
+      assert.strictEqual(result.length, 1)
+      assert.deepStrictEqual([...result[0].clause], [])
+      assert.strictEqual(result[0].justification, "assumption")
+    })
+
+    it("throws on invalid clause format", () => {
+      const list = ["P, Q (assumption)"] // missing {}
+
+      assert.throws(() => {
+        VRfunc.parseClauseList(list)
+      })
+    })
+
+    it("throws on invalid justification", () => {
+      const list = ["{P} (line: 1)"] // wrong format
+
+      assert.throws(() => {
+        VRfunc.parseClauseList(list)
+      })
+    })
+
+    it("throws on invalid characters", () => {
+      const list = ["{P, 1} (assumption)"] // invalid literal
+
+      assert.throws(() => {
+        VRfunc.parseClauseList(list)
+      })
+    })
+
+    it("handles single literal with negation", () => {
+      const list = ["{¬P} (assumption)"]
+      const result = VRfunc.parseClauseList(list)
+
+      assert.deepStrictEqual([...result[0].clause], ["¬P"])
+    })
+  })
 })

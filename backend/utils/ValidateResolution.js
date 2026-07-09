@@ -92,9 +92,20 @@ function parseUserClause(input) {
   return { clause: clauseSet, justification: referencedLines }
 }
 
+function parseClauseList(listInput) {
+  const clauseList = []
+  let i = 0
+  while (i < listInput.length) {
+    clauseList.push(parseUserClause(listInput[i]))
+    i++
+  }
+  return clauseList
+}
+
 module.exports = {
   toTokens,
   parseClauseToSet,
   parseReferencedLines,
   parseUserClause,
+  parseClauseList,
 }
