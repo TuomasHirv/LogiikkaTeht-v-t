@@ -114,6 +114,7 @@ const ResolutionTask = ({ task }) => {
       submittedAnswer: answer,
       addAnswer,
       setFeedback,
+      moduleName: task.moduleName,
     })
   }
 

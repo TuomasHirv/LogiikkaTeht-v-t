@@ -23,9 +23,11 @@ const insertAnswer = async (userId, taskId, answer, correct) => {
 
 const getAllUserAnswers = async (userId) => {
   const q = `
-    SELECT task_id, submitted_answer, is_correct
-    FROM answers
-    WHERE user_id = $1`
+    SELECT A.task_id, A.submitted_answer, A.is_correct, T.module_name
+    FROM answers AS A
+    JOIN tasks AS T ON A.task_id = T.id
+    WHERE A.user_id = $1
+    `
   try {
     const answers = await db.query(q, [userId])
     return answers

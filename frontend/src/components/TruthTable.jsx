@@ -37,6 +37,7 @@ const TruthTable = ({ task, start, showSubmitButton = true }) => {
         submittedAnswer: inputFields,
         addAnswer,
         setFeedback,
+        moduleName: task.moduleName,
       })
     }
   }

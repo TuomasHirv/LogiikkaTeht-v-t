@@ -19,6 +19,7 @@ import LoginScreen from "./components/LoginScreen"
 import RegisterScreen from "./components/RegisterScreen"
 import InstructionScreen from "./components/InstructionScreen"
 import ResolutionTask from "./components/ResolutionTask"
+import UserPage from "./components/UserScreen"
 function App() {
   const token = useUserStore((state) => state.token)
   const { initialize } = useUserActions()
@@ -43,6 +44,7 @@ function App() {
             path="/part/:id/section/:section"
             element={<InstructionScreen />}
           />
+          <Route path="/userpage" element={<UserPage />} />
           <Route path="/testing" element={<ResolutionTask />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

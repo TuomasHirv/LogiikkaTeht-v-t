@@ -21,11 +21,12 @@ export const submitTaskAnswer = async ({
   submittedAnswer,
   addAnswer,
   setFeedback,
+  moduleName,
 }) => {
   event?.preventDefault()
   try {
     const responseData = await answerService.submit(taskId, submittedAnswer)
-    addAnswer(taskId, submittedAnswer, responseData.correct)
+    addAnswer(taskId, submittedAnswer, responseData.correct, moduleName)
     setFeedback(createPassFailFeedback(responseData.correct))
   } catch (error) {
     console.log("Failed to submit answer:", error.message)

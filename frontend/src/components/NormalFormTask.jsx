@@ -37,6 +37,7 @@ const NormalFormTask = ({ task }) => {
       submittedAnswer: normalFormInput.value,
       addAnswer,
       setFeedback,
+      moduleName: task.moduleName,
     })
   }
 

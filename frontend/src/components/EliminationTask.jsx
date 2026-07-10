@@ -80,6 +80,7 @@ const EliminationTask = ({ task }) => {
       submittedAnswer: answer,
       addAnswer,
       setFeedback,
+      moduleName: task.moduleName,
     })
   }
 

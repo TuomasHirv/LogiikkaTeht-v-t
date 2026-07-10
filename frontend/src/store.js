@@ -41,13 +41,14 @@ const useUserStore = create(
         logoutUser: () =>
           set(() => ({ user: null, completedTasks: [], answers: {} })),
 
-        addAnswer: (taskId, answerText, isCorrect) => {
+        addAnswer: (taskId, answerText, isCorrect, moduleName) => {
           set((state) => ({
             answers: {
               ...state.answers,
               [taskId]: {
                 submitted_answer: answerText,
                 is_correct: isCorrect,
+                module_name: moduleName,
               },
             },
           }))
@@ -64,6 +65,7 @@ const useUserStore = create(
               mappedAnswers[a.task_id] = {
                 submitted_answer: normalizeSubmittedAnswer(a.submitted_answer),
                 is_correct: a.is_correct,
+                module_name: a.module_name,
               }
             })
             set(() => ({ answers: mappedAnswers }))

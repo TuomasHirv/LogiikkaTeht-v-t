@@ -35,6 +35,7 @@ const TaskItem = ({ task }) => {
       submittedAnswer: answerInput.value,
       addAnswer,
       setFeedback,
+      moduleName: task.moduleName,
     })
   }
 

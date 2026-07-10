@@ -31,6 +31,17 @@ taskRouter.post("/", async (request, response) => {
   }
 })
 
+taskRouter.get("/count", async (request, response) => {
+  const q = "SELECT module_name, COUNT(*) FROM tasks GROUP BY module_name"
+  try {
+    const result = await db.query(q)
+    return response.json(result.rows)
+  } catch (error) {
+    console.log("Error in counting all tasks:", error)
+    return response.json({ error: error })
+  }
+})
+
 taskRouter.get("/:module", async (request, response) => {
   const term = request.params.module
   const q =
