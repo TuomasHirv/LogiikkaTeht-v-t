@@ -1,6 +1,6 @@
 import React from "react"
 import { useEffect, useState } from "react"
-import { UseField } from "../hooks"
+import { UseResolutionField } from "../hooks"
 import { submitTaskAnswer } from "../hooks/submitAnswer"
 import useUserStore, { useUserActions } from "../store"
 import {
@@ -10,20 +10,49 @@ import {
 import AnswerFeedback from "./AnswerFeedback"
 
 const Line = ({ initValue, index, change }) => {
-  const { reset: _reset, ...lineInput } = UseField("text", initValue)
+  const {
+    reset: _reset,
+    checkSyntax: checkSyntax,
+    syntaxError: syntaxError,
+    ...lineInput
+  } = UseResolutionField("text", initValue, index)
   return (
-    <div className="flex bg-white text-black">
-      <span className="bg-gray-500 pr-1">{index}:</span>
+    <React.Fragment>
+      <div className="flex bg-white text-black">
+        <span className="bg-gray-500 pr-1">{index}:</span>
 
-      <input
-        {...lineInput}
-        onBlur={() => {
-          if (lineInput.value) {
-            change(lineInput.value, index)
-          }
-        }}
-      />
-    </div>
+        <input
+          {...lineInput}
+          onBlur={() => {
+            checkSyntax(lineInput.value, index)
+            if (lineInput.value) {
+              change(lineInput.value, index)
+            }
+          }}
+        />
+        {syntaxError && (
+          <div className="group relative">
+            <span className="cursor-pointer text-red-700 bg-gray-700 select-none px-1">
+              {" "}
+              !{" "}
+            </span>
+            <p
+              className="
+              absolute left-0 top-full mt-1 z-10
+              max-w-xs whitespace-normal
+              bg-gray-700 text-white text-sm rounded px-2 py-1
+              opacity-0 pointer-events-none
+              group-hover:opacity-100
+              transition-opacity duration-150
+            "
+            >
+              {" "}
+              {syntaxError}{" "}
+            </p>
+          </div>
+        )}
+      </div>
+    </React.Fragment>
   )
 }
 
