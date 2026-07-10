@@ -18,3 +18,4 @@ Tasks is a simple description of what has been completed and doesn't necessarily
 | 07.07 |    +proposition -> CNF using Truth Tables. Also now Equivalence transformations     |  8.5 | Part 2 started    |
 | 08.07 |     Frontend for Res method. Difficulties in evaluating answers. Planned it out     |    4 |                   |
 | 09.07 |          Created Res method evaluation. Also created Res refutation method          |    7 | Res method in MVP |
+| 10.07 |      Added a userscreen and some other stuff. And syntax checking in frontend       |    4 |                   |
