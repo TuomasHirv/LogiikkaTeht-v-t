@@ -1,8 +1,8 @@
 const db = require("../database/db")
 const matchText = require("./matchTree")
 const areLogicallyEquivalent = require("./equivalence")
-const formChecker = require("../utils/textToForm")
-const resolutionChecker = require("../utils/ValidateResolution")
+const formChecker = require("./textToForm")
+const resolutionChecker = require("./ValidateResolution")
 const normalizeProposition = (proposition) =>
   proposition.replace(/\s+/g, "").toLowerCase()
 

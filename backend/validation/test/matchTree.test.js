@@ -6,8 +6,8 @@ const assert = require("node:assert/strict")
 const matchText = require("../matchTree")
 
 function loadMatchAnswerWithEquivalenceStub(stubExport) {
-  const matchTreePath = require.resolve("./matchTree")
-  const equivalencePath = require.resolve("./equivalence")
+  const matchTreePath = require.resolve("../matchTree")
+  const equivalencePath = require.resolve("../equivalence")
 
   const originalMatchTree = require.cache[matchTreePath]
   const originalEquivalence = require.cache[equivalencePath]

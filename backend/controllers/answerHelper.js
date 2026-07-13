@@ -1,7 +1,7 @@
 const dbFunc = require("../database/dbFunc.js")
-const evaluator = require("../utils/matchAnswer.js")
-const matchTree = require("../utils/matchTree.js")
-const validatePropositional = require("../utils/correctness")
+const evaluator = require("../validation/matchAnswer.js")
+const matchTree = require("../validation/matchTree.js")
+const validatePropositional = require("../validation/correctness")
 
 const serializeSubmittedAnswer = (answer) => JSON.stringify(answer)
 

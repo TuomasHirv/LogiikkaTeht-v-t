@@ -1,7 +1,7 @@
 const answerRouter = require("express").Router()
-const validatePropositional = require("../utils/correctness")
+const validatePropositional = require("../validation/correctness")
 const dbFunc = require("../database/dbFunc.js")
-const evaluator = require("../utils/matchAnswer.js")
+const evaluator = require("../validation/matchAnswer.js")
 const authenticateToken = require("../middleware/auth.js")
 const routerHelper = require("./answerHelper.js")
 
