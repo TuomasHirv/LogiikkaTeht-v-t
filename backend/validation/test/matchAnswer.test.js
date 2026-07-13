@@ -19,7 +19,7 @@ function loadMatchAnswerWithDbStub(dbExport) {
   }
 
   try {
-    return require("./matchAnswer")
+    return require("../matchAnswer")
   } finally {
     delete require.cache[matchAnswerPath]
     delete require.cache[dbPath]

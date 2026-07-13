@@ -3,7 +3,7 @@
 const test = require("node:test")
 const assert = require("node:assert/strict")
 
-const areLogicallyEquivalent = require("./equivalence")
+const areLogicallyEquivalent = require("../equivalence")
 
 test("treats implication and disjunction form as equivalent", () => {
   assert.equal(areLogicallyEquivalent("A→B", "¬A∨B"), true)

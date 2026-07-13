@@ -1,7 +1,7 @@
 const assert = require("node:assert/strict")
 const { test, describe, it } = require("node:test")
 
-const ttForm = require("./textToForm")
+const ttForm = require("../textToForm")
 
 const gTokens = ["(", "A", "∨", "¬", "B", ")"]
 describe("Parsing text to CNF forms", () => {

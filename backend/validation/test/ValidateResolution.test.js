@@ -3,7 +3,7 @@
 const assert = require("node:assert/strict")
 const { test, describe, it } = require("node:test")
 
-const VRfunc = require("./ValidateResolution")
+const VRfunc = require("../ValidateResolution")
 
 describe("Testing ValidateResolution", () => {
   describe("toTokens", () => {

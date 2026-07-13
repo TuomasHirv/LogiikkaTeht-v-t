@@ -3,7 +3,7 @@
 const test = require("node:test")
 const assert = require("node:assert/strict")
 
-const matchText = require("./matchTree")
+const matchText = require("../matchTree")
 
 function loadMatchAnswerWithEquivalenceStub(stubExport) {
   const matchTreePath = require.resolve("./matchTree")
@@ -23,7 +23,7 @@ function loadMatchAnswerWithEquivalenceStub(stubExport) {
   }
 
   try {
-    return require("./matchTree")
+    return require("../matchTree")
   } finally {
     delete require.cache[matchTreePath]
     delete require.cache[equivalencePath]
