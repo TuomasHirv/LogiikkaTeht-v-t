@@ -10,6 +10,7 @@ import {
   useMatch,
   useNavigate,
 } from "react-router-dom"
+import { ErrorBoundary } from "react-error-boundary"
 
 import NotFound from "./components/NotFound"
 import HomeScreen from "./components/HomeScreen"
@@ -20,6 +21,7 @@ import RegisterScreen from "./components/RegisterScreen"
 import InstructionScreen from "./components/InstructionScreen"
 import ResolutionTask from "./components/ResolutionTask"
 import UserPage from "./components/UserScreen"
+import ErrorScreen from "./components/ErrorScreen"
 function App() {
   const token = useUserStore((state) => state.token)
   const { initialize } = useUserActions()
@@ -31,24 +33,27 @@ function App() {
   return (
     <div>
       <NavBar />
-      <div style={{ paddingTop: "80px" }}>
-        <Routes>
-          <Route path="/" element={<HomeScreen />} />
-          <Route path="/login" element={<LoginScreen />} />
-          <Route path="/register" element={<RegisterScreen />} />
-          <Route
-            path="/part/:id/section/:section/tasks/:moduleName"
-            element={<TaskScreen />}
-          />
-          <Route
-            path="/part/:id/section/:section"
-            element={<InstructionScreen />}
-          />
-          <Route path="/userpage" element={<UserPage />} />
-          <Route path="/testing" element={<ResolutionTask />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </div>
+      <ErrorBoundary FallbackComponent={ErrorScreen}>
+        <div style={{ paddingTop: "80px" }}>
+          <Routes>
+            <Route path="/" element={<HomeScreen />} />
+            <Route path="/login" element={<LoginScreen />} />
+            <Route path="/register" element={<RegisterScreen />} />
+            <Route
+              path="/part/:id/section/:section/tasks/:moduleName"
+              element={<TaskScreen />}
+            />
+            <Route
+              path="/part/:id/section/:section"
+              element={<InstructionScreen />}
+            />
+            <Route path="/userpage" element={<UserPage />} />
+            <Route path="/testing" element={<ResolutionTask />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
+      </ErrorBoundary>
+      ;
     </div>
   )
 }
