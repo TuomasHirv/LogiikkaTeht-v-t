@@ -3,6 +3,9 @@ import { useEffect, useState } from "react"
 import { UseResolutionField } from "../hooks"
 import { submitTaskAnswer } from "../hooks/submitAnswer"
 import useUserStore, { useUserActions } from "../store"
+import { useLineList } from "../hooks/lineList"
+import { RESOLUTION_LINE_LIMITS } from "../constants"
+
 import {
   buildSavedAnswerFeedback,
   parseSavedEliminationAnswer,
@@ -10,27 +13,23 @@ import {
 import AnswerFeedback from "./AnswerFeedback"
 
 const Line = ({ initValue, index, change }) => {
-  const {
-    reset: _reset,
-    checkSyntax: checkSyntax,
-    syntaxError: syntaxError,
-    ...lineInput
-  } = UseResolutionField("text", initValue, index)
+  const lineInput = UseResolutionField("text", initValue, index)
+
   return (
     <React.Fragment>
       <div className="flex bg-white text-black">
         <span className="bg-gray-500 pr-1">{index}:</span>
 
         <input
-          {...lineInput}
+          {...lineInput.inputProps}
           onBlur={() => {
-            checkSyntax(lineInput.value, index)
+            lineInput.checkSyntax(lineInput.inputProps.value, index)
             if (lineInput.value) {
               change(lineInput.value, index)
             }
           }}
         />
-        {syntaxError && (
+        {lineInput.syntaxError && (
           <div className="group relative">
             <span className="cursor-pointer text-red-700 bg-gray-700 select-none px-1">
               {" "}
@@ -47,7 +46,7 @@ const Line = ({ initValue, index, change }) => {
             "
             >
               {" "}
-              {syntaxError}{" "}
+              {lineInput.syntaxError}{" "}
             </p>
           </div>
         )}
@@ -61,7 +60,7 @@ const ResolutionTask = ({ task }) => {
   const [feedback, setFeedback] = useState(null)
   const savedAnswer = useUserStore((state) => state.answers[task.id])
   const start = task?.question || ""
-  const [clauses, setClauses] = useState([""])
+  const { ...clauses } = useLineList([""], RESOLUTION_LINE_LIMITS)
 
   useEffect(() => {
     const savedFeedback = buildSavedAnswerFeedback(savedAnswer)
@@ -74,38 +73,20 @@ const ResolutionTask = ({ task }) => {
     }
 
     setFeedback(savedFeedback)
-    setClauses(parsedSavedAnswer)
+    clauses.setLines(parsedSavedAnswer)
   }, [task.id, savedAnswer])
 
-  const changeClauses = (text, i) => {
-    setClauses((previous) => {
-      if (previous[i] === text) {
-        return previous
-      }
-      return previous.map((original, index) => (index === i ? text : original))
-    })
-  }
-
-  const addRemoveLine = (add) => {
-    if (add) {
-      setClauses((previous) => [...previous, ""])
-    } else {
-      setClauses((previous) =>
-        previous.length > 1 ? previous.slice(0, -1) : previous,
-      )
-    }
-  }
   const submitAnswer = async (event) => {
     if (!task.id) {
       return
     }
-    const answer = clauses.filter((cl) => cl.trim() !== "")
-    if (answer.length > 10) {
-      setFeedback({ corect: false, text: "input is too long" })
+    const answer = clauses.lines.filter((cl) => cl.trim() !== "")
+    if (answer.length > RESOLUTION_LINE_LIMITS.max) {
+      setFeedback({ correct: false, text: "input is too long" })
       return
     }
-    if (answer.length < 1) {
-      setFeedback({ corect: false, text: "input is too short" })
+    if (answer.length < RESOLUTION_LINE_LIMITS.min) {
+      setFeedback({ correct: false, text: "input is too short" })
       return
     }
     await submitTaskAnswer({
@@ -127,25 +108,25 @@ const ResolutionTask = ({ task }) => {
       </div>
       <div className="relative w-fit">
         <div className="grid border border-black">
-          {clauses.map((cl, index) => (
+          {clauses.lines.map((cl, index) => (
             <React.Fragment key={index}>
-              <Line initValue={cl} index={index} change={changeClauses} />
+              <Line initValue={cl} index={index} change={clauses.change} />
             </React.Fragment>
           ))}
         </div>
 
         <div className="flex">
-          {clauses.length < 10 && (
+          {clauses.lines.length < RESOLUTION_LINE_LIMITS.max && (
             <button
-              onClick={() => addRemoveLine(true)}
+              onClick={() => clauses.addRemove(true)}
               className="bg-green-600 text-black border-black border-2 rounded hover:bg-green-400 px-1"
             >
               +
             </button>
           )}
-          {clauses.length > 1 && (
+          {clauses.lines.length > RESOLUTION_LINE_LIMITS.min && (
             <button
-              onClick={() => addRemoveLine(false)}
+              onClick={() => clauses.addRemove(false)}
               className="bg-red-500 text-black border-black border-2 rounded hover:bg-red-400 px-2"
             >
               -

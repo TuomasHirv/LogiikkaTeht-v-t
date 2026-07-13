@@ -2,6 +2,8 @@ import React from "react"
 import { partInstructions } from "../content/partInstructions"
 import { useParams, Link } from "react-router-dom"
 import ReactMarkdown from "react-markdown"
+import { ROUTES } from "../constants"
+
 const InstructionScreen = () => {
   const { id, section } = useParams()
   const content = partInstructions[id][section]
@@ -9,7 +11,7 @@ const InstructionScreen = () => {
     return <p> NOT DONE YET</p>
   }
   const moduleName = content?.moduleName
-  const taskLink = `http://localhost:5173/part/${id}/section/${section}/tasks/${moduleName}`
+  const taskLink = ROUTES.tasks(id, section, moduleName)
   return (
     <div className="max-w-5xl mx-auto p-6 bg-white shadow rounded-lg border border-gray-200 max-h-[90vh] overflow-y-auto">
       <div className="text-black text-xl py-2 text-center">

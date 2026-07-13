@@ -4,20 +4,22 @@ import { UseField } from "../hooks"
 import useUserStore, { useUserActions } from "../store"
 import AnswerFeedback from "./AnswerFeedback"
 import { submitTaskAnswer } from "../hooks/submitAnswer"
+import { ELIMINATION_LINE_LIMITS } from "../constants"
+
 import {
   buildSavedAnswerFeedback,
   parseSavedEliminationAnswer,
 } from "../hooks/savedAnswer"
-
+import { useLineList } from "../hooks/lineList"
 const Line = ({ initValue, index, change }) => {
-  const { reset: _reset, ...lineInput } = UseField("text", initValue)
+  const lineInput = UseField("text", initValue)
   if (index === 0) {
     return <div className="flex bg-amber-100 text-black"> {initValue} </div>
   }
   return (
     <div className="flex bg-white text-black">
       <input
-        {...lineInput}
+        {...lineInput.inputProps}
         onBlur={() => {
           if (lineInput.value) {
             change(lineInput.value, index)
@@ -34,13 +36,10 @@ const EliminationTask = ({ task }) => {
   const taskId = task?.id
   const savedAnswer = useUserStore((state) => state.answers[taskId])
   const [feedback, setFeedback] = useState(null)
-  const createInitialPropositions = (initial) => [initial, ""]
-  const [propositions, setPropositions] = useState(() =>
-    createInitialPropositions(start),
-  )
+  const { ...propositions } = useLineList([start, ""], ELIMINATION_LINE_LIMITS)
 
   useEffect(() => {
-    setPropositions(createInitialPropositions(start))
+    propositions.setLines([start, ""])
     setFeedback(null)
   }, [start, taskId])
 
@@ -55,11 +54,11 @@ const EliminationTask = ({ task }) => {
     }
 
     setFeedback(savedFeedback)
-    setPropositions(parsedSavedAnswer)
+    propositions.setLines(parsedSavedAnswer)
   }, [taskId, savedAnswer])
 
   const resetPropositions = () => {
-    setPropositions(createInitialPropositions(start))
+    propositions.setLines([start, ""])
     setFeedback(null)
   }
 
@@ -68,10 +67,10 @@ const EliminationTask = ({ task }) => {
       return
     }
 
-    const answer = propositions.filter((prop) => prop.trim() !== "")
+    const answer = propositions.lines.filter((prop) => prop.trim() !== "")
     answer.splice(0, 1, task.question)
-    if (answer.length > 6) {
-      setFeedback({ corect: false, text: "input is too long" })
+    if (answer.length > ELIMINATION_LINE_LIMITS.max) {
+      setFeedback({ correct: false, text: "input is too long" })
       return
     }
     await submitTaskAnswer({
@@ -84,25 +83,6 @@ const EliminationTask = ({ task }) => {
     })
   }
 
-  const changePropositions = (text, i) => {
-    setPropositions((previous) => {
-      if (previous[i] === text) {
-        return previous
-      }
-      return previous.map((original, index) => (index === i ? text : original))
-    })
-  }
-
-  const addRemoveLine = (add) => {
-    if (add) {
-      setPropositions((previous) => [...previous, ""])
-    } else {
-      setPropositions((previous) =>
-        previous.length > 1 ? previous.slice(0, -1) : previous,
-      )
-    }
-  }
-
   return (
     <>
       <div className="border border-dotted border-black rounded text-xl w-fit">
@@ -110,12 +90,12 @@ const EliminationTask = ({ task }) => {
       </div>
       <div className="relative w-fit">
         <div className="grid border border-black">
-          {propositions.map((prop, index) => (
+          {propositions.lines.map((prop, index) => (
             <React.Fragment key={index}>
               <Line
                 initValue={prop}
                 index={index}
-                change={changePropositions}
+                change={propositions.change}
               />
             </React.Fragment>
           ))}
@@ -130,17 +110,17 @@ const EliminationTask = ({ task }) => {
           Reset
         </button>
         <div className="flex">
-          {propositions.length < 6 && (
+          {propositions.lines.length < ELIMINATION_LINE_LIMITS.max && (
             <button
-              onClick={() => addRemoveLine(true)}
+              onClick={() => propositions.addRemove(true)}
               className="bg-green-600 text-black border-black border-2 rounded hover:bg-green-400 px-1"
             >
               +
             </button>
           )}
-          {propositions.length > 1 && (
+          {propositions.lines.length > ELIMINATION_LINE_LIMITS.min && (
             <button
-              onClick={() => addRemoveLine(false)}
+              onClick={() => propositions.addRemove(false)}
               className="bg-red-500 text-black border-black border-2 rounded hover:bg-red-400 px-2"
             >
               -

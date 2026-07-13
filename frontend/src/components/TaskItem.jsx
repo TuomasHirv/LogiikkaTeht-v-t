@@ -8,7 +8,7 @@ import useUserStore, { useUserActions } from "../store"
 const TaskItem = ({ task }) => {
   const token = useUserStore((state) => state.token)
   const { addAnswer } = useUserActions()
-  const { reset, ...answerInput } = UseField("text")
+  const answerInput = UseField("text")
   const [feedback, setFeedback] = useState(null)
   const allAnswers = useUserStore((state) => state.answers)
   const savedAnswer = useUserStore((state) => state.answers[task.id])
@@ -25,7 +25,9 @@ const TaskItem = ({ task }) => {
     }
 
     setFeedback(savedFeedback)
-    answerInput.onChange({ target: { value: savedAnswer.submitted_answer } })
+    answerInput.inputProps.onChange({
+      target: { value: savedAnswer.submitted_answer },
+    })
   }, [task.id, savedAnswer])
 
   const submitAnswer = async (event) => {
@@ -49,7 +51,7 @@ const TaskItem = ({ task }) => {
           ))}
       </div>
       <form onSubmit={submitAnswer}>
-        <input {...answerInput} className="bg-white text-black" />
+        <input {...answerInput.inputProps} className="bg-white text-black" />
         <button
           type="submit"
           className="border-black border-2 rounded hover:bg-green-700"

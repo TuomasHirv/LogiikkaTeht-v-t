@@ -5,8 +5,8 @@ import { UseSimpleField } from "../hooks"
 const RegisterScreen = () => {
   const user = useUserStore((state) => state.user)
   const { loginUser, logoutUser, registerUser } = useUserActions()
-  const { reset: resetUsername, ...username } = UseSimpleField("text")
-  const { reset: resetPassword, ...password } = UseSimpleField("text")
+  const username = UseSimpleField("text")
+  const password = UseSimpleField("text")
 
   const registerFunc = async (event) => {
     event.preventDefault()
@@ -16,8 +16,8 @@ const RegisterScreen = () => {
     }
 
     await registerUser(username.value, password.value)
-    resetUsername()
-    resetPassword()
+    username.reset()
+    password.reset()
   }
   return (
     <>
@@ -27,9 +27,9 @@ const RegisterScreen = () => {
       <div className="bg-white rounded border-black border-2 center justify-center max-w-80 min-h-40 ml-8 mt-6">
         <form onSubmit={registerFunc} className="">
           <p className="text-black text-2xl">Username</p>
-          <input {...username} className="bg-gray-300 text-black" />
+          <input {...username.inputProps} className="bg-gray-300 text-black" />
           <p className="text-black text-2xl">Password</p>
-          <input {...password} className="bg-gray-300 text-black" />
+          <input {...password.inputProps} className="bg-gray-300 text-black" />
           <button
             type="submit"
             className="border-black border-2 rounded hover:bg-green-700 text-black w-fit ml-63 mt-4"

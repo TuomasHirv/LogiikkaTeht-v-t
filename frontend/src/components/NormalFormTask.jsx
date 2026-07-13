@@ -11,7 +11,7 @@ const NormalFormTask = ({ task }) => {
   const taskId = task.id
   const { addAnswer } = useUserActions()
   const savedAnswer = useUserStore((state) => state.answers[taskId])
-  const { reset: _reset, ...normalFormInput } = UseField("text")
+  const normalFormInput = UseField("text")
   const [feedback, setFeedback] = useState(null)
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const NormalFormTask = ({ task }) => {
     }
 
     setFeedback(savedFeedback)
-    normalFormInput.onChange({ target: { value: lastSavedAnswer } })
+    normalFormInput.inputProps.onChange({ target: { value: lastSavedAnswer } })
   }, [taskId, savedAnswer])
 
   const submitAnswer = async (event) => {
@@ -60,7 +60,7 @@ const NormalFormTask = ({ task }) => {
       )}
       <form onSubmit={submitAnswer} className="flex items-center gap-2">
         <input
-          {...normalFormInput}
+          {...normalFormInput.inputProps}
           className="bg-white text-black border-black border rounded px-3 py-2 text-lg min-w-md"
         />
         <button

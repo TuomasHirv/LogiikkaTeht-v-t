@@ -2,7 +2,9 @@ import { useParams, Link } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { partInstructions } from "../content/partInstructions"
 import { taskInstructions } from "../content/taskInstructions"
+import { ROUTES, MODULE_NAMES } from "../constants"
 
+import { taskService } from "../services/taskService"
 import TaskItem from "./TaskItem"
 import SubFormulaTask from "./SubFormulaTask"
 import TruthTableTask from "./TruthTableTask"
@@ -16,21 +18,17 @@ const TaskScreen = () => {
   const [tasks, setTasks] = useState([])
   const [loading, setLoading] = useState(true)
   const [continued, setContinued] = useState(false)
-  if (partInstructions[id][section] && !continued) {
-    setContinued(true)
-  }
-  const instructionLink = `http://localhost:5173/part/${id}/section/${nextSection}`
+  useEffect(() => {
+    if (partInstructions[id][section] && !continued) {
+      setContinued(true)
+    }
+  }, [id, section])
+  const instructionLink = ROUTES.instructions(id, nextSection)
   useEffect(() => {
     const fetchTasks = async () => {
       try {
         setLoading(true)
-        const response = await fetch(
-          `http://localhost:5000/api/tasks/${moduleName}`,
-        )
-        if (!response.ok) {
-          throw new Error("Couldn't fetch tasks")
-        }
-        const data = await response.json()
+        const data = await taskService.getTasks(moduleName)
         setTasks(data)
       } catch (err) {
         console.log("Failed to fetch tasks:", err)
@@ -45,21 +43,21 @@ const TaskScreen = () => {
   }
   const getTaskComponent = () => {
     switch (moduleName) {
-      case "words-to-propositions":
+      case MODULE_NAMES.WORDS_TO_PROPOSITIONS:
         return TaskItem
-      case "Truth-Table-Task":
+      case MODULE_NAMES.TRUTH_TABLE_TASK:
         return TruthTableTask
-      case "subformula":
+      case MODULE_NAMES.SUBFORMULA:
         return SubFormulaTask
-      case "Equivalence-Rules-Task":
+      case MODULE_NAMES.EQUIVALENCE_RULES_TASK:
         return EliminationTask
-      case "Equivalence-method-Transform":
+      case MODULE_NAMES.EQUIVALENCE_METHOD_TRANSFORM:
         return EliminationTask
-      case "TT-method-Conversion":
+      case MODULE_NAMES.TT_METHOD_CONVERSION:
         return NormalFormTask
-      case "Resolution-Introduction":
+      case MODULE_NAMES.RESOLUTION_INTRODUCTION:
         return ResolutionTask
-      case "Resolution-Refutation":
+      case MODULE_NAMES.RESOLUTION_REFUTATION:
         return ResolutionTask
       default:
         return TaskItem

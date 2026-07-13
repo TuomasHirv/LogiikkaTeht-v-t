@@ -1,18 +1,7 @@
 import useUserStore from "../store"
 import { taskService } from "../services/taskService"
 import { useEffect, useState } from "react"
-const MODULE_LABELS = {
-  "words-to-propositions": "Natural Language → Propositions",
-  subformula: "Breaking Down Subformulas",
-  "Truth-Table-Task": "Truth Tables",
-  "Equivalence-Rules-Task": "Equivalence Rules",
-  "TT-method-Conversion": "Normal Forms (Truth-Table Method)",
-  "Equivalence-method-Transform": "Normal Forms (Equivalence-Rule Method)",
-  "Resolution-Introduction": "The Resolution Step",
-  "Resolution-Refutation": "Resolution by Refutation",
-}
-
-const MODULE_ORDER = Object.keys(MODULE_LABELS)
+import { MODULE_NAMES, MODULE_ORDER } from "../constants"
 
 const UserPage = () => {
   const user = useUserStore((state) => state.user)

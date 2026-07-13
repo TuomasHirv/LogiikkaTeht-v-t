@@ -10,7 +10,8 @@ const DIRECTIONS = {
 
 const TruthTableField = forwardRef(
   ({ submitFunc, x, y, value, isHead, onNavigate }, ref) => {
-    const { reset: reset, ...textInput } = UseField("text", value)
+    const textInput = UseField("text", value)
+
     const [locked, setLocked] = useState(false)
     const bgClass = isHead ? "bg-amber-100" : "bg-gray-300"
 
@@ -34,7 +35,7 @@ const TruthTableField = forwardRef(
           }}
         >
           <input
-            {...textInput}
+            {...textInput.inputProps}
             ref={ref}
             onKeyDown={handleKeyDown}
             onBlur={() => {

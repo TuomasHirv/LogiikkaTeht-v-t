@@ -29,7 +29,7 @@ const WordToProposition = ({ word, symbol }) => {
 }
 
 const HomeScreen = () => {
-  const { reset: reset, ...proposition } = UseField("text")
+  const proposition = UseField("text")
   return (
     <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-6 text-slate-100">
       <div className="text-3xl font-black text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-emerald-400 mb-2">
@@ -52,7 +52,7 @@ const HomeScreen = () => {
         </div>
       </div>
       <textarea
-        {...proposition}
+        {...proposition.inputProps}
         className="w-full max-w-2xl h-32 p-4 bg-slate-950 border border-slate-800 rounded-2xl text-slate-200 placeholder-slate-600 font-mono text-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition resize-none shadow-inner"
         placeholder="A and B Therefore C"
       />

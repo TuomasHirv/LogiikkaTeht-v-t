@@ -6,4 +6,8 @@ export const taskService = {
     console.log(response)
     return response.data
   },
+  getTasks: async (moduleName) => {
+    const response = await apiClient.get(`/tasks/${moduleName}`)
+    return response.data
+  },
 }

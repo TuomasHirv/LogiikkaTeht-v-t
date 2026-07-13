@@ -76,49 +76,55 @@ const insertUser = async (username, passwordHash) => {
 const getAnswerAndModule = async (task_id) => {
   const q = `
   SELECT correct_answer, module_name FROM tasks WHERE id = $1`
-
-  const info = await db.query(q, [task_id])
-  const rows = info.rows[0]
-  switch (rows.module_name) {
-    case "words-to-propositions":
-      return {
-        answer: rows.correct_answer.answers,
-        moduleName: rows.module_name,
-      }
-    case "subformula":
-      return { answer: rows.correct_answer, moduleName: rows.module_name }
-    case "Truth-Table-Task":
-      return {
-        answer: rows.correct_answer.answer,
-        moduleName: rows.module_name,
-      }
-    case "Equivalence-Rules-Task":
-      return {
-        answer: rows.correct_answer.remove,
-        moduleName: rows.module_name,
-      }
-    case "TT-method-Conversion":
-      return {
-        answer: [rows.correct_answer.groups, rows.correct_answer.form],
-        moduleName: rows.module_name,
-      }
-    case "Equivalence-method-Transform":
-      return {
-        answer: [rows.correct_answer.remove, rows.correct_answer.form],
-        moduleName: rows.module_name,
-      }
-    case "Resolution-Introduction":
-      return {
-        answer: [
-          rows.correct_answer.clauses,
-          rows.correct_answer.assumption_count,
-          rows.correct_answer.assumptions,
-        ],
-        moduleName: rows.module_name,
-      }
-    default:
-      console.log("Module name isnt in presets:", rows.module_name)
-      throw new Error("Module name isnt in presets:", rows.module_name)
+  try {
+    const info = await db.query(q, [task_id])
+    const rows = info.rows[0]
+    switch (rows.module_name) {
+      case "words-to-propositions":
+        return {
+          answer: rows.correct_answer.answers,
+          moduleName: rows.module_name,
+        }
+      case "subformula":
+        return { answer: rows.correct_answer, moduleName: rows.module_name }
+      case "Truth-Table-Task":
+        return {
+          answer: rows.correct_answer.answer,
+          moduleName: rows.module_name,
+        }
+      case "Equivalence-Rules-Task":
+        return {
+          answer: rows.correct_answer.remove,
+          moduleName: rows.module_name,
+        }
+      case "TT-method-Conversion":
+        return {
+          answer: [rows.correct_answer.groups, rows.correct_answer.form],
+          moduleName: rows.module_name,
+        }
+      case "Equivalence-method-Transform":
+        return {
+          answer: [rows.correct_answer.remove, rows.correct_answer.form],
+          moduleName: rows.module_name,
+        }
+      case "Resolution-Introduction":
+        return {
+          answer: [
+            rows.correct_answer.clauses,
+            rows.correct_answer.assumption_count,
+            rows.correct_answer.assumptions,
+          ],
+          moduleName: rows.module_name,
+        }
+      default:
+        console.log("Module name isnt in presets:", rows.module_name)
+        throw new Error("Module name isnt in presets:", rows.module_name)
+    }
+  } catch (error) {
+    if (moduleName) {
+      console.log("Couldnt receive answer and module from db:", moduleName)
+    }
+    console.log("Module name was undefined")
   }
 }
 
