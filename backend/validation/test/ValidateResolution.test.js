@@ -79,7 +79,11 @@ describe("Testing ValidateResolution", () => {
 
   describe("parseUserClause", () => {
     it("parses a full assumption line", () => {
-      const result = VRfunc.parseUserClause("{P, Q} (assumption)")
+      const result = VRfunc.parseUserClause(
+        "{P, Q} (assumption)",
+        [["P", "Q"]],
+        0,
+      )
       assert.equal(result.justification, "assumption")
       assert.ok(result.clause.has("P"))
       assert.ok(result.clause.has("Q"))
@@ -105,11 +109,11 @@ describe("Testing ValidateResolution", () => {
     it("parses multiple valid clauses correctly", () => {
       const list = [
         "{P, Q} (assumption)",
-        "{Q} (lines: 1,2)",
-        "{ P , ¬Q }   ( lines: 2 , 3 )",
+        "{¬Q} (assumption)",
+        "{ P  }   ( lines: 0 , 1 )",
       ]
 
-      const result = VRfunc.parseClauseList(list)
+      const result = VRfunc.parseClauseList(list, [["P", "Q"], ["¬Q"]])
 
       assert.strictEqual(result.length, 3)
 
@@ -118,21 +122,19 @@ describe("Testing ValidateResolution", () => {
       assert.strictEqual(result[0].justification, "assumption")
 
       // Clause 2
-      assert.deepStrictEqual([...result[1].clause], ["Q"])
-      assert.deepStrictEqual(result[1].justification, [1, 2])
+      assert.deepStrictEqual([...result[1].clause], ["¬Q"])
+      assert.deepStrictEqual(result[1].justification, "assumption")
 
       // Clause 3 (with negation + whitespace)
-      assert.deepStrictEqual([...result[2].clause], ["P", "¬Q"])
-      assert.deepStrictEqual(result[2].justification, [2, 3])
+      assert.deepStrictEqual([...result[2].clause], ["P"])
+      assert.deepStrictEqual(result[2].justification, [0, 1])
     })
 
     it("handles empty clause", () => {
       const list = ["{} (assumption)"]
-      const result = VRfunc.parseClauseList(list)
-
-      assert.strictEqual(result.length, 1)
-      assert.deepStrictEqual([...result[0].clause], ["∅"])
-      assert.strictEqual(result[0].justification, "assumption")
+      assert.throws(() => {
+        VRfunc.parseClauseList(list, ["{}"])
+      })
     })
 
     it("throws on invalid clause format", () => {
@@ -161,7 +163,7 @@ describe("Testing ValidateResolution", () => {
 
     it("handles single literal with negation", () => {
       const list = ["{¬P} (assumption)"]
-      const result = VRfunc.parseClauseList(list)
+      const result = VRfunc.parseClauseList(list, [["¬P"]])
 
       assert.deepStrictEqual([...result[0].clause], ["¬P"])
     })

@@ -3,7 +3,7 @@ const assert = require("node:assert/strict")
 
 function loadMatchAnswerWithDbStub(dbExport) {
   const matchAnswerPath = require.resolve("../matchAnswer")
-  const dbPath = require.resolve("../database/db")
+  const dbPath = require.resolve("../../database/db")
 
   const originalMatchAnswer = require.cache[matchAnswerPath]
   const originalDb = require.cache[dbPath]
