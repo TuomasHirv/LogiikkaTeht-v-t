@@ -756,7 +756,13 @@ const tasks = [
     type: "Expand-Shorthand-Chain",
     module_name: "Recursive-Definition",
     question: "(A → B)",
-    correct_answer: { final: "(p0 → p1)" },
+    correct_answer: {
+      final: "(p0 → p1)",
+      shorthands: {
+        A: ["p0"],
+        B: ["p1"],
+      },
+    },
     metadata: {
       shorthands: { A: "p0", B: "p1" },
       end_goal:
@@ -767,7 +773,14 @@ const tasks = [
     type: "Expand-Shorthand-Chain",
     module_name: "Recursive-Definition",
     question: "(B ∨ C)",
-    correct_answer: { final: "(¬p0 ∨ p1)" },
+    correct_answer: {
+      final: "(¬p0 ∨ p1)",
+      shorthands: {
+        A: ["p0"],
+        B: ["¬", "A"],
+        C: ["p1"],
+      },
+    },
     metadata: {
       shorthands: { A: "p0", B: "¬A", C: "p1" },
       end_goal:
@@ -778,7 +791,15 @@ const tasks = [
     type: "Expand-Shorthand-Chain",
     module_name: "Recursive-Definition",
     question: "(C ↔ D)",
-    correct_answer: { final: "((p0 ∧ p1) ↔ p2)" },
+    correct_answer: {
+      final: "((p0 ∧ p1) ↔ p2)",
+      shorthands: {
+        A: ["p0"],
+        B: ["p1"],
+        C: ["(", "A", "∧", "B", ")"],
+        D: ["p2"],
+      },
+    },
     metadata: {
       shorthands: { A: "p0", B: "p1", C: "(A ∧ B)", D: "p2" },
       end_goal:
@@ -789,7 +810,15 @@ const tasks = [
     type: "Expand-Shorthand-Chain",
     module_name: "Recursive-Definition",
     question: "(C → D)",
-    correct_answer: { final: "(¬¬p0 → p1)" },
+    correct_answer: {
+      final: "(¬¬p0 → p1)",
+      shorthands: {
+        A: ["p0"],
+        B: ["¬", "A"],
+        C: ["¬", "B"],
+        D: ["p1"],
+      },
+    },
     metadata: {
       shorthands: { A: "p0", B: "¬A", C: "¬B", D: "p1" },
       end_goal:
@@ -800,7 +829,16 @@ const tasks = [
     type: "Expand-Shorthand-Chain",
     module_name: "Recursive-Definition",
     question: "(C ∧ E)",
-    correct_answer: { final: "((p0 ∨ p1) ∧ ¬p2)" },
+    correct_answer: {
+      final: "((p0 ∨ p1) ∧ ¬p2)",
+      shorthands: {
+        A: ["p0"],
+        B: ["p1"],
+        C: ["(", "A", "∨", "B", ")"],
+        D: ["p2"],
+        E: ["¬", "D"],
+      },
+    },
     metadata: {
       shorthands: { A: "p0", B: "p1", C: "(A ∨ B)", D: "p2", E: "¬D" },
       end_goal:
@@ -811,7 +849,18 @@ const tasks = [
     type: "Expand-Shorthand-Chain",
     module_name: "Recursive-Definition",
     question: "(F → C)",
-    correct_answer: { final: "((¬(p0 ∧ p1) ∨ p2) → (p0 ∧ p1))" },
+    correct_answer: {
+      final: "((¬(p0 ∧ p1) ∨ p2) → (p0 ∧ p1))",
+      shorthands: {
+        A: ["p0"],
+        B: ["p1"],
+        C: ["p2"],
+        D: ["(", "A", "↔", "B", ")"],
+        E: ["(", "D", "∨", "C", ")"],
+        F: ["¬", "E"],
+        G: ["p3"],
+      },
+    },
     metadata: {
       shorthands: {
         A: "p0",
@@ -829,7 +878,18 @@ const tasks = [
     type: "Expand-Shorthand-Chain",
     module_name: "Recursive-Definition",
     question: "(F → G)",
-    correct_answer: { final: "(¬((p0 ↔ p1) ∨ p2) → p3)" },
+    correct_answer: {
+      final: "(¬((p0 ↔ p1) ∨ p2) → p3)",
+      shorthands: {
+        A: ["p0"],
+        B: ["p1"],
+        C: ["p2"],
+        D: ["(", "A", "↔", "B", ")"],
+        E: ["(", "D", "∨", "C", ")"],
+        F: ["¬", "E"],
+        G: ["p3"],
+      },
+    },
     metadata: {
       shorthands: {
         A: "p0",
@@ -848,7 +908,19 @@ const tasks = [
     type: "Expand-Shorthand-Chain",
     module_name: "Recursive-Definition",
     question: "(H → C)",
-    correct_answer: { final: "((((p0 ∨ p1) ↔ ¬p2) ∧ p3) → (p0 ∨ p1))" },
+    correct_answer: {
+      final: "((((p0 ∨ p1) ↔ ¬p2) ∧ p3) → (p0 ∨ p1))",
+      shorthands: {
+        A: ["p0"],
+        B: ["p1"],
+        C: ["(", "A", "∨", "B", ")"],
+        D: ["p2"],
+        E: ["¬", "D"],
+        F: ["(", "C", "↔", "E", ")"],
+        G: ["p3"],
+        H: ["(", "F", "∧", "G", ")"],
+      },
+    },
     metadata: {
       shorthands: {
         A: "p0",

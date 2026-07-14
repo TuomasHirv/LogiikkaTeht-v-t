@@ -68,6 +68,8 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         taskId,
         response,
       )
+    case "Recursive-Definition":
+      console.log("Received")
     default:
       return response.status(400).json({ error: "Unsupported module" })
   }

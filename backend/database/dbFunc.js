@@ -116,6 +116,11 @@ const getAnswerAndModule = async (task_id) => {
           ],
           moduleName: rows.module_name,
         }
+      case "Recursive-Definition":
+        return {
+          answer: [rows.correct_answer.final, rows.correct_answer.shorthands],
+          moduleName: rows.module_name,
+        }
       default:
         console.log("Module name isnt in presets:", rows.module_name)
         throw new Error("Module name isnt in presets:", rows.module_name)
