@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useParams, Link } from "react-router-dom"
-import ReactMarkdown from "react-markdown"
+import SimpleMarkdown from "./SimpleMarkdown"
 import { ROUTES } from "../constants"
 
 const InstructionScreen = () => {
@@ -44,7 +44,7 @@ const InstructionScreen = () => {
             style={{ backgroundColor: "#e2e8f0" }}
           >
             <div className="text-black max-w-xl text-sm md:text-base leading-relaxed m-0">
-              <ReactMarkdown>{par}</ReactMarkdown>
+              <SimpleMarkdown>{par}</SimpleMarkdown>
             </div>
             <pre className="bg-white border-2 border-black rounded px-2 py-1 ml-0 sm:ml-2 overflow-x-auto whitespace-pre-wrap font-mono">
               {content.examples[index]}
