@@ -133,10 +133,22 @@ const getAnswerAndModule = async (task_id) => {
   }
 }
 
+async function getQuestion(taskId) {
+  try {
+    const q = "SELECT question FROM tasks WHERE id = $1"
+    const response = await db.query(q, [taskId])
+    return response.rows
+  } catch (error) {
+    console.log("Error in getQuestion:", error)
+    throw new Error(error)
+  }
+}
+
 module.exports = {
   insertAnswer,
   insertTask,
   insertUser,
   getAllUserAnswers,
   getAnswerAndModule,
+  getQuestion,
 }

@@ -3,6 +3,7 @@ const matchText = require("./matchTree")
 const areLogicallyEquivalent = require("./equivalence")
 const formChecker = require("./textToForm")
 const resolutionChecker = require("./ValidateResolution")
+const checkShorthand = require("./validateShorthand")
 const normalizeProposition = (proposition) =>
   proposition.replace(/\s+/g, "").toLowerCase()
 
@@ -242,6 +243,23 @@ function containsAllRequiredClauses(clauseList, requiredClauses) {
   )
 }
 
+async function validateShorthandtask(userList, finalAllowed, reqStart) {
+  try {
+    if (userList[0] !== reqStart) {
+      return false
+    }
+    const userLast = userList[userList.length - 1].replace(/\s/g, "")
+    const expectedLast = finalAllowed[0].replace(/\s/g, "")
+    if (userLast !== expectedLast) {
+      return false
+    }
+    return checkShorthand.validatePropositionList(userList, finalAllowed[1])
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
+
 module.exports = {
   matchPropositions,
   matchSubFormula,
@@ -250,4 +268,5 @@ module.exports = {
   matchTTFormAnswer,
   checkIfCorrectForm,
   matchResolutionTask,
+  validateShorthandtask,
 }
