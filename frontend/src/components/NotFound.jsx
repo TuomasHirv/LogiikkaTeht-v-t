@@ -1,4 +1,5 @@
-import notFoundImage from "../assets/coolPick.jfif"
+import { lazy, Suspense } from "react"
+const notFoundImage = lazy(() => import("../assets/coolPick.jfif"))
 const NotFound = () => {
   return (
     <div>

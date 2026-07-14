@@ -1,12 +1,18 @@
-import React from "react"
-import { partInstructions } from "../content/partInstructions"
+import { useState, useEffect } from "react"
 import { useParams, Link } from "react-router-dom"
 import ReactMarkdown from "react-markdown"
 import { ROUTES } from "../constants"
 
 const InstructionScreen = () => {
   const { id, section } = useParams()
-  const content = partInstructions[id][section]
+  const [content, setContent] = useState(null)
+  useEffect(() => {
+    setContent(null)
+    console.log(`part${id}section${section}.js`)
+    import(`../content/instructions/part${id}section${section}.js`)
+      .then((module) => setContent(module.default))
+      .catch(() => setContent(null))
+  }, [id, section])
   if (!content) {
     return <p> NOT DONE YET</p>
   }

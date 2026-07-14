@@ -11,11 +11,11 @@ const LoginScreen = () => {
   const loginFunc = async (event) => {
     event.preventDefault()
 
-    if (!username.value || !password.value) {
+    if (!username.inputProps.value || !password.inputProps.value) {
       return
     }
 
-    await loginUser(username.value, password.value)
+    await loginUser(username.inputProps.value, password.inputProps.value)
     username.reset()
     password.reset()
   }

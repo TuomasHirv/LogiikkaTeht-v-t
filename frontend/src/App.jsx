@@ -19,7 +19,6 @@ import NavBar from "./components/NavBar"
 import LoginScreen from "./components/LoginScreen"
 import RegisterScreen from "./components/RegisterScreen"
 import InstructionScreen from "./components/InstructionScreen"
-import ResolutionTask from "./components/ResolutionTask"
 import UserPage from "./components/UserScreen"
 import ErrorScreen from "./components/ErrorScreen"
 function App() {
@@ -48,7 +47,6 @@ function App() {
               element={<InstructionScreen />}
             />
             <Route path="/userpage" element={<UserPage />} />
-            <Route path="/testing" element={<ResolutionTask />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>

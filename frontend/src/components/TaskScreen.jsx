@@ -1,17 +1,16 @@
 import { useParams, Link } from "react-router-dom"
-import { useState, useEffect } from "react"
-import { partInstructions } from "../content/partInstructions"
+import { useState, useEffect, lazy, Suspense } from "react"
 import { taskInstructions } from "../content/taskInstructions"
 import { ROUTES, MODULE_NAMES } from "../constants"
 
 import { taskService } from "../services/taskService"
-import TaskItem from "./TaskItem"
-import SubFormulaTask from "./SubFormulaTask"
-import TruthTableTask from "./TruthTableTask"
-import EliminationTask from "./EliminationTask"
-import NormalFormTask from "./NormalFormTask"
-import ResolutionTask from "./ResolutionTask"
-
+const TaskItem = lazy(() => import("./TaskItem"))
+const SubFormulaTask = lazy(() => import("./SubFormulaTask"))
+const TruthTableTask = lazy(() => import("./TruthTableTask"))
+const EliminationTask = lazy(() => import("./EliminationTask"))
+const NormalFormTask = lazy(() => import("./NormalFormTask"))
+const ResolutionTask = lazy(() => import("./ResolutionTask"))
+const ShorthandTask = lazy(() => import("./ShorthandTask"))
 const TaskScreen = () => {
   const { moduleName, id, section } = useParams()
   const nextSection = Number(section) + 1
@@ -19,10 +18,12 @@ const TaskScreen = () => {
   const [loading, setLoading] = useState(true)
   const [continued, setContinued] = useState(false)
   useEffect(() => {
-    if (partInstructions[id][section] && !continued) {
-      setContinued(true)
-    }
+    setContinued(false)
+    import(`../content/instructions/part${id}section${section}.js`)
+      .then(() => setContinued(true))
+      .catch(() => setContinued(false))
   }, [id, section])
+
   const instructionLink = ROUTES.instructions(id, nextSection)
   useEffect(() => {
     const fetchTasks = async () => {
@@ -59,6 +60,8 @@ const TaskScreen = () => {
         return ResolutionTask
       case MODULE_NAMES.RESOLUTION_REFUTATION:
         return ResolutionTask
+      case "Recursive-Definition":
+        return ShorthandTask
       default:
         return TaskItem
     }
@@ -85,7 +88,11 @@ const TaskScreen = () => {
               : "bg-gray-500 p-3 border-black border-2"
           }
         >
-          <TaskComponent task={task} />
+          <Suspense
+            fallback={<div className="text-black">Loading task...</div>}
+          >
+            <TaskComponent task={task} />
+          </Suspense>
         </div>
       ))}
 

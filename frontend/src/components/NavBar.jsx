@@ -22,8 +22,13 @@ const NavBar = () => {
         </Link>
         <Link to="/part/2/section/1" className="nav-btn-primary">
           {" "}
+          Semantic tree{" "}
+        </Link>
+        <Link to="/part/3/section/1" className="nav-btn-primary">
+          {" "}
           Resolution method{" "}
         </Link>
+
         <div className="flex ml-auto">
           {!user ? (
             <div style={{ display: "flex", gap: "0.75rem" }}>
@@ -37,10 +42,16 @@ const NavBar = () => {
               </Link>
             </div>
           ) : (
-            <button className="nav-btn-primary" onClick={logoutUser}>
-              {" "}
-              Log out
-            </button>
+            <div className="flex gap-0.5">
+              <Link to="/userpage" className="nav-btn-primary">
+                {" "}
+                Tasks{" "}
+              </Link>
+              <button className="nav-btn-primary" onClick={logoutUser}>
+                {" "}
+                Log out
+              </button>
+            </div>
           )}
         </div>
       </div>

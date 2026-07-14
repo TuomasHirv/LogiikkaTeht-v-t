@@ -11,11 +11,11 @@ const RegisterScreen = () => {
   const registerFunc = async (event) => {
     event.preventDefault()
 
-    if (!username.value || !password.value) {
+    if (!username.inputProps.value || !password.inputProps.value) {
       return
     }
 
-    await registerUser(username.value, password.value)
+    await registerUser(username.inputProps.value, password.inputProps.value)
     username.reset()
     password.reset()
   }

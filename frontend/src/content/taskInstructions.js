@@ -30,4 +30,7 @@ export const taskInstructions = {
   "Resolution-Refutation": {
     instruction: "Remember to use the clause format.",
   },
+  "Recursive-Definition": {
+    instruction: "Task: Fully expand by opening one shorthand at a time.",
+  },
 }
