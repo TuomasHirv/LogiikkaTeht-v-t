@@ -19,3 +19,5 @@ Tasks is a simple description of what has been completed and doesn't necessarily
 | 08.07 |     Frontend for Res method. Difficulties in evaluating answers. Planned it out     |    4 |                   |
 | 09.07 |          Created Res method evaluation. Also created Res refutation method          |    7 | Res method in MVP |
 | 10.07 |      Added a userscreen and some other stuff. And syntax checking in frontend       |    4 |                   |
+| 13.07 |                          Fixed tests and refractored code                           |    4 |
+| 14.07 |     Added frontend component for a new task. Made front end alot more efficient     |    7 |
