@@ -34,7 +34,7 @@ const TaskItem = ({ task }) => {
     await submitTaskAnswer({
       event,
       taskId: task.id,
-      submittedAnswer: answerInput.value,
+      submittedAnswer: answerInput.inputProps.value,
       addAnswer,
       setFeedback,
       moduleName: task.moduleName,

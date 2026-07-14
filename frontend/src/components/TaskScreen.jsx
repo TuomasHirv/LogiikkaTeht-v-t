@@ -22,6 +22,11 @@ const TaskScreen = () => {
     import(`../content/instructions/part${id}section${section}.js`)
       .then(() => setContinued(true))
       .catch(() => setContinued(false))
+
+    const nextSection = Number(section) + 1
+    import(`../content/instructions/part${id}section${nextSection}.js`).catch(
+      () => {},
+    )
   }, [id, section])
 
   const instructionLink = ROUTES.instructions(id, nextSection)
@@ -60,7 +65,7 @@ const TaskScreen = () => {
         return ResolutionTask
       case MODULE_NAMES.RESOLUTION_REFUTATION:
         return ResolutionTask
-      case "Recursive-Definition":
+      case MODULE_NAMES.SHORTHAND_TASK:
         return ShorthandTask
       default:
         return TaskItem

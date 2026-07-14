@@ -28,6 +28,7 @@ export const MODULE_NAMES = {
   EQUIVALENCE_METHOD_TRANSFORM: "Equivalence-method-Transform",
   RESOLUTION_INTRODUCTION: "Resolution-Introduction",
   RESOLUTION_REFUTATION: "Resolution-Refutation",
+  SHORTHAND_TASK: "Recursive-Definition",
 }
 
 export const MODULE_ORDER = Object.values(MODULE_NAMES)
