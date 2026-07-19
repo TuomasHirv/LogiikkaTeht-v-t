@@ -9,6 +9,7 @@
     "frontend": "cd frontend && npm run dev",
     "dev": "npm run docker:up && concurrently \"npm run backend\" \"npm run frontend\"",
     "test": "npm --prefix backend test",
+    "test:routes": "npm --prefix backend run test:routes",
     "build": "cd frontend && npm run build",
     "preview": "cd frontend && npm run preview"
   },
