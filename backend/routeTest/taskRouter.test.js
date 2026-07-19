@@ -1,4 +1,4 @@
-const { test, describe } = require("node:test")
+const { test, describe, mock } = require("node:test")
 const assert = require("node:assert/strict")
 const supertest = require("supertest")
 const { setupTestDb, teardownTestDb, clearTestDb } = require("./setup")
@@ -82,6 +82,7 @@ describe("taskRouter", async () => {
       assert.ok(response.body.id)
     })
     test("Doesn't create task on missing items in request.body", async () => {
+      mock.method(console, "log", () => {})
       const res = await supertest(app)
         .post("/api/tasks")
         .send({
@@ -95,6 +96,7 @@ describe("taskRouter", async () => {
       assert.deepEqual(result.rows, [])
     })
     test("Doesn't create task on invalid items in request.body", async () => {
+      mock.method(console, "log", () => {})
       const res = await supertest(app).post("/api/tasks").send({
         type: "test",
         question: "testquestion",

@@ -20,7 +20,8 @@ userRouter.post("/", async (request, response) => {
     }
     const hashedPassword = await bcrypt.hash(password, saltRounds)
 
-    const newUser = await dbFunc.insertUser(username, hashedPassword)
+    const res = await dbFunc.insertUser(username, hashedPassword)
+    const newUser = res.rows[0]
     const token = jwt.sign({ userId: newUser.id }, JWT_secret, {
       expiresIn: "7d",
     })
