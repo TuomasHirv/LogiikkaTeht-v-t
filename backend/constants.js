@@ -6,6 +6,7 @@ const MODULENAMES = {
   TT_METHOD_CONVERSION: "TT-method-Conversion",
   EQUIVALENCE_METHOD_TRANSFORM: "Equivalence-method-Transform",
   RESOLUTION_INTRODUCTION: "Resolution-Introduction",
+  RESOLUTION_REFUTATION: "Resolution-Refutation",
   RECURSIVE_DEFINITION: "Recursive-Definition",
 }
 module.exports = { MODULENAMES }

@@ -3,7 +3,7 @@ const assert = require("node:assert/strict")
 const supertest = require("supertest")
 const { setupTestDb, teardownTestDb, clearTestDb } = require("./setup")
 const { MODULENAMES } = require("../constants")
-const helperFunc = require("./helperFunc")
+const helperFunc = require("./taskHelperFunc")
 let app
 let db
 test.before(async () => {

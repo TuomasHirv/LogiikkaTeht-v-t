@@ -87,7 +87,7 @@ answerRouter.get("/", authenticateToken, async (request, response) => {
 
   try {
     const answerList = await dbFunc.getAllUserAnswers(userId)
-    if (answerList.length === 0) {
+    if (answerList.rows.length === 0) {
       return response.status(404).json({ error: "Answers not found" })
     }
     return response.status(200).json({ answerList: answerList.rows })

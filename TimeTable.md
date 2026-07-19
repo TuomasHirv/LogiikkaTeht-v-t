@@ -22,4 +22,4 @@ Tasks is a simple description of what has been completed and doesn't necessarily
 | 13.07 |                           Fixed tests and refractored code                            |    4 |                   |
 | 14.07 |  Made new task for shorthands in the new section Made front end alot more efficient   |   12 |                   |
 | 17.07 |           Made frontend for Semantic tree task. Designed backend evaluation           |    6 |                   |
-| 19.07 | Continued to design backend connection. Decided to add supertest for End-to-End tests |    6 |                   |
+| 19.07 | Continued to design backend connection. Decided to add supertest for End-to-End tests |  7.5 |                   |
