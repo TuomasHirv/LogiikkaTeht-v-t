@@ -5,13 +5,13 @@ const TextField = ({ onLock }) => {
 
   const handleLock = (event) => {
     event.preventDefault()
-    if (textInput.value.trim()) {
-      onLock(textInput.value)
+    if (textInput.inputProps.value.trim()) {
+      onLock(textInput.inputProps.value)
     }
   }
   return (
     <form onSubmit={handleLock}>
-      <input {...textInput} className="bg-white" />
+      <input {...textInput.inputProps} className="bg-white" />
       <button type="submit" className="border-2 border-black rounded">
         {" "}
         ok{" "}

@@ -936,6 +936,227 @@ const tasks = [
         "Fully expand the given proposition by opening one shorthand at a time",
     },
   },
+  [
+    {
+      type: "tree",
+      module_name: "Semantic-Tree-Intro",
+      question: "P ∧ ¬P",
+      correct_answer: {
+        text: "P ∧ ¬P",
+        children: [
+          {
+            text: "P",
+            children: [{ text: "¬P", children: { text: "X", children: null } }],
+          },
+        ],
+      },
+      metadata: {},
+    },
+    {
+      type: "tree",
+      module_name: "Semantic-Tree-Intro",
+      question: "(P ∨ Q) ∧ ¬P ∧ ¬Q",
+      correct_answer: {
+        text: "(P ∨ Q) ∧ ¬P ∧ ¬Q",
+        children: [
+          {
+            text: "¬P",
+            children: [
+              {
+                text: "¬Q",
+                children: [
+                  {
+                    text: "P",
+                    children: [
+                      { text: "¬P", children: { text: "X", children: null } },
+                    ],
+                  },
+                  {
+                    text: "Q",
+                    children: [
+                      { text: "¬Q", children: { text: "X", children: null } },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      metadata: {},
+    },
+    {
+      type: "tree",
+      module_name: "Semantic-Tree-Intro",
+      question: "(P → Q) ∧ P ∧ ¬Q",
+      correct_answer: {
+        text: "(P → Q) ∧ P ∧ ¬Q",
+        children: [
+          {
+            text: "P",
+            children: [
+              {
+                text: "¬Q",
+                children: [
+                  {
+                    text: "¬P",
+                    children: [{ text: "X", children: null }],
+                  },
+                  {
+                    text: "Q",
+                    children: [{ text: "X", children: null }],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      metadata: {},
+    },
+    {
+      type: "tree",
+      module_name: "Semantic-Tree-Intro",
+      question: "¬(P ∧ Q) ∧ P",
+      correct_answer: {
+        text: "¬(P ∧ Q) ∧ P",
+        children: [
+          {
+            text: "P",
+            children: [
+              {
+                text: "¬P",
+                children: { text: "X", children: null },
+              },
+              {
+                text: "¬Q",
+                children: null,
+              },
+            ],
+          },
+        ],
+      },
+      metadata: {},
+    },
+    {
+      type: "tree",
+      module_name: "Semantic-Tree-Intro",
+      question: "¬(P ∨ Q) ∧ P",
+      correct_answer: {
+        text: "¬(P ∨ Q) ∧ P",
+        children: [
+          {
+            text: "P",
+            children: [
+              {
+                text: "¬P",
+                children: [
+                  {
+                    text: "¬Q",
+                    children: { text: "X", children: null },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      metadata: {},
+    },
+    {
+      type: "tree",
+      module_name: "Semantic-Tree-Intro",
+      question: "¬¬P ∧ ¬P",
+      correct_answer: {
+        text: "¬¬P ∧ ¬P",
+        children: [
+          {
+            text: "¬¬P",
+            children: [
+              {
+                text: "P",
+                children: [
+                  {
+                    text: "¬P",
+                    children: { text: "X", children: null },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      metadata: {},
+    },
+    {
+      type: "tree",
+      module_name: "Semantic-Tree-Intro",
+      question: "(P ↔ Q) ∧ ¬P",
+      correct_answer: {
+        text: "(P ↔ Q) ∧ ¬P",
+        children: [
+          {
+            text: "¬P",
+            children: [
+              {
+                text: "(P ∧ Q)",
+                children: [
+                  {
+                    text: "P",
+                    children: [{ text: "X", children: null }],
+                  },
+                ],
+              },
+              {
+                text: "(¬P ∧ ¬Q)",
+                children: [
+                  {
+                    text: "¬P",
+                    children: [
+                      {
+                        text: "¬Q",
+                        children: null,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      metadata: {},
+    },
+    {
+      type: "tree",
+      module_name: "Semantic-Tree-Intro",
+      question: "¬(P → Q) ∧ (Q ∨ ¬P)",
+      correct_answer: {
+        text: "¬(P → Q) ∧ (Q ∨ ¬P)",
+        children: [
+          {
+            text: "P",
+            children: [
+              {
+                text: "¬Q",
+                children: [
+                  {
+                    text: "Q",
+                    children: [{ text: "X", children: null }],
+                  },
+                  {
+                    text: "¬P",
+                    children: [{ text: "X", children: null }],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      metadata: {},
+    },
+  ],
 ]
 
 module.exports = tasks

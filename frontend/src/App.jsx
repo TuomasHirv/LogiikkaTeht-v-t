@@ -21,6 +21,7 @@ import RegisterScreen from "./components/RegisterScreen"
 import InstructionScreen from "./components/InstructionScreen"
 import UserPage from "./components/UserScreen"
 import ErrorScreen from "./components/ErrorScreen"
+import SemanticTreeTask from "./components/SemanticTreeTask"
 function App() {
   const token = useUserStore((state) => state.token)
   const { initialize } = useUserActions()
@@ -47,6 +48,7 @@ function App() {
               element={<InstructionScreen />}
             />
             <Route path="/userpage" element={<UserPage />} />
+            <Route path="/testing" element={<SemanticTreeTask />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
