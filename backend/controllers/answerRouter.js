@@ -4,6 +4,7 @@ const dbFunc = require("../database/dbFunc.js")
 const evaluator = require("../validation/matchAnswer.js")
 const authenticateToken = require("../middleware/auth.js")
 const routerHelper = require("./answerHelper.js")
+const { MODULENAMES } = require("../constants.js")
 
 answerRouter.post("/:id", authenticateToken, async (request, response) => {
   const taskId = request.params.id
@@ -14,14 +15,14 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
   const userId = request.userId
   const answerModuleName = await dbFunc.getAnswerAndModule(taskId)
   switch (answerModuleName.moduleName) {
-    case "words-to-propositions":
+    case MODULENAMES.WORDS_TO_PROPOSITIONS:
       return await routerHelper.wordsToPropositionsHelper(
         answer,
         taskId,
         userId,
         response,
       )
-    case "subformula":
+    case MODULENAMES.SUBFORMULA:
       return await routerHelper.subFormulaHelper(
         answer,
         taskId,
@@ -29,14 +30,14 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         userId,
         response,
       )
-    case "Truth-Table-Task":
+    case MODULENAMES.TRUTHTABLE_TASK:
       return await routerHelper.truthTableHelper(
         answer,
         taskId,
         userId,
         response,
       )
-    case "Equivalence-Rules-Task":
+    case MODULENAMES.EQUIVALENCE_RULES_TASK:
       return await routerHelper.equivalenceRuleHelper(
         answer,
         answerModuleName.answer,
@@ -44,7 +45,7 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         taskId,
         response,
       )
-    case "TT-method-Conversion":
+    case MODULENAMES.TT_METHOD_CONVERSION:
       return await routerHelper.TTFormHelper(
         answer,
         answerModuleName.answer,
@@ -52,7 +53,7 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         taskId,
         response,
       )
-    case "Equivalence-method-Transform":
+    case MODULENAMES.EQUIVALENCE_METHOD_TRANSFORM:
       return await routerHelper.equivalenceFormHelper(
         answer,
         answerModuleName.answer,
@@ -60,7 +61,7 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         taskId,
         response,
       )
-    case "Resolution-Introduction":
+    case MODULENAMES.RESOLUTION_INTRODUCTION:
       return await routerHelper.resolutionHelper(
         answer,
         answerModuleName.answer,
@@ -68,7 +69,7 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         taskId,
         response,
       )
-    case "Recursive-Definition":
+    case MODULENAMES.RECURSIVE_DEFINITION:
       return await routerHelper.shorthandHelper(
         answer,
         answerModuleName.answer,

@@ -23,6 +23,10 @@ jobs:
         run: npm ci
         working-directory: backend
 
-      - name: Run backend tests
+      - name: Run backend unit tests
         run: npm test
+        working-directory: backend
+
+      - name: Run backend route (supertest) tests
+        run: npm run test:routes
         working-directory: backend

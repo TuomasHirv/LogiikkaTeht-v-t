@@ -1,0 +1,11 @@
+const MODULENAMES = {
+  WORDS_TO_PROPOSITIONS: "words-to-propositions",
+  SUBFORMULA: "subformula",
+  TRUTHTABLE_TASK: "Truth-Table-Task",
+  EQUIVALENCE_RULES_TASK: "Equivalence-Rules-Task",
+  TT_METHOD_CONVERSION: "TT-method-Conversion",
+  EQUIVALENCE_METHOD_TRANSFORM: "Equivalence-method-Transform",
+  RESOLUTION_INTRODUCTION: "Resolution-Introduction",
+  RECURSIVE_DEFINITION: "Recursive-Definition",
+}
+module.exports = { MODULENAMES }
