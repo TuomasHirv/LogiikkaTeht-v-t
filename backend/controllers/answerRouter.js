@@ -13,7 +13,12 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
   const { answer } = request.body
 
   const userId = request.userId
-  const answerModuleName = await dbFunc.getAnswerAndModule(taskId)
+  let answerModuleName
+  try {
+    answerModuleName = await dbFunc.getAnswerAndModule(taskId)
+  } catch (err) {
+    return response.status(404).json({ error: err })
+  }
   switch (answerModuleName.moduleName) {
     case MODULENAMES.WORDS_TO_PROPOSITIONS:
       return await routerHelper.wordsToPropositionsHelper(

@@ -106,6 +106,13 @@ const tasks = {
         "Fully expand the given proposition by opening one shorthand at a time",
     },
   },
+  test: {
+    type: "For-Testing-Purpose",
+    module_name: "test",
+    question: "(A → B)",
+    correct_answer: {},
+    metadata: {},
+  },
 }
 const createTasksForTest = async (db, taskModule) => {
   let allIds = []
