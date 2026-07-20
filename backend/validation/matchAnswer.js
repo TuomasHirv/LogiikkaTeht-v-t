@@ -4,6 +4,7 @@ const areLogicallyEquivalent = require("./equivalence")
 const formChecker = require("./textToForm")
 const resolutionChecker = require("./ValidateResolution")
 const checkShorthand = require("./validateShorthand")
+const { validateSemanticTree } = require("./validateSemanticTree")
 const normalizeProposition = (proposition) =>
   proposition.replace(/\s+/g, "").toLowerCase()
 
@@ -21,12 +22,7 @@ const matchSubFormula = async (userObject, answerId) => {
   const q = `SELECT correct_answer FROM tasks WHERE id = $1`
   const dbAnswer = await db.query(q, [answerId])
   const correctAnswer = dbAnswer.rows[0].correct_answer
-  const accepted = recurseChildren(userObject, correctAnswer)
-  if (accepted) {
-    return true
-  } else {
-    return false
-  }
+  return recurseChildren(userObject, correctAnswer)
 }
 
 function recurseChildren(object, node) {
@@ -260,6 +256,51 @@ async function validateShorthandtask(userList, finalAllowed, reqStart) {
   }
 }
 
+function isContradictorySet(literals) {
+  for (const lit of literals) {
+    const complement = lit.startsWith("¬") ? lit.slice(1) : "¬" + lit
+    if (literals.includes(complement)) {
+      return true
+    }
+  }
+  return false
+}
+
+function checkSemanticTreeTask(userTree, reqLines, question) {
+  let userBranches
+
+  try {
+    userBranches = validateSemanticTree(userTree, question)
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+
+  for (const requiredLine of reqLines) {
+    const requiredClosed = isContradictorySet(requiredLine)
+    const requiredLiterals = new Set(requiredLine)
+
+    const found = userBranches.some((branch) => {
+      if (branch.closed !== requiredClosed) {
+        return false
+      }
+      if (requiredClosed) {
+        return [...requiredLiterals].every((lit) => branch.literals.has(lit))
+      }
+      return (
+        branch.literals.size === requiredLiterals.size &&
+        [...branch.literals].every((lit) => requiredLiterals.has(lit))
+      )
+    })
+
+    if (!found) {
+      return false
+    }
+  }
+
+  return true
+}
+
 module.exports = {
   matchPropositions,
   matchSubFormula,
@@ -269,4 +310,5 @@ module.exports = {
   checkIfCorrectForm,
   matchResolutionTask,
   validateShorthandtask,
+  checkSemanticTreeTask,
 }

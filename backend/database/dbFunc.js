@@ -1,5 +1,5 @@
 const db = require("./db")
-
+const { MODULENAMES } = require("../constants")
 const insertAnswer = async (userId, taskId, answer, correct) => {
   try {
     const qInsertAnswer = `
@@ -119,6 +119,11 @@ const getAnswerAndModule = async (task_id) => {
       case "Recursive-Definition":
         return {
           answer: [rows.correct_answer.final, rows.correct_answer.shorthands],
+          moduleName: rows.module_name,
+        }
+      case "Semantic-Tree-Intro":
+        return {
+          answer: rows.correct_answer.lines,
           moduleName: rows.module_name,
         }
       default:

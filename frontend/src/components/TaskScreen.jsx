@@ -11,6 +11,7 @@ const EliminationTask = lazy(() => import("./EliminationTask"))
 const NormalFormTask = lazy(() => import("./NormalFormTask"))
 const ResolutionTask = lazy(() => import("./ResolutionTask"))
 const ShorthandTask = lazy(() => import("./ShorthandTask"))
+const SemanticTreeTask = lazy(() => import("./SemanticTreeTask"))
 const TaskScreen = () => {
   const { moduleName, id, section } = useParams()
   const nextSection = Number(section) + 1
@@ -67,6 +68,8 @@ const TaskScreen = () => {
         return ResolutionTask
       case MODULE_NAMES.SHORTHAND_TASK:
         return ShorthandTask
+      case MODULE_NAMES.SEMANTIC_TREE_INTRO:
+        return SemanticTreeTask
       default:
         return TaskItem
     }

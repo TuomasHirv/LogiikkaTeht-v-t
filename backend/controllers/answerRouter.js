@@ -82,6 +82,14 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         taskId,
         response,
       )
+    case MODULENAMES.SEMANTIC_TREE_INTRO:
+      return await routerHelper.semanticTreeHelper(
+        answer,
+        answerModuleName.answer,
+        userId,
+        taskId,
+        response,
+      )
     default:
       return response.status(400).json({ error: "Unsupported module" })
   }

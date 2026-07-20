@@ -1,17 +1,51 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import SemanticTreeNode from "./SemanticTreeNode"
-const SemanticTreeTask = () => {
+import {
+  buildSavedAnswerFeedback,
+  parseSavedSubFormulaAnswer,
+} from "../hooks/savedAnswer"
+import { submitTaskAnswer } from "../hooks/submitAnswer"
+import AnswerFeedback from "./AnswerFeedback"
+import useUserStore, { useUserActions } from "../store"
+
+const SemanticTreeTask = ({ task, showSubmitButton = true }) => {
+  const { addAnswer } = useUserActions()
+  const savedAnswer = useUserStore((state) => state.answers[task.id])
+  const [feedback, setFeedback] = useState(null)
   const createInitialRoot = () => ({
-    text: "p0 ∨ p1",
+    text: task.question,
     locked: true,
     children: null,
   })
   const [root, setRoot] = useState({
-    text: "p0 ∨ p1",
+    text: task.question,
     locked: true,
     children: null,
   })
 
+  useEffect(() => {
+    const savedFeedback = buildSavedAnswerFeedback(savedAnswer)
+    const parsedAnswer = parseSavedSubFormulaAnswer(
+      savedAnswer?.submitted_answer,
+    )
+
+    if (!savedFeedback || !parsedAnswer) {
+      return
+    }
+
+    setFeedback(savedFeedback)
+    setRoot(parsedAnswer)
+  }, [task.id, savedAnswer])
+
+  const submitAnswer = async (event) => {
+    await submitTaskAnswer({
+      event,
+      taskId: task.id,
+      submittedAnswer: root,
+      addAnswer,
+      setFeedback,
+    })
+  }
   const resetRoot = () => {
     setRoot(createInitialRoot())
     setFeedback(null)
@@ -20,7 +54,7 @@ const SemanticTreeTask = () => {
   return (
     <>
       <div className="text-black text-center w-fit mx-auto">
-        <SemanticTreeNode node={root} onChange={setRoot} />
+        <SemanticTreeNode node={root} onChange={setRoot} editable={false} />
       </div>
       <div className="flex justify-end gap-2">
         <button
@@ -30,7 +64,17 @@ const SemanticTreeTask = () => {
         >
           Reset
         </button>
+        {showSubmitButton && (
+          <button
+            type="button"
+            className="border-black border-2 text-black rounded bg-green-400 hover:bg-green-700 ml-3.5"
+            onClick={submitAnswer}
+          >
+            Submit answer
+          </button>
+        )}
       </div>
+      <AnswerFeedback feedback={feedback} />
     </>
   )
 }

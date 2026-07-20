@@ -196,6 +196,31 @@ async function shorthandHelper(answer, FinalAllowed, userId, taskId, response) {
   }
 }
 
+async function semanticTreeHelper(answer, reqLines, userId, taskId, response) {
+  try {
+    const question = await dbFunc.getQuestion(taskId)
+    console.log("question: ", question[0].question)
+    const accepted = await evaluator.checkSemanticTreeTask(
+      answer,
+      reqLines,
+      question[0].question,
+    )
+    await dbFunc.insertAnswer(
+      userId,
+      taskId,
+      serializeSubmittedAnswer(answer),
+      accepted,
+    )
+    if (accepted) {
+      return response.status(200).json({ correct: true, answer: answer })
+    }
+    return response.status(200).json({ correct: false, answer: answer })
+  } catch (error) {
+    console.log(error)
+    return response.status(500).json({ error: "internal server error" })
+  }
+}
+
 module.exports = {
   wordsToPropositionsHelper,
   subFormulaHelper,
@@ -205,4 +230,5 @@ module.exports = {
   equivalenceFormHelper,
   resolutionHelper,
   shorthandHelper,
+  semanticTreeHelper,
 }

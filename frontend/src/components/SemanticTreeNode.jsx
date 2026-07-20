@@ -20,7 +20,7 @@ const TextField = ({ onLock }) => {
   )
 }
 
-const SemanticTreeNode = ({ node, onChange }) => {
+const SemanticTreeNode = ({ node, onChange, editable = true }) => {
   if (!node.locked) {
     return (
       <TextField
@@ -63,12 +63,18 @@ const SemanticTreeNode = ({ node, onChange }) => {
   return (
     <div>
       <div className="flex flex-col items-center w-full">
-        <button
-          onClick={openNode}
-          className="bg-white hover:bg-gray-400 rounded text-2xl w-full text-center"
-        >
-          {node.text}
-        </button>
+        {editable ? (
+          <button
+            onClick={openNode}
+            className="bg-white hover:bg-gray-400 rounded text-2xl w-full text-center"
+          >
+            {node.text}
+          </button>
+        ) : (
+          <p className="bg-white rounded text-2xl w-full text-center">
+            {node.text}
+          </p>
+        )}
 
         {(!node.children || node.children.length < 2) && !hasXChild(node) && (
           <button
