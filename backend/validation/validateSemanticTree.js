@@ -4,7 +4,7 @@ const createTree = require("./createTree")
 
 function stripOuterParens(text) {
   let stripped = text.replace(/\s*/, "")
-  while (stripped.startsWith("(") && stripped.startsWith(")")) {
+  while (stripped.startsWith("(") && stripped.endsWith(")")) {
     let depth = 0
     let matches = true
     for (let i = 0; i < stripped.length - 1; i++) {
@@ -85,10 +85,15 @@ function expandNegation(innerText) {
 
 function expandObligation(text) {
   const parsed = findMainConnective(text)
+  console.log("Main connective found:", parsed)
 
   switch (parsed.type) {
     case "AND":
-      return { kind: "chain", results: [parsed.left, parsed.right] }
+      const deeperResults = [
+        ...searchMoreAnd(parsed.left),
+        ...searchMoreAnd(parsed.right),
+      ]
+      return { kind: "chain", results: deeperResults }
     case "OR":
       return { kind: "fork", results: [parsed.left, parsed.right] }
     case "IMPLIES":
@@ -106,6 +111,48 @@ function expandObligation(text) {
     case "VAR":
       return null
   }
+}
+
+function searchMoreAnd(text) {
+  console.log("searchMoreAnd called:", text)
+  let searchable = normalize(text)
+  let matches = false
+  if (searchable.startsWith("(") && searchable.endsWith(")")) {
+    let depth = 0
+    matches = true
+    for (let i = 0; i < searchable.length - 1; i++) {
+      if (searchable[i] === "(") depth++
+      if (searchable[i] === ")") depth--
+      if (depth === 0) {
+        matches = false
+        break
+      }
+    }
+  }
+  if (matches) {
+    return [text]
+  }
+  depth = 0
+  let isAndStatement = false
+  let rightSide = ""
+  let leftSide = ""
+  for (let j = 0; j < searchable.length - 1; j++) {
+    const char = searchable[j]
+    if (char === "(") depth++
+    if (char === ")") depth--
+    if (depth === 0) {
+      if (char === "∧") {
+        isAndStatement = true
+        left = searchable.slice(0, j)
+        right = searchable.slice(j + 1)
+        break
+      }
+    }
+  }
+  if (!isAndStatement) {
+    return [text]
+  }
+  return [normalize(left), normalize(right)]
 }
 
 function withAdded(set, item) {
@@ -160,7 +207,7 @@ function evaluateNode(node, state, branches) {
 
   const remainingPending = withRemoved(state.pending, currText)
   const obligation = expandObligation(currText)
-
+  console.log("New obligations:", obligation)
   // --- atomic literal (VAR or bare negated VAR) ---
   if (obligation === null) {
     const newLiterals = withAdded(state.literals, currText)
@@ -180,6 +227,7 @@ function evaluateNode(node, state, branches) {
     }
 
     if (node.children.length !== 1) {
+      console.log("Children after a literal:", node.children)
       throw new Error(
         "A literal can only chain to exactly one following line (or none, if it ends the branch)",
       )
