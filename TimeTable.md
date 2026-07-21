@@ -24,3 +24,4 @@ Tasks is a simple description of what has been completed and doesn't necessarily
 | 17.07 |            Made frontend for Semantic tree task. Designed backend evaluation            |    6 |                   |
 | 19.07 |  Continued to design backend connection. Decided to add supertest for End-to-End tests  |  7.5 |                   |
 | 20.07 | few tests. Designed and tried to implement an evaluation for semantic tree. Doesnt work |  6.5 |                   |
+| 21.07 | Finished validateSemanticTree. The file is AI-coded but i had to manually work it alot  |    8 | >120 h done       |

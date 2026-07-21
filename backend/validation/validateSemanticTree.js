@@ -1,6 +1,4 @@
-// This file is AI-coded
-
-const createTree = require("./createTree")
+// This file is AI-coded, but it is important to note it also took alot of manual work
 
 function stripOuterParens(text) {
   let stripped = text.replace(/\s*/, "")
@@ -80,7 +78,7 @@ function expandNegation(innerText) {
         kind: "fork",
         results: [
           `${parsed.left} ∧ ${negateText(parsed.right)}`,
-          `¬${parsed.left} ∧ ${parsed.right}`,
+          `${negateText(parsed.left)} ∧ ${parsed.right}`,
         ],
       }
     case "VAR":
@@ -90,7 +88,6 @@ function expandNegation(innerText) {
 
 function expandObligation(text) {
   const parsed = findMainConnective(text)
-  console.log("Main connective found:", parsed)
 
   switch (parsed.type) {
     case "AND":
@@ -108,7 +105,7 @@ function expandObligation(text) {
         kind: "fork",
         results: [
           `${parsed.left} ∧ ${parsed.right}`,
-          `¬${parsed.left} ∧ ¬${parsed.right}`,
+          `${negateText(parsed.left)} ∧ ${negateText(parsed.right)}`,
         ],
       }
     case "NOT":
@@ -119,7 +116,6 @@ function expandObligation(text) {
 }
 
 function searchMoreAnd(text) {
-  console.log("searchMoreAnd called:", text)
   let searchable = normalize(text)
   let matches = false
   if (searchable.startsWith("(") && searchable.endsWith(")")) {
@@ -204,7 +200,6 @@ function evaluateNode(node, state, branches) {
   }
 
   if (!state.pending.has(currText)) {
-    console.log("state.pending:", state.pending)
     throw new Error(
       `"${currText}" doesn't match anything currently pending on this branch`,
     )
@@ -212,7 +207,6 @@ function evaluateNode(node, state, branches) {
 
   const remainingPending = withRemoved(state.pending, currText)
   const obligation = expandObligation(currText)
-  console.log("New obligations:", obligation)
   // --- atomic literal (VAR or bare negated VAR) ---
   if (obligation === null) {
     const newLiterals = withAdded(state.literals, currText)
@@ -232,7 +226,6 @@ function evaluateNode(node, state, branches) {
     }
 
     if (node.children.length !== 1) {
-      console.log("Children after a literal:", node.children)
       throw new Error(
         "A literal can only chain to exactly one following line (or none, if it ends the branch)",
       )
@@ -245,7 +238,6 @@ function evaluateNode(node, state, branches) {
   // --- chain: both results become pending on the SAME branch, addressed in any order ---
   if (obligation.kind === "chain") {
     if (!node.children || node.children.length !== 1) {
-      console.log("curr text:", currText)
       throw new Error(
         "A chain-type obligation (∧, ¬∨, ¬→, ¬¬) must continue with exactly one line",
       )
@@ -262,7 +254,6 @@ function evaluateNode(node, state, branches) {
   // --- fork: two separate branches, each pursuing exactly one of the two results ---
   if (obligation.kind === "fork") {
     if (!node.children || node.children.length !== 2) {
-      console.log("curr text:", currText)
       throw new Error(
         "A fork-type obligation (∨, →, ↔, ¬∧, ¬↔) must split into exactly two lines",
       )
@@ -316,4 +307,13 @@ function validateSemanticTree(rootNode, question) {
   return branches
 }
 
-module.exports = { validateSemanticTree }
+module.exports = {
+  validateSemanticTree,
+  stripOuterParens,
+  findMainConnective,
+  expandNegation,
+  expandObligation,
+  searchMoreAnd,
+  findContradiction,
+  evaluateNode,
+}
