@@ -28,9 +28,6 @@ function connectiveName(symbol) {
 function findMainConnective(text) {
   const stripped = stripOuterParens(text)
 
-  if (stripped.startsWith("¬")) {
-    return { type: "NOT", inner: stripped.slice(1) }
-  }
   const connectives = ["↔", "→", "∨", "∧"]
   let depth = 0
   for (let i = 0; i < stripped.length; i++) {
@@ -45,9 +42,17 @@ function findMainConnective(text) {
       }
     }
   }
+  if (stripped.startsWith("¬")) {
+    return { type: "NOT", inner: stripped.slice(1) }
+  }
   return { type: "VAR", value: stripped }
 }
 
+// TODO: stripOuterParens runs before the negation check, so negating an
+// already-parenthesized compound (e.g. "(P ∧ Q)") drops the parens instead
+// of producing "¬(P ∧ Q)". Not currently hit by any seeded question (every
+// operand passed here today is a bare variable) — needs re-wrapping
+// semantics decided before fixing.
 function negateText(text) {
   const stripped = stripOuterParens(text)
   return stripped.startsWith("¬") ? stripped.slice(1) : `¬${stripped}`
@@ -74,8 +79,8 @@ function expandNegation(innerText) {
       return {
         kind: "fork",
         results: [
-          `(${parsed.left} ∧ ${negateText(parsed.right)})`,
-          `(¬${parsed.left} ∧ ${parsed.right})`,
+          `${parsed.left} ∧ ${negateText(parsed.right)}`,
+          `¬${parsed.left} ∧ ${parsed.right}`,
         ],
       }
     case "VAR":
@@ -102,8 +107,8 @@ function expandObligation(text) {
       return {
         kind: "fork",
         results: [
-          `(${parsed.left} ∧ ${parsed.right})`,
-          `(¬${parsed.left} ∧ ¬${parsed.right})`,
+          `${parsed.left} ∧ ${parsed.right}`,
+          `¬${parsed.left} ∧ ¬${parsed.right}`,
         ],
       }
     case "NOT":
@@ -132,7 +137,7 @@ function searchMoreAnd(text) {
   if (matches) {
     return [text]
   }
-  depth = 0
+  let depth = 0
   let isAndStatement = false
   let rightSide = ""
   let leftSide = ""
@@ -143,8 +148,8 @@ function searchMoreAnd(text) {
     if (depth === 0) {
       if (char === "∧") {
         isAndStatement = true
-        left = searchable.slice(0, j)
-        right = searchable.slice(j + 1)
+        leftSide = searchable.slice(0, j)
+        rightSide = searchable.slice(j + 1)
         break
       }
     }
@@ -152,7 +157,7 @@ function searchMoreAnd(text) {
   if (!isAndStatement) {
     return [text]
   }
-  return [normalize(left), normalize(right)]
+  return [normalize(leftSide), normalize(rightSide)]
 }
 
 function withAdded(set, item) {
