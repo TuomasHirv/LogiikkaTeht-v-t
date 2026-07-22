@@ -11,6 +11,7 @@ async function wordsToPropositionsHelper(answer, taskId, userId, response) {
       return response.status(422).json({ error: "Syntax error" })
     }
     const accepted = await evaluator.matchPropositions(answer, taskId)
+    feedback = accepted ? "Pass" : "Fail"
     await dbFunc.insertAnswer(
       userId,
       taskId,
@@ -18,9 +19,13 @@ async function wordsToPropositionsHelper(answer, taskId, userId, response) {
       accepted,
     )
     if (accepted) {
-      return response.status(200).json({ correct: true, answer: answer })
+      return response
+        .status(200)
+        .json({ correct: true, answer: answer, feedback: feedback })
     }
-    return response.status(200).json({ correct: false, answer: answer })
+    return response
+      .status(200)
+      .json({ correct: false, answer: answer, feedback: feedback })
   } catch (error) {
     return response.status(500).json({ error: "internal server error" })
   }
@@ -58,6 +63,7 @@ async function subFormulaHelper(answer, taskId, dbAnswer, userId, response) {
 async function truthTableHelper(answer, taskId, userId, response) {
   try {
     const accepted = await evaluator.matchTruthTable(answer, taskId)
+    feedback = accepted ? "Pass" : "Fail"
     await dbFunc.insertAnswer(
       userId,
       taskId,
@@ -65,9 +71,13 @@ async function truthTableHelper(answer, taskId, userId, response) {
       accepted,
     )
     if (accepted) {
-      return response.status(200).json({ correct: true, answer: answer })
+      return response
+        .status(200)
+        .json({ correct: true, answer: answer, feedback: feedback })
     }
-    return response.status(200).json({ correct: false, answer: answer })
+    return response
+      .status(200)
+      .json({ correct: false, answer: answer, feedback: feedback })
   } catch (error) {
     return response.status(500).json({ error: "internal server error" })
   }
@@ -82,13 +92,18 @@ async function equivalenceRuleHelper(answer, rule, userId, taskId, response) {
       userId,
       taskId,
       serializeSubmittedAnswer(answer),
-      accepted,
+      accepted.accepted,
+      accepted.feedback,
     )
     console.log("Inserted")
-    if (accepted) {
-      return response.status(200).json({ correct: true, answer: answer })
+    if (accepted.accepted) {
+      return response
+        .status(200)
+        .json({ correct: true, answer: answer, feedback: accepted.feedback })
     }
-    return response.status(200).json({ correct: false, answer: answer })
+    return response
+      .status(200)
+      .json({ correct: false, answer: answer, feedback: accepted.feedback })
   } catch (error) {
     console.log(error)
     return response.status(500).json({ error: "internal server error" })

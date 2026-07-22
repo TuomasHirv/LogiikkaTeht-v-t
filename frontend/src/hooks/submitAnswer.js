@@ -37,7 +37,6 @@ export const submitTaskAnswer = async ({
       correct: responseData.correct,
       feedback: responseData.feedback,
     })
-    console.log(feedback)
     setFeedback(feedback)
   } catch (error) {
     console.log("Failed to submit answer:", error.message)

@@ -21,8 +21,8 @@ const Line = ({ initValue, index, change }) => {
       <input
         {...lineInput.inputProps}
         onBlur={() => {
-          if (lineInput.value) {
-            change(lineInput.value, index)
+          if (lineInput.inputProps.value) {
+            change(lineInput.inputProps.value, index)
           }
         }}
       />
@@ -35,6 +35,7 @@ const EliminationTask = ({ task }) => {
   const start = task?.question || ""
   const taskId = task?.id
   const savedAnswer = useUserStore((state) => state.answers[taskId])
+  console.log(savedAnswer)
   const [feedback, setFeedback] = useState(null)
   const { ...propositions } = useLineList([start, ""], ELIMINATION_LINE_LIMITS)
 
@@ -53,7 +54,10 @@ const EliminationTask = ({ task }) => {
       return
     }
 
-    setFeedback(savedFeedback)
+    setFeedback({
+      correct: savedFeedback.correct,
+      feedback: savedFeedback.feedback,
+    })
     propositions.setLines(parsedSavedAnswer)
   }, [taskId, savedAnswer])
 
@@ -66,13 +70,14 @@ const EliminationTask = ({ task }) => {
     if (!taskId) {
       return
     }
-
+    console.log("Eq answer:", propositions)
     const answer = propositions.lines.filter((prop) => prop.trim() !== "")
     answer.splice(0, 1, task.question)
     if (answer.length > ELIMINATION_LINE_LIMITS.max) {
-      setFeedback({ correct: false, text: "input is too long" })
+      setFeedback({ correct: false, feedback: "input is too long" })
       return
     }
+    console.log("Eq answer:", answer)
     await submitTaskAnswer({
       event,
       taskId,

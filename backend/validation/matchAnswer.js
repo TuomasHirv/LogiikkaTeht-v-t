@@ -101,24 +101,24 @@ const matchEquivalenceAnswer = (answerList, excluded) => {
   const lastAnswer = answerList[answerList.length - 1]
   for (i = 0; i < excluded.length; i++) {
     if (lastAnswer.includes(excluded[i])) {
-      console.log("DOESNT FIT THE RULE")
-      return false
+      return {
+        accepted: false,
+        feedback: `Last line: ${lastAnswer} includes ${excluded[i]}`,
+      }
     }
   }
 
   let accepted = false
   for (i = 1; i < answerList.length; i++) {
     accepted = matchText(answerList[i - 1], answerList[i])
-    console.log(
-      "First text:",
-      answerList[i - 1],
-      "Second text:",
-      answerList[i],
-      "Result:",
-      accepted,
-    )
+    if (!accepted) {
+      return {
+        accepted: false,
+        feedback: `This change is incorrect: ${answerList[i - 1]} → ${answerList[i]}`,
+      }
+    }
   }
-  return accepted
+  return { accepted: accepted, feedback: "Pass" }
 }
 
 const matchTTFormAnswer = (text, form, correctAnswer) => {
@@ -134,11 +134,8 @@ const matchTTFormAnswer = (text, form, correctAnswer) => {
       const userClauses = result.clauses
       return matchArrays(userClauses, correctAnswer)
     }
-    console.log("Form doesnt conform to expectations:", form)
     return false
   } catch (error) {
-    console.log("Something is wrong with the text")
-    console.log(error)
     return false
   }
 }

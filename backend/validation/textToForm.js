@@ -81,7 +81,7 @@ function parseCNF(tokens, index) {
     index = next.index
   }
   if (index !== tokens.length) {
-    throw new Error(`Unexpected token "${tokens[index]}" at position ${index}`)
+    throw new Error(`Unexpected token "${tokens[index]}"`)
   }
   return { clauses, index }
 }
@@ -125,7 +125,7 @@ function parseDNF(tokens, index) {
   }
 
   if (index !== tokens.length) {
-    throw new Error(`Unexpected token "${tokens[index]}" at position ${index}`)
+    throw new Error(`Unexpected token "${tokens[index]}"`)
   }
 
   return { clauses, index }

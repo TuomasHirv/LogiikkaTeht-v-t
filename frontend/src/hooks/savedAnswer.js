@@ -4,6 +4,7 @@ export const createPassFailFeedback = (isCorrect) => ({
 })
 
 export const buildSavedAnswerFeedback = (savedAnswer) => {
+  //console.log(savedAnswer)
   if (!savedAnswer) {
     return null
   }

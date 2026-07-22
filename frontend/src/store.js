@@ -70,7 +70,6 @@ const useUserStore = create(
                 feedback: a.feedback,
                 module_name: a.module_name,
               }
-              console.log(a.is_correct, a.feedback)
             })
             set(() => ({ answers: mappedAnswers }))
           } catch (error) {
