@@ -29,16 +29,27 @@ async function wordsToPropositionsHelper(answer, taskId, userId, response) {
 async function subFormulaHelper(answer, taskId, dbAnswer, userId, response) {
   try {
     const accepted = await evaluator.matchSubFormula(answer, taskId, dbAnswer)
+    console.log(accepted)
+    const defaultFeedback =
+      accepted?.feedback || "served failed to evaluate answer"
     await dbFunc.insertAnswer(
       userId,
       taskId,
       serializeSubmittedAnswer(answer),
-      accepted,
+      accepted.accepted,
+      defaultFeedback,
     )
-    if (accepted) {
-      return response.status(200).json({ correct: true, answer: answer })
+    console.log("DB inserted!")
+    if (accepted.accepted) {
+      console.log("Accepted")
+      return response
+        .status(200)
+        .json({ correct: true, answer: answer, feedback: defaultFeedback })
     }
-    return response.status(200).json({ correct: false, answer: answer })
+    console.log("Not accepted")
+    return response
+      .status(200)
+      .json({ correct: false, answer: answer, feedback: defaultFeedback })
   } catch (error) {
     return response.status(500).json({ error: "internal server error" })
   }

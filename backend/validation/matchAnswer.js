@@ -19,52 +19,64 @@ const matchPropositions = async (userAnswer, taskId) => {
   )
 }
 const matchSubFormula = async (userObject, answerId) => {
+  console.log("FUNC HIT")
   const q = `SELECT correct_answer FROM tasks WHERE id = $1`
   const dbAnswer = await db.query(q, [answerId])
   const correctAnswer = dbAnswer.rows[0].correct_answer
-  return recurseChildren(userObject, correctAnswer)
+  const result = recurseChildren(userObject, correctAnswer)
+  console.log("Answer evaluated:", result)
+  return { accepted: result.accepted, feedback: result.feedback }
 }
 
 function recurseChildren(object, node) {
   if (!object.children) {
     if (!node.children) {
-      return true
+      return { accepted: true, feedback: "Pass" }
     } else if (node.children.length > 0) {
-      return false
+      return { accepted: false, feedback: `This isn't complete ${node.text}` }
     }
-    return true
+    return { accepted: true, feedback: "Pass" }
   }
   if (!node.children) {
     return false
   }
-
   if (object.children.length !== node.children.length) {
-    return false
+    return {
+      accepted: false,
+      feedback: `This should have more branches ${node.text}`,
+    }
   }
   if (object.children.length === 0) {
-    return true
+    return { accepted: true, feedback: "Pass" }
   }
 
-  for (const cNode of node.children) {
-    let found = false
-    for (const child of object.children) {
-      const correctText = cNode.text.trim().replace(/\s+/g, "")
-      const userText = child.text.trim().replace(/\s+/g, "")
-      if (correctText === userText) {
-        found = true
-        const correct = recurseChildren(child, cNode)
-        if (!correct) {
-          return false
+  if (node.children && node.children.length > 0) {
+    const userChildren = new Set()
+
+    for (const cNode of node.children) {
+      let found = false
+      for (const child of object.children) {
+        const correctText = cNode.text.trim().replace(/\s+/g, "")
+        const userText = child.text.trim().replace(/\s+/g, "")
+        if (correctText === userText) {
+          found = true
+          const correct = recurseChildren(child, cNode)
+          if (!correct.accepted) {
+            return { accepted: false, feedback: correct.feedback }
+          }
+          break
         }
-        break
+      }
+      if (!found) {
+        return {
+          accepted: false,
+          feedback: `You didnt find the correct branches for ${node.text}`,
+        }
       }
     }
-    if (!found) {
-      return false
-    }
   }
 
-  return true
+  return { accepted: true, feedback: "Pass" }
 }
 const normalizeRow = (row) => row.map((cell) => cell.trim().replace(/\s+/g, ""))
 

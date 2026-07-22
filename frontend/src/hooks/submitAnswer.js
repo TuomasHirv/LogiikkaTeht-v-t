@@ -5,13 +5,13 @@ const buildSubmissionErrorFeedback = (error) => {
   if (error.response && error.response.status === 422) {
     return {
       correct: false,
-      text: "Error in syntax",
+      feedback: "Error in syntax",
     }
   }
 
   return {
     correct: false,
-    text: "Server failed to evaluate answer",
+    feedback: "Server failed to evaluate answer",
   }
 }
 
@@ -26,8 +26,19 @@ export const submitTaskAnswer = async ({
   event?.preventDefault()
   try {
     const responseData = await answerService.submit(taskId, submittedAnswer)
-    addAnswer(taskId, submittedAnswer, responseData.correct, moduleName)
-    setFeedback(createPassFailFeedback(responseData.correct))
+    addAnswer(
+      taskId,
+      submittedAnswer,
+      responseData.correct,
+      responseData.feedback,
+      moduleName,
+    )
+    const feedback = createPassFailFeedback({
+      correct: responseData.correct,
+      feedback: responseData.feedback,
+    })
+    console.log(feedback)
+    setFeedback(feedback)
   } catch (error) {
     console.log("Failed to submit answer:", error.message)
     setFeedback(buildSubmissionErrorFeedback(error))

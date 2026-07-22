@@ -1,18 +1,19 @@
 const db = require("./db")
 const { MODULENAMES } = require("../constants")
-const insertAnswer = async (userId, taskId, answer, correct) => {
+const insertAnswer = async (userId, taskId, answer, correct, feedback) => {
   try {
     const qInsertAnswer = `
-      INSERT INTO answers (user_id, task_id, submitted_answer, is_correct)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO answers (user_id, task_id, submitted_answer, is_correct, feedback)
+      VALUES ($1, $2, $3, $4, $5)
       ON CONFLICT (user_id, task_id)
-      DO UPDATE SET submitted_answer = EXCLUDED.submitted_answer, is_correct = EXCLUDED.is_correct, completed_at = CURRENT_TIMESTAMP
+      DO UPDATE SET submitted_answer = EXCLUDED.submitted_answer, is_correct = EXCLUDED.is_correct, completed_at = CURRENT_TIMESTAMP, feedback = EXCLUDED.feedback
       RETURNING submitted_answer`
     const returnedAnswer = await db.query(qInsertAnswer, [
       userId,
       taskId,
       answer,
       correct,
+      feedback,
     ])
     return returnedAnswer
   } catch (error) {
@@ -23,7 +24,7 @@ const insertAnswer = async (userId, taskId, answer, correct) => {
 
 const getAllUserAnswers = async (userId) => {
   const q = `
-    SELECT A.task_id, A.submitted_answer, A.is_correct, T.module_name
+    SELECT A.task_id, A.submitted_answer, A.is_correct, A.feedback, T.module_name
     FROM answers AS A
     JOIN tasks AS T ON A.task_id = T.id
     WHERE A.user_id = $1

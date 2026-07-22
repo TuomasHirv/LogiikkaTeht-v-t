@@ -1,13 +1,16 @@
 export const createPassFailFeedback = (isCorrect) => ({
-  correct: isCorrect,
-  text: isCorrect ? "Pass" : "Fail",
+  correct: isCorrect.correct,
+  feedback: isCorrect.feedback,
 })
 
 export const buildSavedAnswerFeedback = (savedAnswer) => {
   if (!savedAnswer) {
     return null
   }
-  return createPassFailFeedback(savedAnswer.is_correct)
+  return createPassFailFeedback({
+    correct: savedAnswer.is_correct,
+    feedback: savedAnswer.feedback,
+  })
 }
 
 export const parseSavedSubFormulaAnswer = (submittedAnswer) => {

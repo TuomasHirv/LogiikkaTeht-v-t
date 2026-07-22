@@ -2,7 +2,7 @@ const AnswerFeedback = ({ feedback }) => {
   if (!feedback) {
     return null
   }
-
+  console.log("AnswerFeedback:", feedback)
   return (
     <p
       style={{
@@ -10,7 +10,7 @@ const AnswerFeedback = ({ feedback }) => {
         fontSize: "1.4rem",
       }}
     >
-      {feedback.text} {feedback.correct ? " ✓ " : " ✗ "}
+      {feedback.feedback} {feedback.correct ? " ✓ " : " ✗ "}
     </p>
   )
 }
