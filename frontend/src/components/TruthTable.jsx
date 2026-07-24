@@ -23,8 +23,9 @@ const TruthTable = ({ task, start, showSubmitButton = true }) => {
     task,
     savedAnswer,
     setFeedback,
-    setInputFields,
+    applyAnswer: setInputFields,
     parseAnswer,
+    enabled: false,
   })
 
   useEffect(() => {

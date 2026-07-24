@@ -8,7 +8,6 @@ const InstructionScreen = () => {
   const [content, setContent] = useState(null)
   useEffect(() => {
     setContent(null)
-    console.log(`part${id}section${section}.js`)
     import(`../content/instructions/part${id}section${section}.js`)
       .then((module) => setContent(module.default))
       .catch(() => setContent(null))

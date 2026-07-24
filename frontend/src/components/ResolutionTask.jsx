@@ -82,7 +82,6 @@ const ResolutionTask = ({ task }) => {
       return
     }
     if (answer.length < RESOLUTION_LINE_LIMITS.min) {
-      console.log(answer)
       setFeedback({ correct: false, feedback: "input is too short" })
       return
     }

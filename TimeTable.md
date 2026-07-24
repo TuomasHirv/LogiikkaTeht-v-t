@@ -26,3 +26,4 @@ Tasks is a simple description of what has been completed and doesn't necessarily
 | 20.07 | few tests. Designed and tried to implement an evaluation for semantic tree. Doesnt work |  6.5 |                   |
 | 21.07 | Finished validateSemanticTree. The file is AI-coded but i had to manually work it alot  |    8 | >120 h done       |
 | 22.07 |                        Started to add better feedback on tasks.                         |    4 |                   |
+| 24.07 |           Added feedback to tasks. Refractored restoring answers. Added tests           |  5.5 |

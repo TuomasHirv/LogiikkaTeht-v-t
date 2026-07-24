@@ -13,7 +13,6 @@ const UserPage = () => {
   useEffect(() => {
     const getCount = async () => {
       const result = await taskService.getCount()
-      console.log(result)
       const countDict = {}
       const modNames = []
       result.forEach((row) => {
@@ -22,7 +21,6 @@ const UserPage = () => {
       })
       setModuleTaskCount(countDict)
       setModuleNames(modNames)
-      console.log(moduleNames, moduleTaskCount)
     }
     getCount()
   }, [])

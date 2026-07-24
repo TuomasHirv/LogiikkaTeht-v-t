@@ -27,9 +27,9 @@ const SemanticTreeTask = ({ task, showSubmitButton = true }) => {
   useLastSavedAnswer({
     task,
     savedAnswer,
-    root,
+    currAnswer: root,
     setFeedback,
-    setRoot,
+    applyAnswer: setRoot,
     parseAnswer,
   })
 
