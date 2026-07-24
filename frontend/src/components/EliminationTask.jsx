@@ -1,9 +1,11 @@
 import React from "react"
 import { useEffect, useState } from "react"
-import { UseField } from "../hooks"
+import { useField } from "../hooks"
 import useUserStore, { useUserActions } from "../store"
 import AnswerFeedback from "./AnswerFeedback"
 import { submitTaskAnswer } from "../hooks/submitAnswer"
+import { useLastSavedAnswer } from "../hooks/useTaskHooks"
+
 import { ELIMINATION_LINE_LIMITS } from "../constants"
 
 import {
@@ -12,7 +14,7 @@ import {
 } from "../hooks/savedAnswer"
 import { useLineList } from "../hooks/lineList"
 const Line = ({ initValue, index, change }) => {
-  const lineInput = UseField("text", initValue)
+  const lineInput = useField("text", initValue)
   if (index === 0) {
     return <div className="flex bg-amber-100 text-black"> {initValue} </div>
   }
@@ -43,23 +45,15 @@ const EliminationTask = ({ task }) => {
     propositions.setLines([start, ""])
     setFeedback(null)
   }, [start, taskId])
-
-  useEffect(() => {
-    const savedFeedback = buildSavedAnswerFeedback(savedAnswer)
-    const parsedSavedAnswer = parseSavedEliminationAnswer(
-      savedAnswer?.submitted_answer,
-    )
-
-    if (!savedFeedback || !parsedSavedAnswer) {
-      return
-    }
-
-    setFeedback({
-      correct: savedFeedback.correct,
-      feedback: savedFeedback.feedback,
-    })
-    propositions.setLines(parsedSavedAnswer)
-  }, [taskId, savedAnswer])
+  const parseAnswer = (x) => x
+  useLastSavedAnswer({
+    task,
+    savedAnswer,
+    currAnswer: propositions.lines,
+    setFeedback,
+    applyAnswer: propositions.setLines,
+    parseAnswer,
+  })
 
   const resetPropositions = () => {
     propositions.setLines([start, ""])

@@ -5,6 +5,7 @@ import {
   parseSavedSubFormulaAnswer,
 } from "../hooks/savedAnswer"
 import { submitTaskAnswer } from "../hooks/submitAnswer"
+import { useLastSavedAnswer } from "../hooks/useTaskHooks"
 import AnswerFeedback from "./AnswerFeedback"
 import useUserStore, { useUserActions } from "../store"
 
@@ -22,20 +23,15 @@ const SemanticTreeTask = ({ task, showSubmitButton = true }) => {
     locked: true,
     children: null,
   })
-
-  useEffect(() => {
-    const savedFeedback = buildSavedAnswerFeedback(savedAnswer)
-    const parsedAnswer = parseSavedSubFormulaAnswer(
-      savedAnswer?.submitted_answer,
-    )
-
-    if (!savedFeedback || !parsedAnswer) {
-      return
-    }
-
-    setFeedback(savedFeedback)
-    setRoot(parsedAnswer)
-  }, [task.id, savedAnswer])
+  const parseAnswer = (x) => x
+  useLastSavedAnswer({
+    task,
+    savedAnswer,
+    root,
+    setFeedback,
+    setRoot,
+    parseAnswer,
+  })
 
   const submitAnswer = async (event) => {
     await submitTaskAnswer({

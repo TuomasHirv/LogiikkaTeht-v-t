@@ -3,6 +3,7 @@ import useUserStore, { useUserActions } from "../store"
 import AnswerFeedback from "./AnswerFeedback"
 import TruthTableField from "./TruthTableField"
 import { submitTaskAnswer } from "../hooks/submitAnswer"
+import { useLastSavedAnswer } from "../hooks/useTaskHooks"
 import { buildSavedAnswerFeedback } from "../hooks/savedAnswer"
 
 {
@@ -17,6 +18,15 @@ const TruthTable = ({ task, start, showSubmitButton = true }) => {
   const [inputFields, setInputFields] = useState(() =>
     start.map((str) => [str, "", "", "", ""]),
   )
+  const parseAnswer = (x) => x
+  useLastSavedAnswer({
+    task,
+    savedAnswer,
+    setFeedback,
+    setInputFields,
+    parseAnswer,
+  })
+
   useEffect(() => {
     if (showSubmitButton) {
       const savedFeedback = buildSavedAnswerFeedback(savedAnswer)

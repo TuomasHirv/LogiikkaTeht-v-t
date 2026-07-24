@@ -15,14 +15,14 @@ const NormalFormTask = ({ task }) => {
   const [feedback, setFeedback] = useState(null)
 
   const parseAnswer = (x) => ({ target: { value: x } })
-  useLastSavedAnswer(
+  useLastSavedAnswer({
     task,
     savedAnswer,
-    normalFormInput.inputProps.value,
+    currAnswer: normalFormInput.inputProps.value,
     setFeedback,
-    normalFormInput.inputProps.onChange,
+    applyAnswer: normalFormInput.inputProps.onChange,
     parseAnswer,
-  )
+  })
 
   const submitAnswer = async (event) => {
     await submitTaskAnswer({

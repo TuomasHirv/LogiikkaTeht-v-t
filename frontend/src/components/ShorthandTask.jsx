@@ -1,10 +1,11 @@
 import React from "react"
 import { useEffect, useState } from "react"
-import { UseField } from "../hooks"
+import { useField } from "../hooks"
 import { useLineList } from "../hooks/lineList"
 import useUserStore, { useUserActions } from "../store"
 import AnswerFeedback from "./AnswerFeedback"
 import { submitTaskAnswer } from "../hooks/submitAnswer"
+import { useLastSavedAnswer } from "../hooks/useTaskHooks"
 import {
   buildSavedAnswerFeedback,
   parseSavedEliminationAnswer,
@@ -12,7 +13,7 @@ import {
 import { SHORTHAND_CHAIN_LINE_LIMITS } from "../constants"
 
 const Line = ({ initValue, index, change }) => {
-  const field = UseField("text", initValue)
+  const field = useField("text", initValue)
   if (index === 0) {
     return (
       <div className="flex bg-amber-100 text-black px-1"> {initValue} </div>
@@ -47,34 +48,29 @@ const ShorthandReference = ({ shorthands }) => (
 
 const ShorthandExpansionTask = ({ task }) => {
   const { addAnswer } = useUserActions()
-  const taskId = task?.id
   const shorthands = task?.metadata?.shorthands || {}
   const targetDefinition = task?.question
   const start = targetDefinition ? `${targetDefinition}` : ""
   const endGoal = task?.metadata?.end_goal
 
-  const savedAnswer = useUserStore((state) => state.answers[taskId])
+  const savedAnswer = useUserStore((state) => state.answers[task.id])
   const [feedback, setFeedback] = useState(null)
   const lines = useLineList([start, ""], SHORTHAND_CHAIN_LINE_LIMITS)
 
   useEffect(() => {
     lines.setLines([start, ""])
     setFeedback(null)
-  }, [start, taskId])
+  }, [start, task.id])
 
-  useEffect(() => {
-    const savedFeedback = buildSavedAnswerFeedback(savedAnswer)
-    const parsedSavedAnswer = parseSavedEliminationAnswer(
-      savedAnswer?.submitted_answer,
-    )
-
-    if (!savedFeedback || !parsedSavedAnswer) {
-      return
-    }
-
-    setFeedback(savedFeedback)
-    lines.setLines(parsedSavedAnswer)
-  }, [taskId, savedAnswer])
+  const parseAnswer = (x) => x
+  useLastSavedAnswer({
+    task,
+    savedAnswer,
+    currAnswer: lines.lines,
+    setFeedback,
+    applyAnswer: lines.setLines,
+    parseAnswer,
+  })
 
   const resetLines = () => {
     lines.setLines([start, ""])
@@ -82,10 +78,6 @@ const ShorthandExpansionTask = ({ task }) => {
   }
 
   const submitAnswer = async (event) => {
-    if (!taskId) {
-      return
-    }
-
     const answer = lines.lines.filter((line) => line.trim() !== "")
     answer.splice(0, 1, start)
 
@@ -96,7 +88,7 @@ const ShorthandExpansionTask = ({ task }) => {
 
     await submitTaskAnswer({
       event,
-      taskId,
+      taskId: task.id,
       submittedAnswer: answer,
       addAnswer,
       setFeedback,

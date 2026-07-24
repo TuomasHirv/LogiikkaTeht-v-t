@@ -1,6 +1,6 @@
 import React from "react"
 import { useEffect, useState } from "react"
-import { UseResolutionField } from "../hooks"
+import { useResolutionField } from "../hooks"
 import { submitTaskAnswer } from "../hooks/submitAnswer"
 import useUserStore, { useUserActions } from "../store"
 import { useLineList } from "../hooks/lineList"
@@ -13,7 +13,7 @@ import {
 import AnswerFeedback from "./AnswerFeedback"
 
 const Line = ({ initValue, index, change }) => {
-  const lineInput = UseResolutionField("text", initValue, index)
+  const lineInput = useResolutionField("text", initValue, index)
 
   return (
     <React.Fragment>
@@ -62,18 +62,15 @@ const ResolutionTask = ({ task }) => {
   const start = task?.question || ""
   const { ...clauses } = useLineList([""], RESOLUTION_LINE_LIMITS)
 
-  useEffect(() => {
-    const savedFeedback = buildSavedAnswerFeedback(savedAnswer)
-    const parsedSavedAnswer = parseSavedEliminationAnswer(
-      savedAnswer?.submitted_answer,
-    )
-
-    if (!savedFeedback || !parsedSavedAnswer) {
-      return
-    }
-    setFeedback(savedFeedback)
-    clauses.setLines(parsedSavedAnswer)
-  }, [task.id, savedAnswer])
+  const parseAnswer = (x) => x
+  useLastSavedAnswer({
+    task,
+    savedAnswer,
+    currAnswer: clauses.lines,
+    setFeedback,
+    applyAnswer: clauses.setLines,
+    parseAnswer,
+  })
 
   const submitAnswer = async (event) => {
     if (!task.id) {

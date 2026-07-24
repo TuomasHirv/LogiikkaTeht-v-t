@@ -1,15 +1,19 @@
 import { useEffect } from "react"
 import { buildSavedAnswerFeedback } from "../hooks/savedAnswer"
 
-export const useLastSavedAnswer = (
+export const useLastSavedAnswer = ({
   task,
   savedAnswer,
   currAnswer,
   setFeedback,
   applyAnswer,
   parseAnswer,
-) => {
+  enabled = true,
+}) => {
   useEffect(() => {
+    if (!enabled) {
+      return
+    }
     const lastSavedAnswer = savedAnswer?.submitted_answer
     const savedFeedback = buildSavedAnswerFeedback(savedAnswer)
 
@@ -18,5 +22,5 @@ export const useLastSavedAnswer = (
     }
     setFeedback(savedFeedback)
     applyAnswer(parseAnswer(lastSavedAnswer))
-  }, [task.id, savedAnswer])
+  }, [task.id, savedAnswer, enabled])
 }
