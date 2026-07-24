@@ -106,6 +106,15 @@ const tasks = {
         "Fully expand the given proposition by opening one shorthand at a time",
     },
   },
+  [MODULENAMES.SEMANTIC_TREE_INTRO]: {
+    type: "tree",
+    module_name: "Semantic-Tree-Intro",
+    question: "P ∧ ¬P",
+    correct_answer: {
+      lines: [["P", "¬P"]],
+    },
+    metadata: {},
+  },
   test: {
     type: "For-Testing-Purpose",
     module_name: "test",
@@ -160,9 +169,18 @@ const signup = async (testApp, username, password) => {
   return supertest(testApp).post("/api/users").send({ username, password })
 }
 
+const postAnswer = async (testApp, token, taskId, answer) => {
+  return supertest(testApp)
+    .post(`/api/answers/${taskId}`)
+    .set("Authorization", `Bearer ${token}`)
+    .send({ answer })
+}
+
 module.exports = {
+  tasks,
   createTasksForTest,
   insertTaskDb,
   insertAnswerDb,
   signup,
+  postAnswer,
 }
