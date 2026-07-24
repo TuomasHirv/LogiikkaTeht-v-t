@@ -18,9 +18,11 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: backend/package-lock.json
-            - name: Debug - list backend contents
+
+      - name: Debug - list backend contents
         run: ls -la && ls -la routeTest
         working-directory: backend
+
       - name: Install backend dependencies
         run: npm ci
         working-directory: backend
