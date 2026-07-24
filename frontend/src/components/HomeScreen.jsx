@@ -1,4 +1,4 @@
-import { UseField } from "../hooks"
+import { useField } from "../hooks"
 
 const Word = ({ text }) => {
   return (
@@ -29,7 +29,7 @@ const WordToProposition = ({ word, symbol }) => {
 }
 
 const HomeScreen = () => {
-  const proposition = UseField("text")
+  const proposition = useField("text")
   return (
     <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-6 text-slate-100">
       <div className="text-3xl font-black text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-emerald-400 mb-2">

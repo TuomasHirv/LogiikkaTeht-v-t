@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, forwardRef } from "react"
-import { UseField } from "../hooks"
+import { useField } from "../hooks"
 // This file is mostly AI generated
 const DIRECTIONS = {
   ArrowUp: [0, -1],
@@ -10,7 +10,7 @@ const DIRECTIONS = {
 
 const TruthTableField = forwardRef(
   ({ submitFunc, x, y, value, isHead, onNavigate }, ref) => {
-    const textInput = UseField("text", value)
+    const textInput = useField("text", value)
 
     const [locked, setLocked] = useState(false)
     const bgClass = isHead ? "bg-amber-100" : "bg-gray-300"

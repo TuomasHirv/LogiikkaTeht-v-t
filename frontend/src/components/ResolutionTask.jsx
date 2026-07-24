@@ -5,7 +5,7 @@ import { submitTaskAnswer } from "../hooks/submitAnswer"
 import useUserStore, { useUserActions } from "../store"
 import { useLineList } from "../hooks/lineList"
 import { RESOLUTION_LINE_LIMITS } from "../constants"
-
+import { useLastSavedAnswer } from "../hooks/useTaskHooks"
 import {
   buildSavedAnswerFeedback,
   parseSavedEliminationAnswer,
@@ -71,7 +71,6 @@ const ResolutionTask = ({ task }) => {
     if (!savedFeedback || !parsedSavedAnswer) {
       return
     }
-    console.log(savedFeedback)
     setFeedback(savedFeedback)
     clauses.setLines(parsedSavedAnswer)
   }, [task.id, savedAnswer])
@@ -80,7 +79,6 @@ const ResolutionTask = ({ task }) => {
     if (!task.id) {
       return
     }
-    console.log(clauses.lines)
     const answer = clauses.lines.filter((cl) => cl.trim() !== "")
     if (answer.length > RESOLUTION_LINE_LIMITS.max) {
       setFeedback({ correct: false, feedback: "input is too long" })

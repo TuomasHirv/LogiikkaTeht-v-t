@@ -1,12 +1,12 @@
 import { useState } from "react"
 import useUserStore, { useUserActions } from "../store"
-import { UseSimpleField } from "../hooks"
+import { useSimpleField } from "../hooks"
 
 const RegisterScreen = () => {
   const user = useUserStore((state) => state.user)
   const { loginUser, logoutUser, registerUser } = useUserActions()
-  const username = UseSimpleField("text")
-  const password = UseSimpleField("text")
+  const username = useSimpleField("text")
+  const password = useSimpleField("text")
 
   const registerFunc = async (event) => {
     event.preventDefault()

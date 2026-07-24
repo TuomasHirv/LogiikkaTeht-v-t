@@ -2,7 +2,6 @@ const AnswerFeedback = ({ feedback }) => {
   if (!feedback) {
     return null
   }
-  console.log("AnswerFeedback:", feedback)
   return (
     <p
       style={{

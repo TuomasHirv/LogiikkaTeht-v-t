@@ -1,39 +1,33 @@
 import { useEffect, useState } from "react"
 import TruthTable from "./TruthTable"
 import PreSetSubFormula from "./PreSetSubformula"
-import { UseField } from "../hooks"
+import { useField } from "../hooks"
 import { buildSavedAnswerFeedback } from "../hooks/savedAnswer"
 import { submitTaskAnswer } from "../hooks/submitAnswer"
+import { useLastSavedAnswer } from "../hooks/useTaskHooks"
 import AnswerFeedback from "./AnswerFeedback"
 import useUserStore, { useUserActions } from "../store"
 
 const NormalFormTask = ({ task }) => {
-  const taskId = task.id
   const { addAnswer } = useUserActions()
-  const savedAnswer = useUserStore((state) => state.answers[taskId])
-  const normalFormInput = UseField("text")
+  const savedAnswer = useUserStore((state) => state.answers[task.id])
+  const normalFormInput = useField("text")
   const [feedback, setFeedback] = useState(null)
 
-  useEffect(() => {
-    const lastSavedAnswer = savedAnswer?.submitted_answer
-    const savedFeedback = buildSavedAnswerFeedback(savedAnswer)
-
-    if (
-      !savedFeedback ||
-      typeof lastSavedAnswer !== "string" ||
-      normalFormInput.value === lastSavedAnswer
-    ) {
-      return
-    }
-    console.log(savedFeedback)
-    setFeedback(savedFeedback)
-    normalFormInput.inputProps.onChange({ target: { value: lastSavedAnswer } })
-  }, [taskId, savedAnswer])
+  const parseAnswer = (x) => ({ target: { value: x } })
+  useLastSavedAnswer(
+    task,
+    savedAnswer,
+    normalFormInput.inputProps.value,
+    setFeedback,
+    normalFormInput.inputProps.onChange,
+    parseAnswer,
+  )
 
   const submitAnswer = async (event) => {
     await submitTaskAnswer({
       event,
-      taskId,
+      taskId: task.id,
       submittedAnswer: normalFormInput.inputProps.value,
       addAnswer,
       setFeedback,

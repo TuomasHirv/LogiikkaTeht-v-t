@@ -89,14 +89,14 @@ export const useTextField = (type, initValue = "", options = {}) => {
   }
 }
 
-export const UseField = (type, initValue = "") =>
+export const useField = (type, initValue = "") =>
   useTextField(type, initValue, { transform: applyFullWordSymbols })
 
-export const UseResolutionField = (type, initValue = "") =>
+export const useResolutionField = (type, initValue = "") =>
   useTextField(type, initValue, {
     transform: applyBaseSymbols,
     validate: validateResolutionSyntax,
   })
 
-export const UseSimpleField = (type) =>
+export const useSimpleField = (type) =>
   useTextField(type, "", { trackInitValue: false })
