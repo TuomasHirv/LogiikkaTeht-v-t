@@ -28,9 +28,9 @@ jobs:
         working-directory: backend
 
       - name: Run backend unit tests
-        run: node --test --test-reporter=spec --test-reporter-destination=stdout
+        run: npm test
         working-directory: backend
 
       - name: Run backend route (supertest) tests
-        run: node --test --test-reporter=spec --test-reporter-destination=stdout ./routeTest
+        run: npm run test:routes
         working-directory: backend
