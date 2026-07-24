@@ -34,7 +34,6 @@ async function wordsToPropositionsHelper(answer, taskId, userId, response) {
 async function subFormulaHelper(answer, taskId, dbAnswer, userId, response) {
   try {
     const accepted = await evaluator.matchSubFormula(answer, taskId, dbAnswer)
-    console.log(accepted)
     const defaultFeedback =
       accepted?.feedback || "served failed to evaluate answer"
     await dbFunc.insertAnswer(
@@ -44,14 +43,11 @@ async function subFormulaHelper(answer, taskId, dbAnswer, userId, response) {
       accepted.accepted,
       defaultFeedback,
     )
-    console.log("DB inserted!")
     if (accepted.accepted) {
-      console.log("Accepted")
       return response
         .status(200)
         .json({ correct: true, answer: answer, feedback: defaultFeedback })
     }
-    console.log("Not accepted")
     return response
       .status(200)
       .json({ correct: false, answer: answer, feedback: defaultFeedback })
@@ -85,9 +81,7 @@ async function truthTableHelper(answer, taskId, userId, response) {
 
 async function equivalenceRuleHelper(answer, rule, userId, taskId, response) {
   try {
-    console.log(answer, "/", rule)
     const accepted = await evaluator.matchEquivalenceAnswer(answer, rule)
-    console.log("accepted:", accepted)
     await dbFunc.insertAnswer(
       userId,
       taskId,
@@ -95,7 +89,6 @@ async function equivalenceRuleHelper(answer, rule, userId, taskId, response) {
       accepted.accepted,
       accepted.feedback,
     )
-    console.log("Inserted")
     if (accepted.accepted) {
       return response
         .status(200)
@@ -105,7 +98,6 @@ async function equivalenceRuleHelper(answer, rule, userId, taskId, response) {
       .status(200)
       .json({ correct: false, answer: answer, feedback: accepted.feedback })
   } catch (error) {
-    console.log(error)
     return response.status(500).json({ error: "internal server error" })
   }
 }
@@ -139,7 +131,6 @@ async function TTFormHelper(
       .status(200)
       .json({ correct: false, answer: answer, feedback: accepted.feedback })
   } catch (error) {
-    console.log(error)
     return response.status(500).json({ error: "internal server error" })
   }
 }
@@ -188,14 +179,12 @@ async function resolutionHelper(answer, reqClauses, userId, taskId, response) {
     const requiredClauses = reqClauses[0]
     const assumptionCount = reqClauses[1]
     const correctAssumptions = reqClauses[2]
-    console.log(reqClauses)
     const accepted = evaluator.matchResolutionTask(
       answer,
       assumptionCount,
       requiredClauses,
       correctAssumptions,
     )
-    console.log(accepted)
     await dbFunc.insertAnswer(
       userId,
       taskId,
@@ -212,7 +201,6 @@ async function resolutionHelper(answer, reqClauses, userId, taskId, response) {
       .status(200)
       .json({ correct: false, answer: answer, feedback: accepted.feedback })
   } catch (error) {
-    console.log(error)
     return response.status(500).json({ error: "internal server error" })
   }
 }
@@ -248,7 +236,6 @@ async function shorthandHelper(answer, FinalAllowed, userId, taskId, response) {
 async function semanticTreeHelper(answer, reqLines, userId, taskId, response) {
   try {
     const question = await dbFunc.getQuestion(taskId)
-    console.log("question: ", question[0].question)
     const accepted = await evaluator.checkSemanticTreeTask(
       answer,
       reqLines,

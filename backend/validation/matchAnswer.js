@@ -19,12 +19,10 @@ const matchPropositions = async (userAnswer, taskId) => {
   )
 }
 const matchSubFormula = async (userObject, answerId) => {
-  console.log("FUNC HIT")
   const q = `SELECT correct_answer FROM tasks WHERE id = $1`
   const dbAnswer = await db.query(q, [answerId])
   const correctAnswer = dbAnswer.rows[0].correct_answer
   const result = recurseChildren(userObject, correctAnswer)
-  console.log("Answer evaluated:", result)
   return { accepted: result.accepted, feedback: result.feedback }
 }
 
@@ -207,7 +205,6 @@ function checkIfCorrectForm(text, form) {
       }
       return { accepted: false, feedback: "Couldn't create clauses from input" }
     }
-    console.log("Form doesnt conform to expectations:", form)
     return {
       accepted: false,
       feedback: `Form doesnt conform to expectations: ${form}}`,
@@ -227,21 +224,10 @@ function matchResolutionTask(
   correctAssumptions,
 ) {
   try {
-    console.log(
-      "Users input:",
-      userList,
-      "Amount of assumptions allowed:",
-      assumptionCount,
-      "Clauses required:",
-      requiredClauses,
-      "Correct assumptions:",
-      correctAssumptions,
-    )
     const clauseList = resolutionChecker.parseClauseList(
       userList,
       correctAssumptions,
     )
-    console.log("CREATED LIST OF CLAUSES:", clauseList)
     const foundEmptyClause = resolutionChecker.validateResolutionSteps(
       clauseList,
       assumptionCount,
