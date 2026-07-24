@@ -94,6 +94,7 @@ test.before(async () => {
       user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       task_id UUID NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
       submitted_answer JSONB NOT NULL,
+      feedback VARCHAR(50),
       is_correct BOOLEAN NOT NULL,
       completed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
 
@@ -135,7 +136,9 @@ test("Inserts a task succesfully", async () => {
     assert.ok(id.rows[0].id != null)
   }
 
-  const insertedTasks = await db.query(`SELECT COUNT(*)::int AS count FROM tasks`)
+  const insertedTasks = await db.query(
+    `SELECT COUNT(*)::int AS count FROM tasks`,
+  )
   assert.equal(insertedTasks.rows[0].count, fakeTasks.length)
 })
 
@@ -172,7 +175,12 @@ test("Inserts and updates an answer succesfully", async () => {
   const taskId = task.rows[0].id
 
   const firstAnswer = { attempt: "first" }
-  const firstInsert = await dbFunc.insertAnswer(userId, taskId, firstAnswer, true)
+  const firstInsert = await dbFunc.insertAnswer(
+    userId,
+    taskId,
+    firstAnswer,
+    true,
+  )
   assert.equal(firstInsert.rowCount, 1)
   assert.deepEqual(firstInsert.rows[0].submitted_answer, firstAnswer)
 

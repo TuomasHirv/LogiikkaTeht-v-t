@@ -31,7 +31,7 @@ function toTokens(input) {
       continue
     }
     throw new Error(
-      `Invalid character "${ch}" at position ${i}. Only ∨, ∧, ¬, ( ) and letters are allowed.`,
+      `Invalid character "${ch}" Only ∨, ∧, ¬, ( ) and letters are allowed.`,
     )
   }
   return tokens

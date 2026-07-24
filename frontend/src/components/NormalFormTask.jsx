@@ -25,7 +25,7 @@ const NormalFormTask = ({ task }) => {
     ) {
       return
     }
-
+    console.log(savedFeedback)
     setFeedback(savedFeedback)
     normalFormInput.inputProps.onChange({ target: { value: lastSavedAnswer } })
   }, [taskId, savedAnswer])
@@ -34,7 +34,7 @@ const NormalFormTask = ({ task }) => {
     await submitTaskAnswer({
       event,
       taskId,
-      submittedAnswer: normalFormInput.value,
+      submittedAnswer: normalFormInput.inputProps.value,
       addAnswer,
       setFeedback,
       moduleName: task.moduleName,

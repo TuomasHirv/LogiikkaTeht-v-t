@@ -127,22 +127,48 @@ const matchTTFormAnswer = (text, form, correctAnswer) => {
       const tokens = formChecker.toTokens(text)
       const result = formChecker.parseCNF(tokens, 0)
       const userClauses = result.clauses
-      return matchArrays(userClauses, correctAnswer)
+      const accepted = matchArrays(userClauses, correctAnswer)
+      if (accepted.accepted) {
+        return {
+          accepted: true,
+          feedback: "Pass",
+        }
+      }
+      return {
+        accepted: false,
+        feedback: accepted.feedback,
+      }
     } else if (form === "DNF") {
       const tokens = formChecker.toTokens(text)
       const result = formChecker.parseDNF(tokens, 0)
       const userClauses = result.clauses
-      return matchArrays(userClauses, correctAnswer)
+      const accepted = matchArrays(userClauses, correctAnswer)
+      if (accepted.accepted) {
+        return {
+          accepted: true,
+          feedback: "Pass",
+        }
+      }
+      return {
+        accepted: false,
+        feedback: accepted.feedback,
+      }
     }
-    return false
+    return {
+      accepted: false,
+      feedback: "Server failed to parse the expected form",
+    }
   } catch (error) {
-    return false
+    return { accepted: false, feedback: error.message }
   }
 }
 
 function matchArrays(userClauses, correctAnswer) {
   if (userClauses.length !== correctAnswer.length) {
-    return false
+    return {
+      accepted: false,
+      feedback: "Amount of clauses differs from the expected answer",
+    }
   }
   for (let i = 0; i < correctAnswer.length; i++) {
     let found = false
@@ -155,10 +181,13 @@ function matchArrays(userClauses, correctAnswer) {
       }
     }
     if (!found) {
-      return false
+      return {
+        accepted: false,
+        feedback: "Some clause was incorrect",
+      }
     }
   }
-  return true
+  return { accepted: true, feedback: "Pass" }
 }
 
 function checkIfCorrectForm(text, form) {
@@ -167,23 +196,27 @@ function checkIfCorrectForm(text, form) {
       const tokens = formChecker.toTokens(text)
       const result = formChecker.parseCNF(tokens, 0)
       if (result) {
-        return true
+        return { accepted: true, feedback: "Pass" }
       }
-      return false
+      return { accepted: false, feedback: "Couldn't create clauses from input" }
     } else if (form === "DNF") {
       const tokens = formChecker.toTokens(text)
       const result = formChecker.parseDNF(tokens, 0)
       if (result) {
-        return true
+        return { accepted: true, feedback: "Pass" }
       }
-      return false
+      return { accepted: false, feedback: "Couldn't create clauses from input" }
     }
     console.log("Form doesnt conform to expectations:", form)
-    return false
+    return {
+      accepted: false,
+      feedback: `Form doesnt conform to expectations: ${form}}`,
+    }
   } catch (error) {
-    console.log("Something is wrong with the text")
-    console.log(error)
-    return false
+    if (!error.message) {
+      return { accepted: false, feedback: "Unaccounted error or mistake" }
+    }
+    return { accepted: false, feedback: error.message }
   }
 }
 
@@ -223,13 +256,21 @@ function matchResolutionTask(
       requiredClauses.length === 1 && requiredClauses[0][0] === "∅"
 
     if (requiresEmpty) {
-      return { accepted: foundEmptyClause && hasAllRequired, text: "" }
+      if (foundEmptyClause && hasAllRequired) {
+        return {
+          accepted: true,
+          feedback: "Pass",
+        }
+      }
+      return {
+        accepted: false,
+        feedback: "Necessary clause not found",
+      }
     }
 
-    return { accepted: hasAllRequired, text: "" }
+    return { accepted: hasAllRequired, feedback: "Pass" }
   } catch (error) {
-    console.log(error)
-    return { accepted: false, text: error.text }
+    return { accepted: false, feedback: error.message }
   }
 }
 function sameClause(setClause, arrClause) {
@@ -251,17 +292,19 @@ function containsAllRequiredClauses(clauseList, requiredClauses) {
 async function validateShorthandtask(userList, finalAllowed, reqStart) {
   try {
     if (userList[0] !== reqStart) {
-      return false
+      return { accepted: false, feedback: "First line doesn't match question" }
     }
     const userLast = userList[userList.length - 1].replace(/\s/g, "")
     const expectedLast = finalAllowed[0].replace(/\s/g, "")
     if (userLast !== expectedLast) {
-      return false
+      return { accepted: false, feedback: "Last line doesn't match expected" }
     }
     return checkShorthand.validatePropositionList(userList, finalAllowed[1])
   } catch (error) {
-    console.log(error)
-    return false
+    if (!error.message) {
+      return { accepted: false, feedback: "Unaccounted for error or mistake" }
+    }
+    return { accepted: false, feedback: error.message }
   }
 }
 
@@ -281,8 +324,10 @@ function checkSemanticTreeTask(userTree, reqLines, question) {
   try {
     userBranches = validateSemanticTree(userTree, question)
   } catch (error) {
-    console.log(error)
-    return false
+    if (!error.message) {
+      return { accepted: false, feedback: "Unaccounted for error or mistake" }
+    }
+    return { accepted: false, feedback: error.message }
   }
 
   for (const requiredLine of reqLines) {
@@ -303,11 +348,11 @@ function checkSemanticTreeTask(userTree, reqLines, question) {
     })
 
     if (!found) {
-      return false
+      return { accepted: false, feedback: "Some branch was incorrect" }
     }
   }
 
-  return true
+  return { accepted: true, feedback: "Pass" }
 }
 
 module.exports = {

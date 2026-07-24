@@ -127,12 +127,17 @@ async function TTFormHelper(
       userId,
       taskId,
       serializeSubmittedAnswer(answer),
-      accepted,
+      accepted.accepted,
+      accepted.feedback,
     )
-    if (accepted) {
-      return response.status(200).json({ correct: true, answer: answer })
+    if (accepted.accepted) {
+      return response
+        .status(200)
+        .json({ correct: true, answer: answer, feedback: accepted.feedback })
     }
-    return response.status(200).json({ correct: false, answer: answer })
+    return response
+      .status(200)
+      .json({ correct: false, answer: answer, feedback: accepted.feedback })
   } catch (error) {
     console.log(error)
     return response.status(500).json({ error: "internal server error" })
@@ -150,22 +155,30 @@ async function equivalenceFormHelper(
     const rule = ruleAndForm[0]
     const form = ruleAndForm[1]
     const transformCheck = await evaluator.matchEquivalenceAnswer(answer, rule)
-    if (!transformCheck) {
-      return response.status(200).json({ correct: false, answer: answer })
+    if (!transformCheck.accepted) {
+      return response.status(200).json({
+        correct: false,
+        answer: answer,
+        feedback: transformCheck.feedback,
+      })
     }
     const accepted = evaluator.checkIfCorrectForm(answer.at(-1), form)
     await dbFunc.insertAnswer(
       userId,
       taskId,
       serializeSubmittedAnswer(answer),
-      accepted,
+      accepted.accepted,
+      accepted.feedback,
     )
-    if (accepted) {
-      return response.status(200).json({ correct: true, answer: answer })
+    if (accepted.accepted) {
+      return response
+        .status(200)
+        .json({ correct: true, answer: answer, feedback: accepted.feedback })
     }
-    return response.status(200).json({ correct: false, answer: answer })
+    return response
+      .status(200)
+      .json({ correct: false, answer: answer, feedback: accepted.feedback })
   } catch (error) {
-    console.log(error)
     return response.status(500).json({ error: "internal server error" })
   }
 }
@@ -182,16 +195,22 @@ async function resolutionHelper(answer, reqClauses, userId, taskId, response) {
       requiredClauses,
       correctAssumptions,
     )
+    console.log(accepted)
     await dbFunc.insertAnswer(
       userId,
       taskId,
       serializeSubmittedAnswer(answer),
       accepted.accepted,
+      accepted.feedback,
     )
     if (accepted.accepted) {
-      return response.status(200).json({ correct: true, answer: answer })
+      return response
+        .status(200)
+        .json({ correct: true, answer: answer, feedback: accepted.feedback })
     }
-    return response.status(200).json({ correct: false, answer: answer })
+    return response
+      .status(200)
+      .json({ correct: false, answer: answer, feedback: accepted.feedback })
   } catch (error) {
     console.log(error)
     return response.status(500).json({ error: "internal server error" })
@@ -210,14 +229,18 @@ async function shorthandHelper(answer, FinalAllowed, userId, taskId, response) {
       userId,
       taskId,
       serializeSubmittedAnswer(answer),
-      accepted,
+      accepted.accepted,
+      accepted.feedback,
     )
-    if (accepted) {
-      return response.status(200).json({ correct: true, answer: answer })
+    if (accepted.accepted) {
+      return response
+        .status(200)
+        .json({ correct: true, answer: answer, feedback: "Pass" })
     }
-    return response.status(200).json({ correct: false, answer: answer })
+    return response
+      .status(200)
+      .json({ correct: false, answer: answer, feedback: accepted.feedback })
   } catch (error) {
-    console.log(error)
     return response.status(500).json({ error: "internal server error" })
   }
 }
@@ -235,14 +258,18 @@ async function semanticTreeHelper(answer, reqLines, userId, taskId, response) {
       userId,
       taskId,
       serializeSubmittedAnswer(answer),
-      accepted,
+      accepted.accepted,
+      accepted.feedback,
     )
-    if (accepted) {
-      return response.status(200).json({ correct: true, answer: answer })
+    if (accepted.accepted) {
+      return response
+        .status(200)
+        .json({ correct: true, answer: answer, feedback: "Pass" })
     }
-    return response.status(200).json({ correct: false, answer: answer })
+    return response
+      .status(200)
+      .json({ correct: false, answer: answer, feedback: accepted.feedback })
   } catch (error) {
-    console.log(error)
     return response.status(500).json({ error: "internal server error" })
   }
 }

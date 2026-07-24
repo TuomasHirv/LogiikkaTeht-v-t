@@ -72,7 +72,14 @@ describe("Shorthand validation tests", () => {
       A: ["p0"],
     }
 
-    assert.equal(validatePropositionList(["A", "p0"], shorthands), true)
+    assert.equal(
+      validatePropositionList(["A", "p0"], shorthands).accepted,
+      true,
+    )
+    assert.equal(
+      validatePropositionList(["A", "p0"], shorthands).feedback,
+      "Pass",
+    )
   })
 
   test("validatePropositionList rejects proof ending with shorthand", () => {

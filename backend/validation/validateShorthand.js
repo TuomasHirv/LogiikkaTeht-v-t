@@ -32,6 +32,7 @@ function toTokens(proposition, shorthandSymbols) {
 }
 
 function validateDifference(prevTokens, currTokens, shorthands) {
+  console.log("validateDifference:", prevTokens, currTokens, shorthands)
   let i = 0
   let j = 0
   while (i < prevTokens.length) {
@@ -85,7 +86,11 @@ function validatePropositionList(userList, shorthands) {
     last = curr
     i++
   }
-  return !last.some((token) => keys.includes(token))
+  const excludedCorrectly = !last.some((token) => keys.includes(token))
+  if (excludedCorrectly) {
+    return { accepted: true, feedback: "Pass" }
+  }
+  return { accepted: false, feedback: "Includes symbols that arent allowed" }
 }
 
 module.exports = {

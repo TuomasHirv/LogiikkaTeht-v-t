@@ -24,8 +24,8 @@ const Line = ({ initValue, index, change }) => {
           {...lineInput.inputProps}
           onBlur={() => {
             lineInput.checkSyntax(lineInput.inputProps.value, index)
-            if (lineInput.value) {
-              change(lineInput.value, index)
+            if (lineInput.inputProps.value) {
+              change(lineInput.inputProps.value, index)
             }
           }}
         />
@@ -71,7 +71,7 @@ const ResolutionTask = ({ task }) => {
     if (!savedFeedback || !parsedSavedAnswer) {
       return
     }
-
+    console.log(savedFeedback)
     setFeedback(savedFeedback)
     clauses.setLines(parsedSavedAnswer)
   }, [task.id, savedAnswer])
@@ -80,13 +80,15 @@ const ResolutionTask = ({ task }) => {
     if (!task.id) {
       return
     }
+    console.log(clauses.lines)
     const answer = clauses.lines.filter((cl) => cl.trim() !== "")
     if (answer.length > RESOLUTION_LINE_LIMITS.max) {
-      setFeedback({ correct: false, text: "input is too long" })
+      setFeedback({ correct: false, feedback: "input is too long" })
       return
     }
     if (answer.length < RESOLUTION_LINE_LIMITS.min) {
-      setFeedback({ correct: false, text: "input is too short" })
+      console.log(answer)
+      setFeedback({ correct: false, feedback: "input is too short" })
       return
     }
     await submitTaskAnswer({

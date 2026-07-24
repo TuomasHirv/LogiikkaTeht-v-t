@@ -12,7 +12,7 @@ export const ROUTES = {
 }
 
 export const ELIMINATION_LINE_LIMITS = { min: 1, max: 6 }
-export const RESOLUTION_LINE_LIMITS = { min: 1, max: 10 }
+export const RESOLUTION_LINE_LIMITS = { min: 2, max: 10 }
 export const SHORTHAND_CHAIN_LINE_LIMITS = { min: 1, max: 10 }
 
 export const MODULE_COMPLETE_THRESHOLD = 0.8

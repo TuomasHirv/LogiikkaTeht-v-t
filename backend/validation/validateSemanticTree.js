@@ -217,9 +217,7 @@ function evaluateNode(node, state, branches) {
         throw new Error("Branch ended before exhausting everything pending")
       }
       if (findContradiction(newLiterals)) {
-        throw new Error(
-          "A contradiction exists on this branch but was never marked with X",
-        )
+        throw new Error("Mark contradictions with X")
       }
       branches.push({ closed: false, literals: newLiterals })
       return
