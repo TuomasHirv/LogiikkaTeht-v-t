@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import useUserStore from "./Store"
+import useUserStore from "./store"
 import { userService } from "./services/userService"
 import { answerService } from "./services/answerService"
 
