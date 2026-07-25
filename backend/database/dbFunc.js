@@ -81,34 +81,34 @@ const getAnswerAndModule = async (task_id) => {
     const info = await db.query(q, [task_id])
     const rows = info.rows[0]
     switch (rows.module_name) {
-      case "words-to-propositions":
+      case MODULENAMES.WORDS_TO_PROPOSITIONS:
         return {
           answer: rows.correct_answer.answers,
           moduleName: rows.module_name,
         }
-      case "subformula":
+      case MODULENAMES.SUBFORMULA:
         return { answer: rows.correct_answer, moduleName: rows.module_name }
-      case "Truth-Table-Task":
+      case MODULENAMES.TRUTHTABLE_TASK:
         return {
           answer: rows.correct_answer.answer,
           moduleName: rows.module_name,
         }
-      case "Equivalence-Rules-Task":
+      case MODULENAMES.EQUIVALENCE_RULES_TASK:
         return {
           answer: rows.correct_answer.remove,
           moduleName: rows.module_name,
         }
-      case "TT-method-Conversion":
+      case MODULENAMES.TT_METHOD_CONVERSION:
         return {
           answer: [rows.correct_answer.groups, rows.correct_answer.form],
           moduleName: rows.module_name,
         }
-      case "Equivalence-method-Transform":
+      case MODULENAMES.EQUIVALENCE_METHOD_TRANSFORM:
         return {
           answer: [rows.correct_answer.remove, rows.correct_answer.form],
           moduleName: rows.module_name,
         }
-      case "Resolution-Introduction":
+      case MODULENAMES.RESOLUTION_INTRODUCTION:
         return {
           answer: [
             rows.correct_answer.clauses,
@@ -117,12 +117,21 @@ const getAnswerAndModule = async (task_id) => {
           ],
           moduleName: rows.module_name,
         }
-      case "Recursive-Definition":
+      case MODULENAMES.RESOLUTION_REFUTATION:
+        return {
+          answer: [
+            rows.correct_answer.clauses,
+            rows.correct_answer.assumption_count,
+            rows.correct_answer.assumptions,
+          ],
+          moduleName: rows.module_name,
+        }
+      case MODULENAMES.RECURSIVE_DEFINITION:
         return {
           answer: [rows.correct_answer.final, rows.correct_answer.shorthands],
           moduleName: rows.module_name,
         }
-      case "Semantic-Tree-Intro":
+      case MODULENAMES.SEMANTIC_TREE_INTRO:
         return {
           answer: rows.correct_answer.lines,
           moduleName: rows.module_name,

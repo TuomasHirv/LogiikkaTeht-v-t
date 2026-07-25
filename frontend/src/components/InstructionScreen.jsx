@@ -45,9 +45,11 @@ const InstructionScreen = () => {
             <div className="text-black max-w-xl text-sm md:text-base leading-relaxed m-0">
               <SimpleMarkdown>{par}</SimpleMarkdown>
             </div>
-            <pre className="bg-white border-2 border-black rounded px-2 py-1 ml-0 sm:ml-2 overflow-x-auto whitespace-pre-wrap font-mono">
-              {content.examples[index]}
-            </pre>
+            {content.examples[index] && (
+              <pre className="bg-white border-2 border-black rounded px-2 py-1 ml-0 sm:ml-2 overflow-x-auto whitespace-pre-wrap font-mono">
+                {content.examples[index]}
+              </pre>
+            )}
           </div>
         ))}
       </div>

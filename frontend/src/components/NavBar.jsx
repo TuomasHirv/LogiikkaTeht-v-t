@@ -28,6 +28,10 @@ const NavBar = () => {
           {" "}
           Resolution method{" "}
         </Link>
+        <Link to="/part/4/section/1" className="nav-btn-primary">
+          {" "}
+          Natural deduction{" "}
+        </Link>
 
         <div className="flex ml-auto">
           {!user ? (

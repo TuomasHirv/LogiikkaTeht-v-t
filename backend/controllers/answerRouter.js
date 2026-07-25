@@ -66,6 +66,8 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         taskId,
         response,
       )
+    // Both tasks are evaluated in the same way. The only difference is in the database
+    case MODULENAMES.RESOLUTION_REFUTATION:
     case MODULENAMES.RESOLUTION_INTRODUCTION:
       return await routerHelper.resolutionHelper(
         answer,

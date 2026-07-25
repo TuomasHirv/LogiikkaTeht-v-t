@@ -33,4 +33,7 @@ export const taskInstructions = {
   "Recursive-Definition": {
     instruction: "Task: Fully expand by opening one shorthand at a time.",
   },
+  "Multiple-Choice-Natural-Deduction": {
+    instruction: "Choose the correct answer from the given options",
+  },
 }

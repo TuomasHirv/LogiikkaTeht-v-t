@@ -1023,6 +1023,69 @@ const tasks = [
     },
     metadata: {},
   },
+  {
+    type: "multiple-Choise",
+    module_name: "Multiple-Choice-Natural-Deduction",
+    question: "Natural deduction unlike other systems is purely mechanical",
+    correct_answer: { answer: "Incorrect" },
+    metadata: {
+      choises: ["True", "Incorrect", "All systems are purely mechanical"],
+    },
+  },
+  {
+    type: "multiple-Choise",
+    module_name: "Multiple-Choice-Natural-Deduction",
+    question: "Natural deduction proves something by:",
+    correct_answer: {
+      answer: "Using rule based changes to arrive at the conclusion",
+    },
+    metadata: {
+      choises: [
+        "Calculating the truth values of propositions",
+        "Using rule based changes to arrive at the conclusion",
+        "Assuming that it is true",
+      ],
+    },
+  },
+  {
+    type: "multiple-Choise",
+    module_name: "Multiple-Choice-Natural-Deduction",
+    question: "If i know A and B then",
+    correct_answer: {
+      answer: "I can introduce A ∧ B",
+    },
+    metadata: {
+      choises: [
+        "I can introduce A ∧ B",
+        "I need more premises to introduce anything meaningful",
+      ],
+    },
+  },
+  {
+    type: "multiple-Choise",
+    module_name: "Multiple-Choice-Natural-Deduction",
+    question: "Contradiction has to be written as:",
+    correct_answer: {
+      answer: "A ∧ ¬A",
+    },
+    metadata: {
+      choises: ["A ∧ ¬A", "¬A ∧ A"],
+    },
+  },
+  {
+    type: "multiple-Choise",
+    module_name: "Multiple-Choice-Natural-Deduction",
+    question: "I can rewrite premises to other equivalent forms",
+    correct_answer: {
+      answer: "Only by following the rules",
+    },
+    metadata: {
+      choises: [
+        "Only by following the rules",
+        "As long as they are equivalent",
+      ],
+    },
+  },
 ]
 
 module.exports = tasks

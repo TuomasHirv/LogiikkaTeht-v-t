@@ -28,6 +28,7 @@ export const MODULE_NAMES = {
   RESOLUTION_REFUTATION: "Resolution-Refutation",
   SHORTHAND_TASK: "Recursive-Definition",
   SEMANTIC_TREE_INTRO: "Semantic-Tree-Intro",
+  MULTIPLE_CHOISE_NATURAL_DEDUCTION: "Multiple-Choice-Natural-Deduction",
 }
 
 export const MODULE_ORDER = Object.values(MODULE_NAMES)
