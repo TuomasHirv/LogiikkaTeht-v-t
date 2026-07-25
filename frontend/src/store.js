@@ -38,9 +38,7 @@ const useUserStore = create(
             console.log("Error when logging in:", error.message)
           }
         },
-        logoutUser: () =>
-          set(() => ({ user: null, completedTasks: [], answers: {} })),
-
+        logoutUser: () => set(() => ({ user: null, token: null, answers: {} })),
         addAnswer: (taskId, answerText, isCorrect, feedback, moduleName) => {
           set((state) => ({
             answers: {
@@ -53,7 +51,6 @@ const useUserStore = create(
               },
             },
           }))
-          console.log(taskId, answerText, isCorrect, feedback, moduleName)
         },
 
         initialize: async () => {
