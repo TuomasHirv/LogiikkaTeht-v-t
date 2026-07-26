@@ -1155,6 +1155,83 @@ const tasks = [
       ],
     },
   },
+  {
+    type: "natural-deduction",
+    module_name: "Basic-Rules-Natural-Deduction",
+    question: "P ∧ Q",
+    correct_answer: { goal: "P ∧ Q" },
+    metadata: {
+      premises: ["P", "Q"],
+      allowed_rules: ["∧I", "∧E", "∨I", "→E", "¬E"],
+      prefilled_lines: [],
+    },
+  },
+  {
+    type: "natural-deduction",
+    module_name: "Basic-Rules-Natural-Deduction",
+    question: "Q ∧ P",
+    correct_answer: { goal: "Q ∧ P" },
+    metadata: {
+      premises: ["P ∧ Q"],
+      allowed_rules: ["∧I", "∧E", "∨I", "→E", "¬E"],
+      prefilled_lines: [],
+    },
+  },
+  {
+    type: "natural-deduction",
+    module_name: "Basic-Rules-Natural-Deduction",
+    question: "Q",
+    correct_answer: { goal: "Q" },
+    metadata: {
+      premises: ["P", "P → Q"],
+      allowed_rules: ["∧I", "∧E", "∨I", "→E", "¬E"],
+      prefilled_lines: [],
+    },
+  },
+  {
+    type: "natural-deduction",
+    module_name: "Basic-Rules-Natural-Deduction",
+    question: "Q ∨ R",
+    correct_answer: { goal: "Q ∨ R" },
+    metadata: {
+      premises: ["P", "P → Q"],
+      allowed_rules: ["∧I", "∧E", "∨I", "→E", "¬E"],
+      prefilled_lines: [],
+    },
+  },
+  {
+    type: "natural-deduction",
+    module_name: "Basic-Rules-Natural-Deduction",
+    question: "R ∧ P",
+    correct_answer: { goal: "R ∧ P" },
+    metadata: {
+      premises: ["P ∧ Q", "Q → R"],
+      allowed_rules: ["∧I", "∧E", "∨I", "→E", "¬E"],
+      prefilled_lines: [],
+    },
+  },
+  {
+    type: "natural-deduction",
+    module_name: "Basic-Rules-Natural-Deduction",
+    question: "P ∧ ¬P",
+    correct_answer: { goal: "P ∧ ¬P" },
+    metadata: {
+      premises: ["P ∧ Q", "¬P"],
+      allowed_rules: ["∧I", "∧E", "∨I", "→E", "¬E"],
+      prefilled_lines: [],
+    },
+  },
+  {
+    type: "natural-deduction",
+    module_name: "Basic-Rules-Natural-Deduction",
+    question: "R ∧ (P ∨ S)",
+    correct_answer: { goal: "R ∧ (P ∨ S)" },
+    metadata: {
+      premises: ["P → Q", "Q → R", "P"],
+      allowed_rules: ["∧I", "∧E", "∨I", "→E", "¬E"],
+      prefilled_lines: [],
+    },
+  },
 ]
 
 module.exports = tasks

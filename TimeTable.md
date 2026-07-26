@@ -28,3 +28,4 @@ Tasks is a simple description of what has been completed and doesn't necessarily
 | 22.07 |                        Started to add better feedback on tasks.                         |    4 |                                      |
 | 24.07 |           Added feedback to tasks. Refractored restoring answers. Added tests           |  5.5 | frnt tests + r-refutation tasks todo |
 | 25.07 |  Added tests to task components. Added frontend component for multipleChoise questions  |    4 | Started on Natural deduction         |
+| 26.07 |     frnt component for N-Deduction. Parsing list. Needs more work and better tests      |    6 |                                      |

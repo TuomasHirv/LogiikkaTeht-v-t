@@ -18,7 +18,7 @@ const Line = ({ initValue, index, change }) => {
   return (
     <React.Fragment>
       <div className="flex bg-white text-black">
-        <span className="inline-block w-6 text-center bg-gray-500">
+        <span className="inline-block w-5 text-center bg-gray-500">
           {index}:
         </span>
 
@@ -57,30 +57,22 @@ const Line = ({ initValue, index, change }) => {
   )
 }
 
-const task = {
-  question: "Prove A ∧ B",
-  metadata: {
-    premises: ["A", "B"],
-  },
-  moduleName: "NATURALDEDUCTION",
-}
-
-const NaturalDeductionTask = () => {
+const NaturalDeductionTask = ({ task }) => {
   const { addAnswer } = useUserActions()
   const [feedback, setFeedback] = useState(null)
   const savedAnswer = useUserStore((state) => state.answers[task.id])
   const start = task?.question || ""
   const { ...clauses } = useLineList([""], NATURALDEDUCTION_LINE_LIMITS)
 
-  //const parseAnswer = (x) => x
-  //useLastSavedAnswer({
-  //  task,
-  //  savedAnswer,
-  //  currAnswer: clauses.lines,
-  //  setFeedback,
-  //  applyAnswer: clauses.setLines,
-  //  parseAnswer,
-  //})
+  const parseAnswer = (x) => x
+  useLastSavedAnswer({
+    task,
+    savedAnswer,
+    currAnswer: clauses.lines,
+    setFeedback,
+    applyAnswer: clauses.setLines,
+    parseAnswer,
+  })
 
   const submitAnswer = async (event) => {
     if (!task.id) {
@@ -107,8 +99,8 @@ const NaturalDeductionTask = () => {
 
   return (
     <div>
-      <div className=" rounded text-xl w-fit">{task?.question}</div>
-      <div className="bg-gray-500 rounded text-black w-fit">
+      <div className=" rounded text-xl w-fit">Prove: {task?.question}</div>
+      <div className="border-dotted border-2 rounded text-black w-fit flex gap-10">
         <p> PREMISES: </p>
         {task?.metadata?.premises.map((premise, index) => (
           <li key={index}>{premise}</li>
