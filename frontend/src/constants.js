@@ -13,6 +13,8 @@ export const ROUTES = {
 
 export const ELIMINATION_LINE_LIMITS = { min: 1, max: 6 }
 export const RESOLUTION_LINE_LIMITS = { min: 2, max: 10 }
+export const NATURALDEDUCTION_LINE_LIMITS = { min: 2, max: 15 }
+
 export const SHORTHAND_CHAIN_LINE_LIMITS = { min: 1, max: 10 }
 
 export const MODULE_COMPLETE_THRESHOLD = 0.8
@@ -22,13 +24,17 @@ export const MODULE_NAMES = {
   SUBFORMULA: "subformula",
   TRUTH_TABLE_TASK: "Truth-Table-Task",
   EQUIVALENCE_RULES_TASK: "Equivalence-Rules-Task",
+
   TT_METHOD_CONVERSION: "TT-method-Conversion",
   EQUIVALENCE_METHOD_TRANSFORM: "Equivalence-method-Transform",
   RESOLUTION_INTRODUCTION: "Resolution-Introduction",
   RESOLUTION_REFUTATION: "Resolution-Refutation",
+
   SHORTHAND_TASK: "Recursive-Definition",
   SEMANTIC_TREE_INTRO: "Semantic-Tree-Intro",
+
   MULTIPLE_CHOISE_NATURAL_DEDUCTION: "Multiple-Choice-Natural-Deduction",
+  BASIC_RULES_NATURAL_DEDUCTION: "Basic-Rules-Natural-Deduction",
 }
 
 export const MODULE_ORDER = Object.values(MODULE_NAMES)

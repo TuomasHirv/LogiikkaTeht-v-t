@@ -1,0 +1,155 @@
+import React from "react"
+import { useEffect, useState } from "react"
+import { useNaturalDeductionField } from "../hooks"
+import { submitTaskAnswer } from "../hooks/submitAnswer"
+import useUserStore, { useUserActions } from "../store"
+import { useLineList } from "../hooks/lineList"
+import { NATURALDEDUCTION_LINE_LIMITS } from "../constants"
+import { useLastSavedAnswer } from "../hooks/useTaskHooks"
+import {
+  buildSavedAnswerFeedback,
+  parseSavedEliminationAnswer,
+} from "../hooks/savedAnswer"
+import AnswerFeedback from "./AnswerFeedback"
+
+const Line = ({ initValue, index, change }) => {
+  const lineInput = useNaturalDeductionField("text", initValue, index)
+
+  return (
+    <React.Fragment>
+      <div className="flex bg-white text-black">
+        <span className="inline-block w-6 text-center bg-gray-500">
+          {index}:
+        </span>
+
+        <input
+          {...lineInput.inputProps}
+          onBlur={() => {
+            lineInput.checkSyntax(lineInput.inputProps.value, index)
+            if (lineInput.inputProps.value) {
+              change(lineInput.inputProps.value, index)
+            }
+          }}
+        />
+        {lineInput.syntaxError && (
+          <div className="group relative">
+            <span className="cursor-pointer text-red-700 bg-gray-700 select-none px-1">
+              {" "}
+              !{" "}
+            </span>
+            <p
+              className="
+              absolute left-0 top-full mt-1 z-10
+              max-w-xs whitespace-normal
+              bg-gray-700 text-white text-sm rounded px-2 py-1
+              opacity-0 pointer-events-none
+              group-hover:opacity-100
+              transition-opacity duration-150
+            "
+            >
+              {" "}
+              {lineInput.syntaxError}{" "}
+            </p>
+          </div>
+        )}
+      </div>
+    </React.Fragment>
+  )
+}
+
+const task = {
+  question: "Prove A ∧ B",
+  metadata: {
+    premises: ["A", "B"],
+  },
+  moduleName: "NATURALDEDUCTION",
+}
+
+const NaturalDeductionTask = () => {
+  const { addAnswer } = useUserActions()
+  const [feedback, setFeedback] = useState(null)
+  const savedAnswer = useUserStore((state) => state.answers[task.id])
+  const start = task?.question || ""
+  const { ...clauses } = useLineList([""], NATURALDEDUCTION_LINE_LIMITS)
+
+  //const parseAnswer = (x) => x
+  //useLastSavedAnswer({
+  //  task,
+  //  savedAnswer,
+  //  currAnswer: clauses.lines,
+  //  setFeedback,
+  //  applyAnswer: clauses.setLines,
+  //  parseAnswer,
+  //})
+
+  const submitAnswer = async (event) => {
+    if (!task.id) {
+      return
+    }
+    const answer = clauses.lines.filter((cl) => cl.trim() !== "")
+    if (answer.length > NATURALDEDUCTION_LINE_LIMITS.max) {
+      setFeedback({ correct: false, feedback: "input is too long" })
+      return
+    }
+    if (answer.length < NATURALDEDUCTION_LINE_LIMITS.min) {
+      setFeedback({ correct: false, feedback: "input is too short" })
+      return
+    }
+    await submitTaskAnswer({
+      event,
+      taskId: task.id,
+      submittedAnswer: answer,
+      addAnswer,
+      setFeedback,
+      moduleName: task.moduleName,
+    })
+  }
+
+  return (
+    <div>
+      <div className=" rounded text-xl w-fit">{task?.question}</div>
+      <div className="bg-gray-500 rounded text-black w-fit">
+        <p> PREMISES: </p>
+        {task?.metadata?.premises.map((premise, index) => (
+          <li key={index}>{premise}</li>
+        ))}
+      </div>
+      <div className="relative w-fit">
+        <div className="grid border border-black">
+          {clauses.lines.map((cl, index) => (
+            <React.Fragment key={index}>
+              <Line initValue={cl} index={index} change={clauses.change} />
+            </React.Fragment>
+          ))}
+        </div>
+
+        <div className="flex">
+          {clauses.lines.length < NATURALDEDUCTION_LINE_LIMITS.max && (
+            <button
+              onClick={() => clauses.addRemove(true)}
+              className="bg-green-600 text-black border-black border-2 rounded hover:bg-green-400 px-1"
+            >
+              +
+            </button>
+          )}
+          {clauses.lines.length > NATURALDEDUCTION_LINE_LIMITS.min && (
+            <button
+              onClick={() => clauses.addRemove(false)}
+              className="bg-red-500 text-black border-black border-2 rounded hover:bg-red-400 px-2"
+            >
+              -
+            </button>
+          )}
+          <div className="text-black ml-auto border-black border-2 rounded bg-green-700 hover:bg-green-400">
+            <button onClick={submitAnswer}>Submit</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <AnswerFeedback feedback={feedback} />
+      </div>
+    </div>
+  )
+}
+
+export default NaturalDeductionTask

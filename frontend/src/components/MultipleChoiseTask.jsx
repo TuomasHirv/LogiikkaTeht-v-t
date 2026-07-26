@@ -32,7 +32,6 @@ const MultipleChoiseTask = ({ task }) => {
       moduleName: task.moduleName,
     })
   }
-  console.log(answer, feedback)
   return (
     <div className="task-card">
       <h3 className="text-2xl">{task.question}</h3>

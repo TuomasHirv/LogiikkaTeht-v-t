@@ -13,6 +13,8 @@ const ResolutionTask = lazy(() => import("./ResolutionTask"))
 const ShorthandTask = lazy(() => import("./ShorthandTask"))
 const SemanticTreeTask = lazy(() => import("./SemanticTreeTask"))
 const MultipleChoiseTask = lazy(() => import("./MultipleChoiseTask"))
+const NaturalDeductionTask = lazy(() => import("./NaturalDeductionTask"))
+
 const TaskScreen = () => {
   const { moduleName, id, section } = useParams()
   const nextSection = Number(section) + 1
@@ -73,6 +75,8 @@ const TaskScreen = () => {
         return SemanticTreeTask
       case MODULE_NAMES.MULTIPLE_CHOISE_NATURAL_DEDUCTION:
         return MultipleChoiseTask
+      case MODULE_NAMES.BASIC_RULES_NATURAL_DEDUCTION:
+        return NaturalDeductionTask
       default:
         return TaskItem
     }
