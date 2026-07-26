@@ -1027,7 +1027,10 @@ const tasks = [
     type: "multiple-Choise",
     module_name: "Multiple-Choice-Natural-Deduction",
     question: "Natural deduction unlike other systems is purely mechanical",
-    correct_answer: { answer: "Incorrect" },
+    correct_answer: {
+      answer: "Incorrect",
+      feedback: "Natural deduction is goal-directed.",
+    },
     metadata: {
       choises: ["True", "Incorrect", "All systems are purely mechanical"],
     },
@@ -1038,6 +1041,7 @@ const tasks = [
     question: "Natural deduction proves something by:",
     correct_answer: {
       answer: "Using rule based changes to arrive at the conclusion",
+      feedback: "Remember how Natural Deduction works!",
     },
     metadata: {
       choises: [
@@ -1053,6 +1057,7 @@ const tasks = [
     question: "If i know A and B then",
     correct_answer: {
       answer: "I can introduce A ∧ B",
+      feedback: "If i know A and B why wouldn't i know A ∧ B",
     },
     metadata: {
       choises: [
@@ -1067,6 +1072,7 @@ const tasks = [
     question: "Contradiction has to be written as:",
     correct_answer: {
       answer: "A ∧ ¬A",
+      feedback: "contradiction is a formula ∧ its negation.",
     },
     metadata: {
       choises: ["A ∧ ¬A", "¬A ∧ A"],
@@ -1078,11 +1084,74 @@ const tasks = [
     question: "I can rewrite premises to other equivalent forms",
     correct_answer: {
       answer: "Only by following the rules",
+      feedback: "Always follow the rules.",
     },
     metadata: {
       choises: [
         "Only by following the rules",
         "As long as they are equivalent",
+      ],
+    },
+  },
+  {
+    type: "multiple-Choise",
+    module_name: "Multiple-Choice-Natural-Deduction",
+    question: "What does an elimination rule do?",
+    correct_answer: {
+      answer:
+        "Draws a conclusion from a formula that already has that connective",
+      feedback: "Elimination rules use a connective you have",
+    },
+    metadata: {
+      choises: [
+        "Removes a line from the proof",
+        "Draws a conclusion from a formula that already has that connective",
+        "Deletes a connective from the goal",
+      ],
+    },
+  },
+  {
+    type: "multiple-Choise",
+    module_name: "Multiple-Choice-Natural-Deduction",
+    question: "A proof is finished when:",
+    correct_answer: {
+      answer: "The goal appears as a correctly justified line",
+      feedback: "The proof ends the moment the goal is derived.",
+    },
+    metadata: {
+      choises: [
+        "Every premise has been used at least once",
+        "The goal appears as a correctly justified line",
+        "No further rules can be applied",
+      ],
+    },
+  },
+  {
+    type: "multiple-Choise",
+    module_name: "Multiple-Choice-Natural-Deduction",
+    question:
+      "Before starting a natural deduction proof, the premises must be converted to CNF",
+    correct_answer: {
+      answer: "False",
+      feedback: "That requirement belongs to resolution.",
+    },
+    metadata: {
+      choises: ["True", "False", "Only if the goal contains an implication"],
+    },
+  },
+  {
+    type: "multiple-Choise",
+    module_name: "Multiple-Choice-Natural-Deduction",
+    question: "What does the justification on a proof line record?",
+    correct_answer: {
+      answer: "The rule used and which earlier lines it was applied to",
+      feedback: "A justification makes each step checkable",
+    },
+    metadata: {
+      choises: [
+        "The truth value of that line",
+        "The rule used and which earlier lines it was applied to",
+        "How many rules remain before the goal",
       ],
     },
   },

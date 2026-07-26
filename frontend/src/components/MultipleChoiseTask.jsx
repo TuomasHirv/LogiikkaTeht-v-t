@@ -7,7 +7,6 @@ import AnswerFeedback from "./AnswerFeedback"
 import useUserStore, { useUserActions } from "../store"
 
 const MultipleChoiseTask = ({ task }) => {
-  const token = useUserStore((state) => state.token)
   const { addAnswer } = useUserActions()
   const [answer, setAnswer] = useState("")
   const [feedback, setFeedback] = useState(null)
@@ -23,17 +22,17 @@ const MultipleChoiseTask = ({ task }) => {
     parseAnswer,
   })
 
-  const submitAnswer = async (event) => {
+  const submitAnswer = async (event, submitted) => {
     await submitTaskAnswer({
       event,
       taskId: task.id,
-      submittedAnswer: answer,
+      submittedAnswer: submitted,
       addAnswer,
       setFeedback,
       moduleName: task.moduleName,
     })
   }
-
+  console.log(answer, feedback)
   return (
     <div className="task-card">
       <h3 className="text-2xl">{task.question}</h3>
@@ -41,11 +40,13 @@ const MultipleChoiseTask = ({ task }) => {
         {task?.metadata?.choises.map((choise, index) => (
           <button
             key={index}
-            onClick={() => {
+            onClick={(event) => {
               setAnswer(choise)
-              submitAnswer()
+              submitAnswer(event, choise)
             }}
-            className="border-2 rounded hover:bg-green-400 "
+            className={`border-2 rounded hover:bg-green-500 ${
+              answer === choise && feedback.correct ? "bg-green-500" : ""
+            }`}
           >
             {choise}
           </button>

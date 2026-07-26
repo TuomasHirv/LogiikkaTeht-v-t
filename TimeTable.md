@@ -27,3 +27,4 @@ Tasks is a simple description of what has been completed and doesn't necessarily
 | 21.07 | Finished validateSemanticTree. The file is AI-coded but i had to manually work it alot  |    8 | >120 h done                          |
 | 22.07 |                        Started to add better feedback on tasks.                         |    4 |                                      |
 | 24.07 |           Added feedback to tasks. Refractored restoring answers. Added tests           |  5.5 | frnt tests + r-refutation tasks todo |
+| 25.07 |  Added tests to task components. Added frontend component for multipleChoise questions  |    4 | Started on Natural deduction         |

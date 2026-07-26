@@ -136,6 +136,14 @@ const getAnswerAndModule = async (task_id) => {
           answer: rows.correct_answer.lines,
           moduleName: rows.module_name,
         }
+      case MODULENAMES.MULTIPLE_CHOICE_NATURAL_DEDUCTION:
+        return {
+          answerFeedback: [
+            rows.correct_answer.answer,
+            rows.correct_answer.feedback,
+          ],
+          moduleName: rows.module_name,
+        }
       default:
         console.log("Module name isnt in presets:", rows.module_name)
         throw new Error("Module name isnt in presets:", rows.module_name)

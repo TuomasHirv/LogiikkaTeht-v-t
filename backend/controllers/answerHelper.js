@@ -261,6 +261,38 @@ async function semanticTreeHelper(answer, reqLines, userId, taskId, response) {
   }
 }
 
+async function multipleChoiceHelper(
+  answer,
+  reqAnswer,
+  feedback,
+  userId,
+  taskId,
+  response,
+) {
+  if (answer === reqAnswer) {
+    await dbFunc.insertAnswer(
+      userId,
+      taskId,
+      serializeSubmittedAnswer(answer),
+      true,
+      "Pass",
+    )
+    return response
+      .status(200)
+      .json({ correct: true, answer: answer, feedback: "Pass" })
+  }
+  await dbFunc.insertAnswer(
+    userId,
+    taskId,
+    serializeSubmittedAnswer(answer),
+    false,
+    feedback,
+  )
+  return response
+    .status(200)
+    .json({ correct: false, answer: answer, feedback: feedback })
+}
+
 module.exports = {
   wordsToPropositionsHelper,
   subFormulaHelper,
@@ -271,4 +303,5 @@ module.exports = {
   resolutionHelper,
   shorthandHelper,
   semanticTreeHelper,
+  multipleChoiceHelper,
 }

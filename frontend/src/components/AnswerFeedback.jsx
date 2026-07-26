@@ -4,10 +4,7 @@ const AnswerFeedback = ({ feedback }) => {
   }
   return (
     <p
-      style={{
-        color: feedback.correct ? "#16a34a" : "#dc2626",
-        fontSize: "1.4rem",
-      }}
+      className={`text-2xl ${feedback.correct ? "text-green-600" : "text-red-600"} bg-gray-800 rounded w-fit`}
     >
       {feedback.feedback} {feedback.correct ? " ✓ " : " ✗ "}
     </p>

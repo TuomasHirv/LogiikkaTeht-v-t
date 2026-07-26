@@ -9,5 +9,6 @@ const MODULENAMES = {
   RESOLUTION_REFUTATION: "Resolution-Refutation",
   RECURSIVE_DEFINITION: "Recursive-Definition",
   SEMANTIC_TREE_INTRO: "Semantic-Tree-Intro",
+  MULTIPLE_CHOICE_NATURAL_DEDUCTION: "Multiple-Choice-Natural-Deduction",
 }
 module.exports = { MODULENAMES }

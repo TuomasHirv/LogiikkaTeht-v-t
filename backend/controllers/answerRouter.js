@@ -92,6 +92,15 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         taskId,
         response,
       )
+    case MODULENAMES.MULTIPLE_CHOICE_NATURAL_DEDUCTION:
+      return await routerHelper.multipleChoiceHelper(
+        answer,
+        answerModuleName.answerFeedback[0],
+        answerModuleName.answerFeedback[1],
+        userId,
+        taskId,
+        response,
+      )
     default:
       return response.status(400).json({ error: "Unsupported module" })
   }
