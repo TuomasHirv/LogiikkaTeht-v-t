@@ -75,7 +75,6 @@ function turnTextToLine(text, index, allowedRules, lastDepth = 0) {
   }
   return { formula, depth, rule, refs }
 }
-
 function parseAllLines(userList, allowedRules) {
   let i = 0
   let lastDepth = 0

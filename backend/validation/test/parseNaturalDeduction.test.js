@@ -1,5 +1,3 @@
-//This file is AI-coded
-
 const assert = require("node:assert/strict")
 const { test, describe, it } = require("node:test")
 
@@ -9,9 +7,17 @@ describe("Parsing natural deduction lines", () => {
   describe("splitJustificationFormula", () => {
     it("splits a simple formula from its justification", () => {
       const { formula, justification } =
-        pnd.splitJustificationFormula("A→B(premise)")
-      assert.strictEqual(formula, "A→B")
+        pnd.splitJustificationFormula("A → B (premise)")
+      assert.strictEqual(formula, "A → B ")
       assert.strictEqual(justification, "premise")
+    })
+
+    it("splits a simple formula with a rule from its justification", () => {
+      const { formula, justification } = pnd.splitJustificationFormula(
+        "A → B (→I lines: 0,1)",
+      )
+      assert.strictEqual(formula, "A → B ")
+      assert.strictEqual(justification, "→I lines: 0,1")
     })
 
     it("uses the last matching brackets when the formula contains parentheses", () => {
@@ -51,14 +57,32 @@ describe("Parsing natural deduction lines", () => {
     })
 
     it("strips a trailing 'line'/'lines' suffix from the rule name", () => {
-      assert.throws(
-        () => pnd.parseJustification("MP,line:1"),
-        /parseRef is not defined/,
-      )
+      const { rule, refs } = pnd.parseJustification("MP,line:1")
+      assert.deepEqual(refs, [1])
     })
 
     it("throws on justifications without a colon that aren't premise/assumption", () => {
       assert.throws(() => pnd.parseJustification("MP"))
+    })
+    it("finds 2 refs in the same line", () => {
+      const { rule, refs } = pnd.parseJustification("MP,lines:1,2")
+      assert.deepEqual(refs, [1, 2])
+    })
+    it("finds contiguous ref", () => {
+      const { rule, refs } = pnd.parseJustification("MP,lines:1-4")
+      assert.deepEqual(refs, [[1, 4]])
+    })
+    it("finds many contiguous ref", () => {
+      const { rule, refs } = pnd.parseJustification("MP,lines:1-4, 5-7, 0-1")
+      assert.deepEqual(refs, [
+        [1, 4],
+        [5, 7],
+        [0, 1],
+      ])
+    })
+    it("finds mixed contiguous and singular refs", () => {
+      const { rule, refs } = pnd.parseJustification("MP,lines:1-4, 5, 0-1, 8")
+      assert.deepEqual(refs, [[1, 4], 5, [0, 1], 8])
     })
   })
 
@@ -86,6 +110,15 @@ describe("Parsing natural deduction lines", () => {
       assert.strictEqual(depth, 1)
       assert.strictEqual(rule, "assumption")
     })
+    it("parses when given many rules", () => {
+      const { formula, depth, rule } = pnd.turnTextToLine(
+        "|A(→I lines: 1,2)",
+        3,
+        new Set(["premise", "assumption", "→I", "MP"]),
+        0,
+      )
+      assert.strictEqual(rule, "→I")
+    })
 
     it("throws when an assumption is not indented past lastDepth", () => {
       assert.throws(() =>
@@ -106,8 +139,19 @@ describe("Parsing natural deduction lines", () => {
 
     it("throws when the rule is not in allowedRules", () => {
       assert.throws(
-        () => pnd.turnTextToLine("A(premise)", 0, new Set(["assumption"])),
-        /Rule premise is not allowed in this task/,
+        () =>
+          pnd.turnTextToLine("A(→I lines: 1,2)", 0, new Set(["assumption"])),
+        /Rule →I is not allowed in this task/,
+      )
+    })
+    it("throws when referencing a later line", () => {
+      assert.throws(() =>
+        pnd.turnTextToLine("A(→I lines: 1,2)", 0, new Set(["→I"])),
+      )
+    })
+    it("throws when referencing a current line", () => {
+      assert.throws(() =>
+        pnd.turnTextToLine("A(→I line: 0)", 0, new Set(["→I"])),
       )
     })
   })
