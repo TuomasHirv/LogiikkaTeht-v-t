@@ -52,14 +52,49 @@ function parseRef(part) {
   return Number(part)
 }
 
+function validateDepthIncrease(rule, currDepth, lastDepth) {
+  if (rule === "assumption") {
+    if (!(currDepth - 1 === lastDepth)) {
+      throw new Error(`Assumption should be indented by one`)
+    }
+  } else if (currDepth > lastdepth) {
+    throw new Error(`Only assumptions can indent`)
+  }
+}
+
+function validateDepthDecrease(rule, currDepth, lastDepth) {
+  const DISCHARGE_RULES = new Set(["→I", "¬I", "∨E"])
+  if (!DISCHARGE_RULES.has(rule)) {
+    if (currDepth >= lastDepth) {
+      return
+    }
+    throw new Error(`rule ${rule} shouldnt indent or dedent`)
+  }
+
+  if (rule === "∨E") {
+    if (currDepth === lastDepth - 2) {
+      return
+    }
+    throw new Error(`rule ${rule} should dedent by two`)
+  }
+
+  if (currDepth === lastDepth - 1) {
+    return
+  }
+  throw new Error(`rule ${rule} should dedent by one`)
+}
+
+function validateDepth(rule, currDepth, lastDepth) {
+  validateDepthIncrease(rule, currDepth, lastDepth)
+  validateDepthDecrease(rule, currDepth, lastDepth)
+}
+
 function turnTextToLine(text, index, allowedRules, lastDepth = 0) {
   const removedWhitespace = text.replace(/\s/g, "")
   const { depth, rest } = countDepth(removedWhitespace)
   const { formula, justification } = splitJustificationFormula(rest)
   const { rule, refs } = parseJustification(justification)
-  if (rule === "assumption" && !(depth > lastDepth)) {
-    throw new Error(`Assumption should be indented at ${index}`)
-  }
+  validateDepth(rule, depth, lastDepth)
   if (!allowedRules.has(rule) && rule !== "premise") {
     throw new Error(`Rule ${rule} is not allowed in this task`)
   }
@@ -75,6 +110,7 @@ function turnTextToLine(text, index, allowedRules, lastDepth = 0) {
   }
   return { formula, depth, rule, refs }
 }
+
 function parseAllLines(userList, allowedRules) {
   let i = 0
   let lastDepth = 0
@@ -93,4 +129,5 @@ module.exports = {
   turnTextToLine,
   splitJustificationFormula,
   parseJustification,
+  parseAllLines,
 }
