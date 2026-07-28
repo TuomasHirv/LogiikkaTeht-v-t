@@ -57,7 +57,7 @@ function validateDepthIncrease(rule, currDepth, lastDepth) {
     if (!(currDepth - 1 === lastDepth)) {
       throw new Error(`Assumption should be indented by one`)
     }
-  } else if (currDepth > lastdepth) {
+  } else if (currDepth > lastDepth) {
     throw new Error(`Only assumptions can indent`)
   }
 }
@@ -130,4 +130,5 @@ module.exports = {
   splitJustificationFormula,
   parseJustification,
   parseAllLines,
+  validateDepth,
 }

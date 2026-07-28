@@ -112,10 +112,10 @@ describe("Parsing natural deduction lines", () => {
     })
     it("parses when given many rules", () => {
       const { formula, depth, rule } = pnd.turnTextToLine(
-        "|A(→I lines: 1,2)",
+        "A(→I lines: 1,2)",
         3,
         new Set(["premise", "assumption", "→I", "MP"]),
-        0,
+        1,
       )
       assert.strictEqual(rule, "→I")
     })
@@ -128,22 +128,23 @@ describe("Parsing natural deduction lines", () => {
 
     it("strips whitespace before parsing", () => {
       const { formula, depth, rule } = pnd.turnTextToLine(
-        " | A ∨ B ( premise ) ",
+        "A ∨ B ( premise ) ",
         0,
         new Set(["premise"]),
       )
       assert.strictEqual(formula, "A∨B")
-      assert.strictEqual(depth, 1)
+      assert.strictEqual(depth, 0)
       assert.strictEqual(rule, "premise")
     })
 
     it("throws when the rule is not in allowedRules", () => {
       assert.throws(
         () =>
-          pnd.turnTextToLine("A(→I lines: 1,2)", 0, new Set(["assumption"])),
+          pnd.turnTextToLine("A(→I lines: 1,2)", 0, new Set(["assumption"]), 1),
         /Rule →I is not allowed in this task/,
       )
     })
+
     it("throws when referencing a later line", () => {
       assert.throws(() =>
         pnd.turnTextToLine("A(→I lines: 1,2)", 0, new Set(["→I"])),
@@ -153,6 +154,45 @@ describe("Parsing natural deduction lines", () => {
       assert.throws(() =>
         pnd.turnTextToLine("A(→I line: 0)", 0, new Set(["→I"])),
       )
+    })
+  })
+  describe("validateDepthIncrease", () => {
+    describe("increase", () => {
+      it("Throws if assumption doesn't indent", () => {
+        assert.throws(() => pnd.validateDepth("assumption", 1, 1))
+      })
+      it("Throws if assumption indents by 2", () => {
+        assert.throws(() => pnd.validateDepth("assumption", 2, 0))
+      })
+      it("Throws if anything else indents", () => {
+        assert.throws(() => pnd.validateDepth("any other rule", 1, 0))
+      })
+      it("Accepts correct assumption use", () => {
+        pnd.validateDepth("assumption", 1, 0)
+      })
+      it("Accepts that other rules dont indent", () => {
+        pnd.validateDepth("any other rule", 1, 1)
+      })
+    })
+    describe("decrease", () => {
+      it("Throws if not dedenting rule dedents", () => {
+        assert.throws(() => pnd.validateDepth("premise", 0, 1))
+      })
+      it("Throws if ∨E rule dedents only once", () => {
+        assert.throws(() => pnd.validateDepth("∨E", 0, 1))
+      })
+      it("Throws if →I rule doesn't dedent", () => {
+        assert.throws(() => pnd.validateDepth("→I", 1, 1))
+      })
+      it("Acceptes not dedenting", () => {
+        pnd.validateDepth("premise", 1, 1)
+      })
+      it("Accepts correct ∨E rule", () => {
+        pnd.validateDepth("∨E", 0, 2)
+      })
+      it("Accepts other correct dedenting rules", () => {
+        pnd.validateDepth("→I", 0, 1)
+      })
     })
   })
 })

@@ -1,5 +1,15 @@
 const { parseAllLines } = require("./parseNaturalDeduction")
 const { findMainConnective } = require("./validateSemanticTree")
+
+function formulasEqual(f1, f2) {
+  const p1 = findMainConnective(f1)
+  const p2 = findMainConnective(f2)
+
+  if (p1.type !== p2.type) return false
+  if (p1.type === "VAR") return p1.value === p2.value
+  if (p1.type === "NOT") return formulasEqual(p1.inner, p2.inner)
+  return formulasEqual(p1.left, p2.left) && formulasEqual(p1.right, p2.right)
+}
 /** Checks that the reference path is legal
  * @param {[{formula: "", depth: int, rule: "", refs: []}]} lines :List of all lines
  * @param {int} referencedIndex
@@ -31,7 +41,6 @@ function checkPremise(currLine, premises) {
   return found
 }
 /**
- *
  * @param {[{formula: "", depth: int, rule: "", refs: []}]} lines
  * @param {{formula: "", depth: int, rule: "", refs: []}} currLine
  */
@@ -47,8 +56,19 @@ function checkAndIntro(lines, currLine) {
   if (parsed.type !== "AND") {
     throw new Error(`Not correct type: ${currFormula}`)
   }
-  if (parsed.left === leftRef && parsed.right === rightRef) return
-  if (parsed.left === rightRef && parsed.right === leftRef) return
+  if (
+    formulasEqual(parsed.left, leftRef) &&
+    formulasEqual(parsed.right, rightRef)
+  ) {
+    return
+  }
+  if (
+    formulasEqual(parsed.left, rightRef) &&
+    formulasEqual(parsed.right, leftRef)
+  ) {
+    return
+  }
+
   throw new Error(`${currFormula} doesn't match refs`)
 }
 
@@ -66,11 +86,12 @@ function checkAndElim(lines, currLine) {
     throw new Error("Ref didnt have ∧ main connective")
   }
   if (
-    parsedRef.left === currLine.formula ||
-    parsedRef.right === currLine.formula
+    formulasEqual(parsedRef.left, currLine.formula) ||
+    formulasEqual(parsedRef.right, currLine.formula)
   ) {
     return
   }
+
   throw new Error(`${currLine.formula} can't be derived from this`)
 }
 
@@ -87,14 +108,20 @@ function checkImpElim(lines, currLine) {
   const [leftRef, rightRef] = currLine.refs.map((r) => lines[r].formula)
   const currFormula = currLine.formula
   const parsedLeft = findMainConnective(leftRef)
-  if (parsedLeft.right === currFormula && parsedLeft.type === "IMPLIES") {
-    if (parsedLeft.left === rightRef) {
+  if (
+    parsedLeft.type === "IMPLIES" &&
+    formulasEqual(parsedLeft.right, currFormula)
+  ) {
+    if (formulasEqual(parsedLeft.left, rightRef)) {
       return
     }
   }
   const parsedRight = findMainConnective(rightRef)
-  if (parsedRight.right === currFormula && parsedRight.type === "IMPLIES") {
-    if (parsedRight.left === leftRef) {
+  if (
+    parsedRight.type === "IMPLIES" &&
+    formulasEqual(parsedRight.right, currFormula)
+  ) {
+    if (formulasEqual(parsedRight.left, leftRef)) {
       return
     }
   }
@@ -120,20 +147,17 @@ function checkImpIntro(lines, currLine, index) {
     throw new Error("Second ref to →I can't be 'assumption'")
   }
   if (!allowedRef(lines, currRefs[0], currRefs[1])) {
-    throw new Error(``)
+    throw new Error(`Refs ${currRefs} not on the same assumption`)
   }
   const currFormula = currLine.formula
   const currParsed = findMainConnective(currFormula)
   if (currParsed.type !== "IMPLIES") {
     throw new Error(`${currLine.formula} isn't the correct type`)
   }
-  if (currParsed.left !== leftRef.formula) {
+  if (!formulasEqual(currParsed.left, leftRef.formula)) {
     throw new Error(`Antecedent must be second Ref`)
   }
-  if (
-    currParsed.right !== rightRef.formula &&
-    currParsed.right !== "(" + rightRef.formula + ")"
-  ) {
+  if (!formulasEqual(currParsed.right, rightRef.formula)) {
     throw new Error(`Consequent must be first Ref`)
   }
   return
@@ -149,13 +173,10 @@ function checkOrIntro(lines, currLine) {
   if (currParsed.type !== "OR") {
     throw new Error(`${currLine.formula} isn't the correct type`)
   }
-  const rightMatch =
-    currParsed.right === refFormula ||
-    currParsed.right === "(" + refFormula + ")"
-  const leftMatch =
-    currParsed.left === refFormula || currParsed.left === "(" + refFormula + ")"
+  const rightMatch = formulasEqual(currParsed.right, refFormula)
+  const leftMatch = formulasEqual(currParsed.left, refFormula)
   if (!rightMatch && !leftMatch) {
-    throw new Error(`Neither side matches ${ref}`)
+    throw new Error(`Neither side matches ${refFormula}`)
   }
 }
 
@@ -165,14 +186,18 @@ function checkNotElim(lines, currLine) {
   }
   const [ref] = currLine.refs.map((r) => lines[r].formula)
   const currFormula = currLine.formula
-  const possibleForms = [
-    "¬¬" + currFormula,
-    "¬¬(" + currFormula + ")",
-    "¬(¬" + currFormula + ")",
-    "¬(¬(" + currFormula + "))",
-  ]
-  if (!possibleForms.includes(ref)) {
-    throw new Error(`${ref} isn't a double negation of ${currFormula}`)
+  const parsedRef = findMainConnective(ref)
+  const possibleError = `${ref} isn't a double negation of ${currFormula}`
+
+  if (parsedRef.type !== "NOT") {
+    throw new Error(possibleError)
+  }
+  const innerParsed = findMainConnective(parsedRef.inner)
+  if (innerParsed.type !== "NOT") {
+    throw new Error(possibleError)
+  }
+  if (!formulasEqual(innerParsed.inner, currFormula)) {
+    throw new Error(possibleError)
   }
 }
 
@@ -210,4 +235,17 @@ function checkLine(lines, index, premises) {
     case "¬E":
       return checkNotElim(lines, currLine)
   }
+}
+
+module.exports = {
+  allowedRef,
+  checkPremise,
+  checkAndIntro,
+  checkAndElim,
+  checkImpElim,
+  checkImpIntro,
+  checkOrIntro,
+  checkNotElim,
+  checkLine,
+  formulasEqual,
 }
