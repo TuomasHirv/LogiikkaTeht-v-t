@@ -201,6 +201,135 @@ function checkNotElim(lines, currLine) {
   }
 }
 
+// This function is AI-coded
+function checkOrElim(lines, currLine, currIndex) {
+  if (currLine.refs.length !== 5) {
+    throw new Error("∨E must have exactly five references")
+  }
+  const [disjIdx, a1Idx, l1Idx, a2Idx, l2Idx] = currLine.refs
+  const disjLine = lines[disjIdx]
+  const a1 = lines[a1Idx],
+    l1 = lines[l1Idx]
+  const a2 = lines[a2Idx],
+    l2 = lines[l2Idx]
+
+  if (a1.rule !== "assumption" || a2.rule !== "assumption") {
+    throw new Error("Both boxes must open with an assumption")
+  }
+
+  if (a1.depth !== currLine.depth + 1 || l1.depth !== a1.depth) {
+    throw new Error("First box isn't well-formed relative to the conclusion")
+  }
+  if (a2.depth !== currLine.depth + 1 || l2.depth !== a2.depth) {
+    throw new Error("Second box isn't well-formed relative to the conclusion")
+  }
+
+  const disjoint = l1Idx < a2Idx || l2Idx < a1Idx
+  if (!disjoint) {
+    throw new Error("The two boxes must not overlap")
+  }
+
+  if (!allowedRef(lines, a1Idx, l1Idx)) {
+    throw new Error("First box's last line isn't validly within it")
+  }
+  if (!allowedRef(lines, a2Idx, l2Idx)) {
+    throw new Error("Second box's last line isn't validly within it")
+  }
+
+  const finalRefIndex = Math.max(l1Idx, l2Idx)
+  if (currIndex !== finalRefIndex + 1) {
+    throw new Error("∨E must immediately follow the last discharged box")
+  }
+  const disjParsed = findMainConnective(disjLine.formula)
+  if (disjParsed.type !== "OR") {
+    throw new Error(`${disjLine.formula} isn't a disjunction`)
+  }
+  const pairForward =
+    formulasEqual(a1.formula, disjParsed.left) &&
+    formulasEqual(a2.formula, disjParsed.right)
+  const pairBackward =
+    formulasEqual(a1.formula, disjParsed.right) &&
+    formulasEqual(a2.formula, disjParsed.left)
+  if (!pairForward && !pairBackward) {
+    throw new Error("The two assumptions must be the two disjuncts")
+  }
+
+  if (
+    !formulasEqual(l1.formula, currLine.formula) ||
+    !formulasEqual(l2.formula, currLine.formula)
+  ) {
+    throw new Error("Both boxes must conclude the formula being proven")
+  }
+}
+
+//This function is AI-coded
+function isContradiction(formula) {
+  const parsed = findMainConnective(formula)
+  if (parsed.type !== "AND") return false
+  const parsedLeft = findMainConnective(parsed.left)
+  const parsedRight = findMainConnective(parsed.right)
+  const leftIsNegOfRight =
+    parsedLeft.type === "NOT" && formulasEqual(parsedLeft.inner, parsed.right)
+  const rightIsNegOfLeft =
+    parsedRight.type === "NOT" && formulasEqual(parsedRight.inner, parsed.left)
+  return leftIsNegOfRight || rightIsNegOfLeft
+}
+
+//This function is AI-coded
+function checkContradiction(lines, currLine) {
+  if (currLine.refs.length !== 2) {
+    throw new Error("Contradiction requires exactly two references")
+  }
+  const [leftRef, rightRef] = currLine.refs.map((r) => lines[r].formula)
+  const currFormula = currLine.formula
+  const parsed = findMainConnective(currFormula)
+
+  if (isContradiction(currFormula)) {
+    throw new Error(`${currFormula} isn't a formula and its negation`)
+  }
+
+  // now confirm refs actually match the two conjuncts, either order
+  const matchesForward =
+    formulasEqual(parsed.left, leftRef) && formulasEqual(parsed.right, rightRef)
+  const matchesBackward =
+    formulasEqual(parsed.left, rightRef) && formulasEqual(parsed.right, leftRef)
+
+  if (!matchesForward && !matchesBackward) {
+    throw new Error(`${currFormula} doesn't match refs`)
+  }
+}
+
+//This function is AI-coded
+function checkNotIntro(lines, currLine, index) {
+  if (currLine.refs.length !== 2) {
+    throw new Error("¬I must have exactly two references")
+  }
+  const [assumeIdx, lastIdx] = currLine.refs
+  const assumeRef = lines[assumeIdx]
+  const lastRef = lines[lastIdx]
+
+  if (lastIdx !== index - 1 || lastRef.depth !== currLine.depth + 1) {
+    throw new Error("¬I must discharge the assumption")
+  }
+  if (assumeRef.depth !== lastRef.depth) {
+    throw new Error("Refs must be on the same assumption")
+  }
+  if (assumeRef.rule !== "assumption") {
+    throw new Error("First ref to ¬I must be 'assumption'")
+  }
+
+  // last line of the box must itself be a valid contradiction shape: X ∧ ¬X
+  isContradiction(lastRef.formula)
+  // conclusion must be exactly ¬(assumption)
+  const currParsed = findMainConnective(currLine.formula)
+  if (currParsed.type !== "NOT") {
+    throw new Error(`${currLine.formula} isn't the correct type`)
+  }
+  if (!formulasEqual(currParsed.inner, assumeRef.formula)) {
+    throw new Error("¬I must conclude the negation of the assumption")
+  }
+}
+
 /** CHECKS THE VALIDITY OF EACH LINE.
  * @param {[{formula: "", depth: int, rule: "", refs: []}]} lines :List of all lines
  * @param {int} index :Index of the current line
@@ -222,6 +351,8 @@ function checkLine(lines, index, premises) {
       return checkPremise(currLine, premises)
     case "assumption":
       return true
+    case "contradiction":
+      return checkContradiction(lines, currLine)
     case "∧I":
       return checkAndIntro(lines, currLine)
     case "∧E":
@@ -232,6 +363,10 @@ function checkLine(lines, index, premises) {
       return checkImpElim(lines, currLine)
     case "∨I":
       return checkOrIntro(lines, currLine)
+    case "∨E":
+      return checkOrElim(lines, currLine)
+    case "¬I":
+      return checkNotIntro(lines, currLine, index)
     case "¬E":
       return checkNotElim(lines, currLine)
   }
