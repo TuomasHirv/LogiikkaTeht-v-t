@@ -31,3 +31,4 @@ Tasks is a simple description of what has been completed and doesn't necessarily
 | 26.07 |       frnt component for N-Deduction. Parsing list. Needs more work and better tests       |    6 |                                      |
 | 27.07 |    Added rule checking to N-deduction. FIxed parsing. Needs testing and MORE MORE WORK     |    6 | Tests dont work for now              |
 | 28.07 | Tests: N-deduction validation and parsing. FIxed problems. Added validation for some rules |    6 | Next up wire what we have to front   |
+| 29.07 |      Hooked simple N-deduction tasks to front. Tests + fixes. New instruction screen       |    4 | Still need 2 rules. And more tasks   |
