@@ -10,5 +10,6 @@ const MODULENAMES = {
   RECURSIVE_DEFINITION: "Recursive-Definition",
   SEMANTIC_TREE_INTRO: "Semantic-Tree-Intro",
   MULTIPLE_CHOICE_NATURAL_DEDUCTION: "Multiple-Choice-Natural-Deduction",
+  BASIC_RULES_NATURAL_DEDUCTION: "Basic-Rules-Natural-Deduction",
 }
 module.exports = { MODULENAMES }

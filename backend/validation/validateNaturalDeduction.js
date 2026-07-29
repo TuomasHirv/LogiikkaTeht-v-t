@@ -34,11 +34,10 @@ function checkPremise(currLine, premises) {
   let found = false
   for (const premise of premises) {
     if (premise === currLine.formula) {
-      found = true
-      break
+      return
     }
   }
-  return found
+  throw new Error(`${currLine.formula} not in premises`)
 }
 /**
  * @param {[{formula: "", depth: int, rule: "", refs: []}]} lines

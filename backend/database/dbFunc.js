@@ -144,6 +144,11 @@ const getAnswerAndModule = async (task_id) => {
           ],
           moduleName: rows.module_name,
         }
+      case MODULENAMES.BASIC_RULES_NATURAL_DEDUCTION:
+        return {
+          answer: rows.correct_answer.goal,
+          moduleName: rows.module_name,
+        }
       default:
         console.log("Module name isnt in presets:", rows.module_name)
         throw new Error("Module name isnt in presets:", rows.module_name)
@@ -167,6 +172,18 @@ async function getQuestion(taskId) {
   }
 }
 
+async function getMetadata(taskId) {
+  try {
+    const q = "SELECT metadata FROM tasks WHERE id = $1"
+    const response = await db.query(q, [taskId])
+    console.log("AT DBFUNC:", response.rows[0].metadata)
+    return response.rows[0].metadata
+  } catch (error) {
+    console.log("Error in getQuestion:", error)
+    throw new Error(error)
+  }
+}
+
 module.exports = {
   insertAnswer,
   insertTask,
@@ -174,4 +191,5 @@ module.exports = {
   getAllUserAnswers,
   getAnswerAndModule,
   getQuestion,
+  getMetadata,
 }

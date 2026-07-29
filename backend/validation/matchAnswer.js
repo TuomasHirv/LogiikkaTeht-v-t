@@ -5,6 +5,8 @@ const formChecker = require("./textToForm")
 const resolutionChecker = require("./ValidateResolution")
 const checkShorthand = require("./validateShorthand")
 const { validateSemanticTree } = require("./validateSemanticTree")
+const { parseAllLines } = require("./parseNaturalDeduction")
+const { checkLine, formulasEqual } = require("./validateNaturalDeduction")
 const normalizeProposition = (proposition) =>
   proposition.replace(/\s+/g, "").toLowerCase()
 
@@ -341,6 +343,26 @@ function checkSemanticTreeTask(userTree, reqLines, question) {
   return { accepted: true, feedback: "Pass" }
 }
 
+function matchNaturalDeduction(userList, goal, allowedRules, allowedPremises) {
+  try {
+    const parsedLines = parseAllLines(userList, allowedRules)
+    if (!formulasEqual(parsedLines.at(-1).formula, goal)) {
+      return { accepted: false, feedback: "Last line doesn't match goal" }
+    }
+    let i = 0
+    while (i < parsedLines.length) {
+      checkLine(parsedLines, i, allowedPremises)
+      i++
+    }
+    return { accepted: true, feedback: "Pass" }
+  } catch (error) {
+    if (error.message) {
+      return { accepted: false, feedback: error.message }
+    }
+    return { accepted: false, feedback: "Unaccounted error or mistake" }
+  }
+}
+
 module.exports = {
   matchPropositions,
   matchSubFormula,
@@ -351,4 +373,5 @@ module.exports = {
   matchResolutionTask,
   validateShorthandtask,
   checkSemanticTreeTask,
+  matchNaturalDeduction,
 }

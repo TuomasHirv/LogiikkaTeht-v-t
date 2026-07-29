@@ -2,7 +2,7 @@ const dbFunc = require("../database/dbFunc.js")
 const evaluator = require("../validation/matchAnswer.js")
 const matchTree = require("../validation/matchTree.js")
 const validatePropositional = require("../validation/correctness")
-
+const { normalize } = require("../utils/normalize.js")
 const serializeSubmittedAnswer = (answer) => JSON.stringify(answer)
 
 async function wordsToPropositionsHelper(answer, taskId, userId, response) {
@@ -293,6 +293,49 @@ async function multipleChoiceHelper(
     .json({ correct: false, answer: answer, feedback: feedback })
 }
 
+async function naturalDeductionHelper(answer, goal, userId, taskId, response) {
+  try {
+    const { premises, allowed_rules, prefilled_lines } =
+      await dbFunc.getMetadata(taskId)
+    console.log(
+      "Given premise, allowedRules, prefilled_lines",
+      premises,
+      allowed_rules,
+      prefilled_lines,
+      "Given answer and expected GOAL:",
+      answer,
+      goal,
+    )
+    const normalizedPremises = premises.map(normalize)
+    const allowedRules = new Set(allowed_rules.map(normalize))
+    const accepted = evaluator.matchNaturalDeduction(
+      answer,
+      goal.replace(/\s+/g, ""),
+      allowedRules,
+      normalizedPremises,
+    )
+    console.log("Return value of accepted:", accepted)
+    await dbFunc.insertAnswer(
+      userId,
+      taskId,
+      serializeSubmittedAnswer(answer),
+      accepted.accepted,
+      accepted.feedback,
+    )
+    if (accepted.accepted) {
+      return response
+        .status(200)
+        .json({ correct: true, answer: answer, feedback: "Pass" })
+    }
+    return response
+      .status(200)
+      .json({ correct: false, answer: answer, feedback: accepted.feedback })
+  } catch (error) {
+    console.log(error)
+    return response.status(500).json({ error: "internal server error" })
+  }
+}
+
 module.exports = {
   wordsToPropositionsHelper,
   subFormulaHelper,
@@ -304,4 +347,5 @@ module.exports = {
   shorthandHelper,
   semanticTreeHelper,
   multipleChoiceHelper,
+  naturalDeductionHelper,
 }

@@ -19,6 +19,7 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
   } catch (err) {
     return response.status(404).json({ error: err })
   }
+  console.log("BEFORE SWITCH:", answerModuleName)
   switch (answerModuleName.moduleName) {
     case MODULENAMES.WORDS_TO_PROPOSITIONS:
       return await routerHelper.wordsToPropositionsHelper(
@@ -97,6 +98,14 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         answer,
         answerModuleName.answerFeedback[0],
         answerModuleName.answerFeedback[1],
+        userId,
+        taskId,
+        response,
+      )
+    case MODULENAMES.BASIC_RULES_NATURAL_DEDUCTION:
+      return routerHelper.naturalDeductionHelper(
+        answer,
+        answerModuleName.answer,
         userId,
         taskId,
         response,
