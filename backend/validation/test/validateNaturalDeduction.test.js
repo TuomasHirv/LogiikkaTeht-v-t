@@ -9,93 +9,35 @@ const fakeLines = [
 ]
 
 describe("validateNaturalDeduction", () => {
-  describe("allowedRef", () => {
-    it("Accepts correct ref", () => {
-      const testLines = fakeLines.concat({
-        formula: "A ∧ B",
-        depth: 0,
-        rule: "∧I",
-        refs: [0, 1],
-      })
-      assert.ok(validator.allowedRef(testLines, 0, 2))
-      assert.ok(validator.allowedRef(testLines, 1, 2))
-    })
-    it("Doesn't accept if the indentation is wrong", () => {
-      const testLines = [
-        ...fakeLines,
-        {
-          formula: "C",
-          depth: 1,
-          rule: "assumption",
-          refs: [],
-        },
-        {
-          formula: "D",
-          depth: 0,
-          rule: "premise",
-          refs: [],
-        },
-        {
-          formula: "C",
-          depth: 0,
-          rule: "premise",
-          refs: [2],
-        },
-      ]
-      assert.ok(!validator.allowedRef(testLines, 2, 4))
-    })
-    it("Accepts if the depth change happens on the referencing line", () => {
-      const testLines = [
-        ...fakeLines,
-        {
-          formula: "C",
-          depth: 1,
-          rule: "assumption",
-          refs: [],
-        },
-        {
-          formula: "D",
-          depth: 0,
-          rule: "premise",
-          refs: [],
-        },
-      ]
-      assert.ok(validator.allowedRef(testLines, 2, 3))
-    })
-  })
   describe("checkPremise", () => {
     it("Accepts listed premise", () => {
       const testPremises = ["A"]
-      assert.ok(
-        validator.checkPremise(
-          {
-            formula: "A",
-            depth: 0,
-            rule: "premise",
-            refs: [],
-          },
-          testPremises,
-        ),
+      validator.checkPremise(
+        {
+          formula: "A",
+          depth: 0,
+          rule: "premise",
+          refs: [],
+        },
+        testPremises,
       )
     })
     it("Accepts more complicated premise", () => {
       const testPremises = ["C", "TEST STRING HERE", "D"]
-      assert.ok(
-        validator.checkPremise(
-          {
-            formula: "TEST STRING HERE",
-            depth: 0,
-            rule: "premise",
-            refs: [],
-          },
-          testPremises,
-        ),
+      validator.checkPremise(
+        {
+          formula: "TEST STRING HERE",
+          depth: 0,
+          rule: "premise",
+          refs: [],
+        },
+        testPremises,
       )
     })
     it("Refuses not listed premise", () => {
       const testPremises = ["C"]
-      assert.ok(
-        !validator.checkPremise(
+      assert.throws(() =>
+        validator.checkPremise(
           {
             formula: "A",
             depth: 0,
@@ -376,6 +318,26 @@ describe("validateNaturalDeduction", () => {
         /isn't the correct type/,
       )
     })
+    it("Rejects when a sibling assumption opens between the refs", () => {
+      const testLines = [
+        ...fakeLines,
+        { formula: "P", depth: 1, rule: "assumption", refs: [] },
+        { formula: "S", depth: 1, rule: "assumption", refs: [] },
+        { formula: "Q", depth: 1, rule: "reiteration", refs: [1] },
+      ]
+      const currLine = { formula: "P → Q", depth: 0, rule: "→I", refs: [2, 4] }
+      assert.throws(() => pnd.checkImpIntro(testLines, currLine, 5))
+    })
+
+    it("Accepts the same shape without the sibling", () => {
+      const testLines = [
+        ...fakeLines,
+        { formula: "P", depth: 1, rule: "assumption", refs: [] },
+        { formula: "Q", depth: 1, rule: "reiteration", refs: [1] },
+      ]
+      const currLine = { formula: "P → Q", depth: 0, rule: "→I", refs: [2, 3] }
+      assert.doesNotThrow(() => pnd.checkImpIntro(testLines, currLine, 4))
+    })
   })
   describe("checkOrIntro", () => {
     it("Works when correct", () => {
@@ -469,6 +431,64 @@ describe("validateNaturalDeduction", () => {
         () => validator.checkNotElim(testLines, currLine),
         /isn't a double negation of/,
       )
+    })
+  })
+  describe("checkNotIntro", () => {
+    it("Rejects when a sibling assumption opens between the refs", () => {
+      const testLines = [
+        ...fakeLines,
+        { formula: "P", depth: 1, rule: "assumption", refs: [] },
+        { formula: "S", depth: 1, rule: "assumption", refs: [] },
+        { formula: "Q ∧ ¬Q", depth: 1, rule: "contradiction", refs: [1, 1] },
+      ]
+      const currLine = { formula: "¬P", depth: 0, rule: "¬I", refs: [2, 4] }
+      assert.throws(() => pnd.checkNotIntro(testLines, currLine, 5))
+    })
+
+    it("Accepts the same shape without the sibling", () => {
+      const testLines = [
+        ...fakeLines,
+        { formula: "P", depth: 1, rule: "assumption", refs: [] },
+        { formula: "Q ∧ ¬Q", depth: 1, rule: "contradiction", refs: [1, 1] },
+      ]
+      const currLine = { formula: "¬P", depth: 0, rule: "¬I", refs: [2, 3] }
+      assert.doesNotThrow(() => pnd.checkNotIntro(testLines, currLine, 4))
+    })
+  })
+  describe("checkOrElim", () => {
+    it("Rejects when a third sibling opens inside the second box", () => {
+      const testLines = [
+        { formula: "P ∨ Q", depth: 0, rule: "premise", refs: [] },
+        { formula: "P", depth: 1, rule: "assumption", refs: [] },
+        { formula: "R", depth: 1, rule: "reiteration", refs: [0] },
+        { formula: "Q", depth: 1, rule: "assumption", refs: [] },
+        { formula: "S", depth: 1, rule: "assumption", refs: [] },
+        { formula: "R", depth: 1, rule: "reiteration", refs: [0] },
+      ]
+      const currLine = {
+        formula: "R",
+        depth: 0,
+        rule: "∨E",
+        refs: [0, 1, 2, 3, 5],
+      }
+      assert.throws(() => pnd.checkOrElim(testLines, currLine, 6))
+    })
+
+    it("Accepts genuine sibling boxes", () => {
+      const testLines = [
+        { formula: "P ∨ Q", depth: 0, rule: "premise", refs: [] },
+        { formula: "P", depth: 1, rule: "assumption", refs: [] },
+        { formula: "R", depth: 1, rule: "reiteration", refs: [0] },
+        { formula: "Q", depth: 1, rule: "assumption", refs: [] },
+        { formula: "R", depth: 1, rule: "reiteration", refs: [0] },
+      ]
+      const currLine = {
+        formula: "R",
+        depth: 0,
+        rule: "∨E",
+        refs: [0, 1, 2, 3, 4],
+      }
+      assert.doesNotThrow(() => pnd.checkOrElim(testLines, currLine, 5))
     })
   })
 })

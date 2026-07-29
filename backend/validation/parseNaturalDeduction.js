@@ -1,3 +1,5 @@
+const DISCHARGE_RULES = new Set(["→I", "¬I", "∨E"])
+
 function countDepth(text) {
   let depth = 0
   let i = 0
@@ -14,6 +16,28 @@ function countDepth(text) {
     break
   }
   return { depth: depth, rest: text.slice(i) }
+}
+
+function allowedRef(
+  lines,
+  referencedIndex,
+  currLineIndex,
+  siblingCloses = true,
+) {
+  if (referencedIndex >= currLineIndex) return false
+  const startDepth = lines[referencedIndex].depth
+  let i = referencedIndex + 1
+  while (i < currLineIndex) {
+    if (lines[i].depth < startDepth) return false
+    if (
+      siblingCloses &&
+      lines[i].rule === "assumption" &&
+      lines[i].depth === startDepth
+    )
+      return false
+    i++
+  }
+  return true
 }
 
 function splitJustificationFormula(text) {
@@ -54,8 +78,11 @@ function parseRef(part) {
 
 function validateDepthIncrease(rule, currDepth, lastDepth) {
   if (rule === "assumption") {
-    if (!(currDepth - 1 === lastDepth)) {
-      throw new Error(`Assumption should be indented by one`)
+    if (
+      (currDepth - 1 !== lastDepth && currDepth !== lastDepth) ||
+      currDepth === 0
+    ) {
+      throw new Error(`Assumption should be indented`)
     }
   } else if (currDepth > lastDepth) {
     throw new Error(`Only assumptions can indent`)
@@ -63,24 +90,11 @@ function validateDepthIncrease(rule, currDepth, lastDepth) {
 }
 
 function validateDepthDecrease(rule, currDepth, lastDepth) {
-  const DISCHARGE_RULES = new Set(["→I", "¬I", "∨E"])
   if (!DISCHARGE_RULES.has(rule)) {
-    if (currDepth >= lastDepth) {
-      return
-    }
-    throw new Error(`rule ${rule} shouldnt indent or dedent`)
+    if (currDepth >= lastDepth) return
+    throw new Error(`rule ${rule} shouldnt dedent`)
   }
-
-  if (rule === "∨E") {
-    if (currDepth === lastDepth - 2) {
-      return
-    }
-    throw new Error(`rule ${rule} should dedent by two`)
-  }
-
-  if (currDepth === lastDepth - 1) {
-    return
-  }
+  if (currDepth === lastDepth - 1) return
   throw new Error(`rule ${rule} should dedent by one`)
 }
 
@@ -95,7 +109,7 @@ function turnTextToLine(text, index, allowedRules, lastDepth = 0) {
   const { formula, justification } = splitJustificationFormula(rest)
   const { rule, refs } = parseJustification(justification)
   validateDepth(rule, depth, lastDepth)
-  if (!allowedRules.has(rule) && rule !== "premise") {
+  if (!allowedRules.has(rule) && rule !== "premise" && rule !== "reiterate") {
     throw new Error(`Rule ${rule} is not allowed in this task`)
   }
   let i = 0
@@ -122,6 +136,17 @@ function parseAllLines(userList, allowedRules) {
     lines.push(newLine)
     i++
   }
+  let index = 0
+  while (index < lines.length) {
+    const currLine = lines[index]
+    const siblingCloses = !DISCHARGE_RULES.has(currLine.rule)
+    for (const ref of currLine.refs) {
+      if (!allowedRef(lines, ref, index, siblingCloses)) {
+        throw new Error(`Bad reference at: ${index}`)
+      }
+    }
+    index++
+  }
   return lines
 }
 
@@ -131,4 +156,5 @@ module.exports = {
   parseJustification,
   parseAllLines,
   validateDepth,
+  allowedRef,
 }

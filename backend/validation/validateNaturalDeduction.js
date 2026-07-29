@@ -1,4 +1,4 @@
-const { parseAllLines } = require("./parseNaturalDeduction")
+const { parseAllLines, allowedRef } = require("./parseNaturalDeduction")
 const { findMainConnective } = require("./validateSemanticTree")
 
 function formulasEqual(f1, f2) {
@@ -15,14 +15,18 @@ function formulasEqual(f1, f2) {
  * @param {int} referencedIndex
  * @param {int} currLineIndex
  */
-function allowedRef(lines, referencedIndex, currLineIndex) {
-  const startDepth = lines[referencedIndex].depth
-  let i = referencedIndex + 1
-  while (i < currLineIndex) {
-    if (lines[i].depth < startDepth) return false
-    i++
+
+function checkReiteration(lines, currLine) {
+  if (currLine.refs.length !== 1) {
+    throw new Error("Reiteration Always takes one reference")
   }
-  return true
+  const ref = lines[currLine.refs[0]]
+  if (ref.depth > currLine.depth) {
+    throw new Error("Can't reiterate from deeper scope")
+  }
+  if (!formulasEqual(currLine.formula, ref.formula)) {
+    throw new Error(`Ref: ${ref.formula} doesn't match ${currLine.formula}`)
+  }
 }
 
 /**
@@ -145,7 +149,7 @@ function checkImpIntro(lines, currLine, index) {
   if (rightRef.rule === "assumption") {
     throw new Error("Second ref to →I can't be 'assumption'")
   }
-  if (!allowedRef(lines, currRefs[0], currRefs[1])) {
+  if (!allowedRef(lines, currRefs[0], currRefs[1], true)) {
     throw new Error(`Refs ${currRefs} not on the same assumption`)
   }
   const currFormula = currLine.formula
@@ -228,10 +232,10 @@ function checkOrElim(lines, currLine, currIndex) {
     throw new Error("The two boxes must not overlap")
   }
 
-  if (!allowedRef(lines, a1Idx, l1Idx)) {
+  if (!allowedRef(lines, a1Idx, l1Idx, true)) {
     throw new Error("First box's last line isn't validly within it")
   }
-  if (!allowedRef(lines, a2Idx, l2Idx)) {
+  if (!allowedRef(lines, a2Idx, l2Idx, true)) {
     throw new Error("Second box's last line isn't validly within it")
   }
 
@@ -306,7 +310,11 @@ function checkNotIntro(lines, currLine, index) {
   const [assumeIdx, lastIdx] = currLine.refs
   const assumeRef = lines[assumeIdx]
   const lastRef = lines[lastIdx]
-
+  if (!allowedRef(lines, assumeIdx, lastIdx, true)) {
+    throw new Error(
+      "Second ref must be within the same open assumption as the first ref",
+    )
+  }
   if (lastIdx !== index - 1 || lastRef.depth !== currLine.depth + 1) {
     throw new Error("¬I must discharge the assumption")
   }
@@ -350,6 +358,8 @@ function checkLine(lines, index, premises) {
       return checkPremise(currLine, premises)
     case "assumption":
       return true
+    case "reiteration":
+      return checkReiteration(lines, currLine)
     case "contradiction":
       return checkContradiction(lines, currLine)
     case "∧I":
@@ -372,7 +382,6 @@ function checkLine(lines, index, premises) {
 }
 
 module.exports = {
-  allowedRef,
   checkPremise,
   checkAndIntro,
   checkAndElim,

@@ -2,8 +2,66 @@ const assert = require("node:assert/strict")
 const { test, describe, it } = require("node:test")
 
 const pnd = require("../parseNaturalDeduction")
+const fakeLines = [
+  { formula: "A", depth: 0, rule: "premise", refs: [] },
+  { formula: "B", depth: 0, rule: "premise", refs: [] },
+]
 
 describe("Parsing natural deduction lines", () => {
+  describe("allowedRef", () => {
+    it("Accepts correct ref", () => {
+      const testLines = fakeLines.concat({
+        formula: "A ∧ B",
+        depth: 0,
+        rule: "∧I",
+        refs: [0, 1],
+      })
+      assert.ok(pnd.allowedRef(testLines, 0, 2))
+      assert.ok(pnd.allowedRef(testLines, 1, 2))
+    })
+    it("Doesn't accept if the indentation is wrong", () => {
+      const testLines = [
+        ...fakeLines,
+        {
+          formula: "C",
+          depth: 1,
+          rule: "assumption",
+          refs: [],
+        },
+        {
+          formula: "D",
+          depth: 0,
+          rule: "premise",
+          refs: [],
+        },
+        {
+          formula: "C",
+          depth: 0,
+          rule: "premise",
+          refs: [2],
+        },
+      ]
+      assert.ok(!pnd.allowedRef(testLines, 2, 4))
+    })
+    it("Accepts if the depth change happens on the referencing line", () => {
+      const testLines = [
+        ...fakeLines,
+        {
+          formula: "C",
+          depth: 1,
+          rule: "assumption",
+          refs: [],
+        },
+        {
+          formula: "D",
+          depth: 0,
+          rule: "premise",
+          refs: [],
+        },
+      ]
+      assert.ok(pnd.allowedRef(testLines, 2, 3))
+    })
+  })
   describe("splitJustificationFormula", () => {
     it("splits a simple formula from its justification", () => {
       const { formula, justification } =
@@ -158,8 +216,8 @@ describe("Parsing natural deduction lines", () => {
   })
   describe("validateDepthIncrease", () => {
     describe("increase", () => {
-      it("Throws if assumption doesn't indent", () => {
-        assert.throws(() => pnd.validateDepth("assumption", 1, 1))
+      it("Throws if assumption doesn't indent from 0", () => {
+        assert.throws(() => pnd.validateDepth("assumption", 0, 0))
       })
       it("Throws if assumption indents by 2", () => {
         assert.throws(() => pnd.validateDepth("assumption", 2, 0))
@@ -178,17 +236,11 @@ describe("Parsing natural deduction lines", () => {
       it("Throws if not dedenting rule dedents", () => {
         assert.throws(() => pnd.validateDepth("premise", 0, 1))
       })
-      it("Throws if ∨E rule dedents only once", () => {
-        assert.throws(() => pnd.validateDepth("∨E", 0, 1))
-      })
       it("Throws if →I rule doesn't dedent", () => {
         assert.throws(() => pnd.validateDepth("→I", 1, 1))
       })
       it("Acceptes not dedenting", () => {
         pnd.validateDepth("premise", 1, 1)
-      })
-      it("Accepts correct ∨E rule", () => {
-        pnd.validateDepth("∨E", 0, 2)
       })
       it("Accepts other correct dedenting rules", () => {
         pnd.validateDepth("→I", 0, 1)
