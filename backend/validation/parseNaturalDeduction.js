@@ -60,7 +60,7 @@ function parseJustification(justification) {
   const refs = justification
     .slice(colon + 1)
     .split(",")
-    .map((part) => parseRef(part))
+    .flatMap((part) => parseRef(part))
   return { rule, refs }
 }
 

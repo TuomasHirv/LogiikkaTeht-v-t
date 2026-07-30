@@ -19,14 +19,14 @@ const applyFullWordSymbols = (input) =>
 
 const applyNaturalDeduction = (input) =>
   applyBaseSymbols(input)
-    .replace(/\band\b(\s+)/gi, "∧ ")
-    .replace(/\bor\b(\s+)/gi, "∨ ")
-    .replace(/\bimply\b(\s+)/gi, "→ ")
-    .replace(/\bja\b(\s+)/gi, "∧ ")
-    .replace(/\btai\b(\s+)/gi, "∨ ")
-    .replace(/\bsiis\b(\s+)/gi, "→ ")
-    .replace(/<->(\s+)/g, "↔ ")
-    .replace(/->(\s+)/g, "→ ")
+    .replace(/\band\b/gi, "∧")
+    .replace(/\bor\b/gi, "∨")
+    .replace(/\bimply\b/gi, "→")
+    .replace(/\bja\b/gi, "∧")
+    .replace(/\btai\b/gi, "∨")
+    .replace(/\bsiis\b/gi, "→")
+    .replace(/<->/g, "↔")
+    .replace(/->/g, "→")
     .replace(/\+/g, "  |")
 
 const validateResolutionSyntax = (input, index) => {
@@ -67,10 +67,11 @@ const validateNaturalDeductionSyntax = (input, index) => {
   const trimmed = input.trim()
   if (trimmed === "") return ""
 
-  const propositionPattern = /[¬(]*[A-Za-z][)]*(\s*[∧∨→↔]\s*[¬(]*[A-Za-z][)]*)*/
+  const propositionPattern =
+    /(?:\s*\|)*[¬(]*[A-Za-z][)]*(\s*[∧∨→↔]\s*[¬(]*[A-Za-z][)]*)*/
 
   const justificationPattern =
-    /\(\s*premise\s*\)|\(\s*assumption\s*\)|\(\s*(?:∧I|∧E|∨I|∨E|→I|→E|¬I|¬E|↔I|↔E|¬¬E)\s*,?\s*lines?:\s*\d+(?:\s*-\s*\d+)?(?:\s*,\s*\d+(?:\s*-\s*\d+)?)*\s*\)/
+    /\(\s*premise\s*\)|\(\s*assumption\s*\)|\(\s*(?:∧I|∧E|∨I|∨E|→I|→E|¬I|¬E|↔I|↔E|¬¬E|contradiction|reiteration)\s*,?\s*lines?:\s*\d+(?:\s*-\s*\d+)?(?:\s*,\s*\d+(?:\s*-\s*\d+)?)*\s*\)/
   const fullPattern = new RegExp(
     `^(${propositionPattern.source})\\s*(${justificationPattern.source})$`,
   )
@@ -88,9 +89,6 @@ const validateNaturalDeductionSyntax = (input, index) => {
     const referenced = lineNumbers.map(Number)
     if (referenced.some((n) => n >= index)) {
       return "Can't reference the current line or later lines"
-    }
-    if (referenced.length > 2) {
-      return "No rule expects more than 2 reference numbers"
     }
   }
 

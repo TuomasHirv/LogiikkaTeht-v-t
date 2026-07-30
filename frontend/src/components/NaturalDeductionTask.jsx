@@ -30,6 +30,7 @@ const Line = ({ initValue, index, change }) => {
               change(lineInput.inputProps.value, index)
             }
           }}
+          className="flex-1 min-w-0 px-1"
         />
         {lineInput.syntaxError && (
           <div className="group relative">
@@ -106,7 +107,7 @@ const NaturalDeductionTask = ({ task }) => {
           <li key={index}>{premise}</li>
         ))}
       </div>
-      <div className="relative w-fit">
+      <div className="relative w-full max-w-3xl">
         <div className="grid border border-black">
           {clauses.lines.map((cl, index) => (
             <React.Fragment key={index}>
