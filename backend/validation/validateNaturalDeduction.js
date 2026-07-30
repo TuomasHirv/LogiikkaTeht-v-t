@@ -166,6 +166,82 @@ function checkImpIntro(lines, currLine, index) {
   return
 }
 
+function checkBicondIntro(lines, currLine) {
+  if (currLine.refs.length !== 2) {
+    throw new Error(`↔I Must have two references`)
+  }
+  const [leftRef, rightRef] = currLine.refs.map((r) => lines[r].formula)
+  const leftParsed = findMainConnective(leftRef)
+  if (leftParsed.type !== "IMPLIES") {
+    throw new Error(`↔I has to reference implications`)
+  }
+  const rightParsed = findMainConnective(rightRef)
+  if (rightParsed.type !== "IMPLIES") {
+    throw new Error(`↔I has to reference implications`)
+  }
+  const currParsed = findMainConnective(currLine.formula)
+  if (currParsed.type !== "BICOND") {
+    throw new Error(`${currLine.formula} isn't the correct type`)
+  }
+  // Here its important to note the order that is checked.
+  // P ↔ Q is created by P → Q and Q → P. One ref has to have P on left and Q on right.
+  // If one does have that then the other should have P on the right and Q on the left
+  // In all other cases this is a mistake
+  if (
+    formulasEqual(currParsed.left, leftParsed.left) &&
+    formulasEqual(currParsed.right, leftParsed.right)
+  ) {
+    if (
+      formulasEqual(currParsed.right, rightParsed.left) &&
+      formulasEqual(currParsed.left, rightParsed.right)
+    ) {
+      return
+    }
+  }
+  // Mirrored Checking the right ref first.
+  if (
+    formulasEqual(currParsed.left, rightParsed.left) &&
+    formulasEqual(currParsed.right, rightParsed.right)
+  ) {
+    if (
+      formulasEqual(currParsed.right, leftParsed.left) &&
+      formulasEqual(currParsed.left, leftParsed.right)
+    ) {
+      return
+    }
+  }
+
+  throw new Error(`Refs don't match result`)
+}
+
+function checkBicondElim(lines, currLine) {
+  if (currLine.refs.length !== 1) {
+    throw new Error(`↔E Must have one reference`)
+  }
+  const refFormula = lines[currLine.refs[0]].formula
+  const refParsed = findMainConnective(refFormula)
+  if (refParsed.type !== "BICOND") {
+    throw new Error(`↔E Must reference a biconditional`)
+  }
+  const currParsed = findMainConnective(currLine.formula)
+  if (currParsed.type !== "IMPLIES") {
+    throw new Error(`${currLine.formula} isn't the correct type`)
+  }
+  if (
+    formulasEqual(currParsed.left, refParsed.left) &&
+    formulasEqual(currParsed.right, refParsed.right)
+  ) {
+    return
+  }
+  if (
+    formulasEqual(currParsed.right, refParsed.left) &&
+    formulasEqual(currParsed.left, refParsed.right)
+  ) {
+    return
+  }
+  throw new Error(`Ref doesn't match result`)
+}
+
 function checkOrIntro(lines, currLine) {
   if (currLine.refs.length !== 1) {
     throw new Error(`∨I Must have one reference`)
@@ -378,6 +454,10 @@ function checkLine(lines, index, premises) {
       return checkNotIntro(lines, currLine, index)
     case "¬E":
       return checkNotElim(lines, currLine)
+    case "↔I":
+      return checkBicondIntro(lines, currLine)
+    case "↔E":
+      return checkBicondElim(lines, currLine)
   }
 }
 
