@@ -69,7 +69,7 @@ const createAnswersTable = async () => {
     task_id UUID NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
     submitted_answer JSONB NOT NULL,
     is_correct BOOLEAN NOT NULL,
-    feedback VARCHAR(50),
+    feedback VARCHAR(100),
     completed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     
     CONSTRAINT unique_user_task UNIQUE (user_id, task_id)

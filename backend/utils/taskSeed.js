@@ -1232,6 +1232,101 @@ const tasks = [
       prefilled_lines: [],
     },
   },
+  {
+    type: "natural-deduction",
+    module_name: "Assumptions-And-Discharge-Natural-Deduction",
+    question: "P → Q",
+    correct_answer: { goal: "P → Q" },
+    metadata: {
+      premises: ["Q"],
+      allowed_rules: ["→I", "reiteration", "assumption"],
+      prefilled_lines: [],
+    },
+  },
+  {
+    type: "natural-deduction",
+    module_name: "Assumptions-And-Discharge-Natural-Deduction",
+    question: "R → P",
+    correct_answer: { goal: "R → P" },
+    metadata: {
+      premises: ["P ∧ Q"],
+      allowed_rules: ["→I", "∧E", "reiteration", "assumption"],
+      prefilled_lines: [],
+    },
+  },
+  {
+    type: "natural-deduction",
+    module_name: "Assumptions-And-Discharge-Natural-Deduction",
+    question: "P → R",
+    correct_answer: { goal: "P → R" },
+    metadata: {
+      premises: ["P → Q", "Q → R"],
+      allowed_rules: ["→I", "→E", "reiteration", "assumption"],
+      prefilled_lines: [],
+    },
+  },
+  {
+    type: "natural-deduction",
+    module_name: "Assumptions-And-Discharge-Natural-Deduction",
+    question: "¬P",
+    correct_answer: { goal: "¬P" },
+    metadata: {
+      premises: ["P → Q", "¬Q"],
+      allowed_rules: ["¬I", "→E", "contradiction", "reiteration", "assumption"],
+      prefilled_lines: [],
+    },
+  },
+  {
+    type: "natural-deduction",
+    module_name: "Assumptions-And-Discharge-Natural-Deduction",
+    question: "R",
+    correct_answer: { goal: "R" },
+    metadata: {
+      premises: ["P ∨ Q", "P → R", "Q → R"],
+      allowed_rules: ["∨E", "→E", "reiteration", "assumption"],
+      prefilled_lines: [],
+    },
+  },
+  {
+    type: "natural-deduction",
+    module_name: "Assumptions-And-Discharge-Natural-Deduction",
+    question: "Q ∨ P",
+    correct_answer: { goal: "Q ∨ P" },
+    metadata: {
+      premises: ["P ∨ Q"],
+      allowed_rules: ["∨E", "∨I", "reiteration", "assumption"],
+      prefilled_lines: [],
+    },
+  },
+  {
+    type: "natural-deduction",
+    module_name: "Assumptions-And-Discharge-Natural-Deduction",
+    question: "P → (Q → (P ∧ Q))",
+    correct_answer: { goal: "P → (Q → (P ∧ Q))" },
+    metadata: {
+      premises: [],
+      allowed_rules: ["→I", "∧I", "reiteration", "assumption"],
+      prefilled_lines: [],
+    },
+  },
+  {
+    type: "natural-deduction",
+    module_name: "Assumptions-And-Discharge-Natural-Deduction",
+    question: "¬Q → ¬P",
+    correct_answer: { goal: "¬Q → ¬P" },
+    metadata: {
+      premises: ["P → Q"],
+      allowed_rules: [
+        "→I",
+        "¬I",
+        "→E",
+        "contradiction",
+        "reiteration",
+        "assumption",
+      ],
+      prefilled_lines: [],
+    },
+  },
 ]
 
 module.exports = tasks

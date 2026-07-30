@@ -144,6 +144,7 @@ const getAnswerAndModule = async (task_id) => {
           ],
           moduleName: rows.module_name,
         }
+      case MODULENAMES.ASSUMPTIONS_AND_DISCHARGE_NATURAL_DEDUCTION:
       case MODULENAMES.BASIC_RULES_NATURAL_DEDUCTION:
         return {
           answer: rows.correct_answer.goal,

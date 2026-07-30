@@ -35,6 +35,8 @@ export const MODULE_NAMES = {
 
   MULTIPLE_CHOISE_NATURAL_DEDUCTION: "Multiple-Choice-Natural-Deduction",
   BASIC_RULES_NATURAL_DEDUCTION: "Basic-Rules-Natural-Deduction",
+  ASSUMPTIONS_AND_DISCHARGE_NATURAL_DEDUCTION:
+    "Assumptions-And-Discharge-Natural-Deduction",
 }
 
 export const MODULE_ORDER = Object.values(MODULE_NAMES)

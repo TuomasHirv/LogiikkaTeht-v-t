@@ -18,12 +18,7 @@ function countDepth(text) {
   return { depth: depth, rest: text.slice(i) }
 }
 
-function allowedRef(
-  lines,
-  referencedIndex,
-  currLineIndex,
-  siblingCloses = true,
-) {
+function allowedRef(lines, referencedIndex, currLineIndex, siblingCloses) {
   if (referencedIndex >= currLineIndex) return false
   const startDepth = lines[referencedIndex].depth
   let i = referencedIndex + 1
@@ -53,7 +48,8 @@ function splitJustificationFormula(text) {
 }
 
 function parseJustification(justification) {
-  if (justification === "premise" || justification === "assumption") {
+  const preApproved = new Set(["premise", "assumption", "reiteration"])
+  if (preApproved.has(justification)) {
     return { rule: justification, refs: [] }
   }
   const colon = justification.indexOf(":")
@@ -109,7 +105,7 @@ function turnTextToLine(text, index, allowedRules, lastDepth = 0) {
   const { formula, justification } = splitJustificationFormula(rest)
   const { rule, refs } = parseJustification(justification)
   validateDepth(rule, depth, lastDepth)
-  if (!allowedRules.has(rule) && rule !== "premise" && rule !== "reiterate") {
+  if (!allowedRules.has(rule) && rule !== "premise" && rule !== "reiteration") {
     throw new Error(`Rule ${rule} is not allowed in this task`)
   }
   let i = 0

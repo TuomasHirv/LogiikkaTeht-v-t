@@ -11,5 +11,7 @@ const MODULENAMES = {
   SEMANTIC_TREE_INTRO: "Semantic-Tree-Intro",
   MULTIPLE_CHOICE_NATURAL_DEDUCTION: "Multiple-Choice-Natural-Deduction",
   BASIC_RULES_NATURAL_DEDUCTION: "Basic-Rules-Natural-Deduction",
+  ASSUMPTIONS_AND_DISCHARGE_NATURAL_DEDUCTION:
+    "Assumptions-And-Discharge-Natural-Deduction",
 }
 module.exports = { MODULENAMES }

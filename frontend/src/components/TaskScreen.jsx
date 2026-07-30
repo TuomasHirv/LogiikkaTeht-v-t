@@ -75,6 +75,7 @@ const TaskScreen = () => {
         return SemanticTreeTask
       case MODULE_NAMES.MULTIPLE_CHOISE_NATURAL_DEDUCTION:
         return MultipleChoiseTask
+      case MODULE_NAMES.ASSUMPTIONS_AND_DISCHARGE_NATURAL_DEDUCTION:
       case MODULE_NAMES.BASIC_RULES_NATURAL_DEDUCTION:
         return NaturalDeductionTask
       default:

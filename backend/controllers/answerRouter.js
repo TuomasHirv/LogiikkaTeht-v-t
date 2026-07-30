@@ -102,6 +102,7 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         taskId,
         response,
       )
+    case MODULENAMES.ASSUMPTIONS_AND_DISCHARGE_NATURAL_DEDUCTION:
     case MODULENAMES.BASIC_RULES_NATURAL_DEDUCTION:
       return routerHelper.naturalDeductionHelper(
         answer,

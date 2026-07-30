@@ -44,7 +44,7 @@ const MultipleChoiseTask = ({ task }) => {
               submitAnswer(event, choise)
             }}
             className={`border-2 rounded hover:bg-green-500 ${
-              answer === choise && feedback.correct ? "bg-green-500" : ""
+              answer === choise && feedback?.correct ? "bg-green-500" : ""
             }`}
           >
             {choise}

@@ -363,7 +363,7 @@ function checkContradiction(lines, currLine) {
   const currFormula = currLine.formula
   const parsed = findMainConnective(currFormula)
 
-  if (isContradiction(currFormula)) {
+  if (!isContradiction(currFormula)) {
     throw new Error(`${currFormula} isn't a formula and its negation`)
   }
 
@@ -449,7 +449,7 @@ function checkLine(lines, index, premises) {
     case "∨I":
       return checkOrIntro(lines, currLine)
     case "∨E":
-      return checkOrElim(lines, currLine)
+      return checkOrElim(lines, currLine, index)
     case "¬I":
       return checkNotIntro(lines, currLine, index)
     case "¬E":
