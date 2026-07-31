@@ -468,7 +468,11 @@ module.exports = {
   checkImpElim,
   checkImpIntro,
   checkOrIntro,
+  checkOrElim,
   checkNotElim,
+  checkNotIntro,
   checkLine,
   formulasEqual,
+  checkBicondIntro,
+  checkBicondElim,
 }

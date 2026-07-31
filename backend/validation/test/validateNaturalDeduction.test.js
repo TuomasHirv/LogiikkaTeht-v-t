@@ -326,7 +326,7 @@ describe("validateNaturalDeduction", () => {
         { formula: "Q", depth: 1, rule: "reiteration", refs: [1] },
       ]
       const currLine = { formula: "P → Q", depth: 0, rule: "→I", refs: [2, 4] }
-      assert.throws(() => pnd.checkImpIntro(testLines, currLine, 5))
+      assert.throws(() => validator.checkImpIntro(testLines, currLine, 5))
     })
 
     it("Accepts the same shape without the sibling", () => {
@@ -336,7 +336,7 @@ describe("validateNaturalDeduction", () => {
         { formula: "Q", depth: 1, rule: "reiteration", refs: [1] },
       ]
       const currLine = { formula: "P → Q", depth: 0, rule: "→I", refs: [2, 3] }
-      assert.doesNotThrow(() => pnd.checkImpIntro(testLines, currLine, 4))
+      assert.doesNotThrow(() => validator.checkImpIntro(testLines, currLine, 4))
     })
   })
   describe("checkOrIntro", () => {
@@ -442,7 +442,7 @@ describe("validateNaturalDeduction", () => {
         { formula: "Q ∧ ¬Q", depth: 1, rule: "contradiction", refs: [1, 1] },
       ]
       const currLine = { formula: "¬P", depth: 0, rule: "¬I", refs: [2, 4] }
-      assert.throws(() => pnd.checkNotIntro(testLines, currLine, 5))
+      assert.throws(() => validator.checkNotIntro(testLines, currLine, 5))
     })
 
     it("Accepts the same shape without the sibling", () => {
@@ -452,7 +452,7 @@ describe("validateNaturalDeduction", () => {
         { formula: "Q ∧ ¬Q", depth: 1, rule: "contradiction", refs: [1, 1] },
       ]
       const currLine = { formula: "¬P", depth: 0, rule: "¬I", refs: [2, 3] }
-      assert.doesNotThrow(() => pnd.checkNotIntro(testLines, currLine, 4))
+      assert.doesNotThrow(() => validator.checkNotIntro(testLines, currLine, 4))
     })
   })
   describe("checkOrElim", () => {
@@ -471,7 +471,7 @@ describe("validateNaturalDeduction", () => {
         rule: "∨E",
         refs: [0, 1, 2, 3, 5],
       }
-      assert.throws(() => pnd.checkOrElim(testLines, currLine, 6))
+      assert.throws(() => validator.checkOrElim(testLines, currLine, 6))
     })
 
     it("Accepts genuine sibling boxes", () => {
@@ -488,7 +488,46 @@ describe("validateNaturalDeduction", () => {
         rule: "∨E",
         refs: [0, 1, 2, 3, 4],
       }
-      assert.doesNotThrow(() => pnd.checkOrElim(testLines, currLine, 5))
+      assert.doesNotThrow(() => validator.checkOrElim(testLines, currLine, 5))
+    })
+  })
+  describe("checkBicondIntro", () => {
+    it("Works when correct", () => {
+      const testLines = [
+        { formula: "P → Q", depth: 0, rule: "premise", refs: [] },
+        { formula: "Q → P", depth: 0, rule: "premise", refs: [] },
+      ]
+      const currLine = { formula: "Q ↔ P", depth: 0, rule: "↔I", refs: [0, 1] }
+      assert.doesNotThrow(() => validator.checkBicondIntro(testLines, currLine))
+    })
+    it("Throws if only one way is referenced", () => {
+      const testLines = [
+        { formula: "P → Q", depth: 0, rule: "premise", refs: [] },
+        { formula: "P → Q", depth: 0, rule: "premise", refs: [] },
+      ]
+      const currLine = { formula: "Q ↔ P", depth: 0, rule: "↔I", refs: [0, 1] }
+      assert.throws(() => validator.checkBicondIntro(testLines, currLine))
+    })
+    it("Throws if only one is implication", () => {
+      const testLines = [
+        { formula: "P → Q", depth: 0, rule: "premise", refs: [] },
+        { formula: "P", depth: 0, rule: "premise", refs: [] },
+      ]
+      const currLine = { formula: "Q ↔ P", depth: 0, rule: "↔I", refs: [0, 1] }
+      assert.throws(() => validator.checkBicondIntro(testLines, currLine))
+    })
+    it("Throws if referenced lines dont have same formulas", () => {
+      const testLines = [
+        { formula: "(A → B) → Q", depth: 0, rule: "premise", refs: [] },
+        { formula: "Q → (B → A)", depth: 0, rule: "premise", refs: [] },
+      ]
+      const currLine = {
+        formula: "Q ↔ (A → B)",
+        depth: 0,
+        rule: "↔I",
+        refs: [0, 1],
+      }
+      assert.throws(() => validator.checkBicondIntro(testLines, currLine))
     })
   })
 })

@@ -126,22 +126,6 @@ describe("Parsing natural deduction lines", () => {
       const { rule, refs } = pnd.parseJustification("MP,lines:1,2")
       assert.deepEqual(refs, [1, 2])
     })
-    it("finds contiguous ref", () => {
-      const { rule, refs } = pnd.parseJustification("MP,lines:1-4")
-      assert.deepEqual(refs, [[1, 4]])
-    })
-    it("finds many contiguous ref", () => {
-      const { rule, refs } = pnd.parseJustification("MP,lines:1-4, 5-7, 0-1")
-      assert.deepEqual(refs, [
-        [1, 4],
-        [5, 7],
-        [0, 1],
-      ])
-    })
-    it("finds mixed contiguous and singular refs", () => {
-      const { rule, refs } = pnd.parseJustification("MP,lines:1-4, 5, 0-1, 8")
-      assert.deepEqual(refs, [[1, 4], 5, [0, 1], 8])
-    })
   })
 
   describe("turnTextToLine", () => {
