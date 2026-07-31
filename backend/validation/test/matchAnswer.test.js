@@ -41,7 +41,8 @@ test("accepts logically equivalent answer for proposition task", async () => {
   })
 
   const accepted = await matchPropositions("¬A∨B", 1)
-  assert.equal(accepted, true)
+  assert.equal(accepted.accepted, true)
+  assert.equal(accepted.feedback, "Pass")
 })
 
 test("rejects non-equivalent answer for proposition task", async () => {
@@ -52,7 +53,8 @@ test("rejects non-equivalent answer for proposition task", async () => {
   })
 
   const accepted = await matchPropositions("A∧B", 1)
-  assert.equal(accepted, false)
+  assert.equal(accepted.accepted, false)
+  assert.equal(accepted.feedback, "Fail")
 })
 
 test("keeps case-insensitive proposition matching", async () => {
@@ -63,5 +65,6 @@ test("keeps case-insensitive proposition matching", async () => {
   })
 
   const accepted = await matchPropositions("¬a∨b", 1)
-  assert.equal(accepted, true)
+  assert.equal(accepted.accepted, true)
+  assert.equal(accepted.feedback, "Pass")
 })
