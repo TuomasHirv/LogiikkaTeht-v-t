@@ -1,5 +1,6 @@
 const db = require("./db")
 const { MODULENAMES } = require("../constants")
+const logger = require("../config/logger")
 const insertAnswer = async (userId, taskId, answer, correct, feedback) => {
   try {
     const qInsertAnswer = `
@@ -17,7 +18,7 @@ const insertAnswer = async (userId, taskId, answer, correct, feedback) => {
     ])
     return returnedAnswer
   } catch (error) {
-    console.log("Error when inserting answer", error)
+    logger.error(error, "Error when inserting answer")
     throw new Error(error)
   }
 }
@@ -33,7 +34,7 @@ const getAllUserAnswers = async (userId) => {
     const answers = await db.query(q, [userId])
     return answers
   } catch (error) {
-    console.log("Error getting user answers:", error)
+    logger.error(error, "Error getting user answers")
     throw new Error(error)
   }
 }
@@ -54,7 +55,7 @@ const insertTask = async (
     const id = await db.query(q, values)
     return id
   } catch (error) {
-    console.log("error inserting task:", error)
+    logger.error(error, "Error inserting task")
     throw new Error(error)
   }
 }
@@ -69,7 +70,7 @@ const insertUser = async (username, passwordHash) => {
     const newUser = await db.query(insertQ, [username, passwordHash])
     return newUser
   } catch (error) {
-    console.log("Error inserting user:", error)
+    logger.error(error, "Error inserting user")
     throw new Error(error)
   }
 }
@@ -151,14 +152,14 @@ const getAnswerAndModule = async (task_id) => {
           moduleName: rows.module_name,
         }
       default:
-        console.log("Module name isnt in presets:", rows.module_name)
+        logger.error("Module name isnt in presets:", rows.module_name)
         throw new Error("Module name isnt in presets:", rows.module_name)
     }
   } catch (error) {
     if (task_id) {
-      console.log("Couldnt receive answer and module for:", task_id)
+      logger.error("Couldnt receive answer and module for:", task_id)
     }
-    console.log("Module name was undefined")
+    logger.error("Module name was undefined")
   }
 }
 
@@ -168,7 +169,7 @@ async function getQuestion(taskId) {
     const response = await db.query(q, [taskId])
     return response.rows
   } catch (error) {
-    console.log("Error in getQuestion:", error)
+    logger.error(error, "Error in getQuestion")
     throw new Error(error)
   }
 }
@@ -177,10 +178,10 @@ async function getMetadata(taskId) {
   try {
     const q = "SELECT metadata FROM tasks WHERE id = $1"
     const response = await db.query(q, [taskId])
-    console.log("AT DBFUNC:", response.rows[0].metadata)
+    logger.debug("AT DBFUNC:", response.rows[0].metadata)
     return response.rows[0].metadata
   } catch (error) {
-    console.log("Error in getQuestion:", error)
+    logger.error(error, "Error in getQuestion")
     throw new Error(error)
   }
 }

@@ -14,13 +14,12 @@ const pinoHttp = require("pino-http")
 const logger = require("./config/logger")
 
 app.use(pinoHttp({ logger }))
-
 app.use(cors(corsOptions))
 app.use(express.json())
 initDB()
-  .then(() => console.log("DB initialized"))
+  .then(() => logger.info("DB initialized"))
   .catch((error) => {
-    console.error("DB init failed:", error)
+    logger.error(error, "DB init failed")
     process.exit(1)
   })
 app.use("/api/tasks", taskRouter)

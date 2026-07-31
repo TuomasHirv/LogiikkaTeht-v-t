@@ -1,4 +1,6 @@
 // This file is AI coded
+const logger = require("../config/logger")
+
 function Node(type, value = null, children = []) {
   return { type, value, children }
 }
@@ -165,7 +167,7 @@ function createTree(input, silent = false) {
     return parse(tokens)
   } catch (error) {
     if (!silent) {
-      console.log("Error when creating tree:", error)
+      logger.error(error, "Error when creating tree")
     }
   }
 }

@@ -5,10 +5,11 @@ const evaluator = require("../validation/matchAnswer.js")
 const authenticateToken = require("../middleware/auth.js")
 const routerHelper = require("./answerHelper.js")
 const { MODULENAMES } = require("../constants.js")
+const logger = require("../config/logger")
 
 answerRouter.post("/:id", authenticateToken, async (request, response) => {
   const taskId = request.params.id
-  console.log("BACKEND RECEIVED TASK ID:", taskId)
+  logger.debug("BACKEND RECEIVED TASK ID:", taskId)
 
   const { answer } = request.body
 
@@ -19,7 +20,7 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
   } catch (err) {
     return response.status(404).json({ error: err })
   }
-  console.log("BEFORE SWITCH:", answerModuleName)
+  logger.debug("BEFORE SWITCH:", answerModuleName)
   switch (answerModuleName.moduleName) {
     case MODULENAMES.WORDS_TO_PROPOSITIONS:
       return await routerHelper.wordsToPropositionsHelper(
@@ -126,7 +127,7 @@ answerRouter.get("/", authenticateToken, async (request, response) => {
     }
     return response.status(200).json({ answerList: answerList.rows })
   } catch (error) {
-    console.log(error)
+    logger.error(error)
     return response.status(500).json({ error: "Error in server" })
   }
 })

@@ -2,6 +2,7 @@ const userRouter = require("express").Router()
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 const db = require("../database/db")
+const logger = require("../config/logger")
 
 const JWT_secret = process.env.JWT_SECRET
 const dbFunc = require("../database/dbFunc.js")
@@ -35,7 +36,7 @@ userRouter.post("/", async (request, response) => {
 
     return response.status(201).json({ user: newUser, token: token })
   } catch (error) {
-    console.log(error.message)
+    logger.error(error)
     return response.status(500).json({ error: "Internal server error" })
   }
 })
@@ -69,7 +70,7 @@ userRouter.post("/login", async (request, response) => {
       token: token,
     })
   } catch (error) {
-    console.log(error.message)
+    logger.error(error)
     return response.status(500).json({ error: "Server error in login" })
   }
 })

@@ -1,3 +1,5 @@
+const logger = require("../config/logger")
+
 function toTokens(proposition, shorthandSymbols) {
   const operators = new Set(["¬", "∧", "∨", "→", "↔", "(", ")"])
   const tokens = []
@@ -32,7 +34,7 @@ function toTokens(proposition, shorthandSymbols) {
 }
 
 function validateDifference(prevTokens, currTokens, shorthands) {
-  console.log("validateDifference:", prevTokens, currTokens, shorthands)
+  logger.debug("validateDifference:", prevTokens, currTokens, shorthands)
   let i = 0
   let j = 0
   while (i < prevTokens.length) {

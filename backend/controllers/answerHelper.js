@@ -3,6 +3,7 @@ const evaluator = require("../validation/matchAnswer.js")
 const matchTree = require("../validation/matchTree.js")
 const validatePropositional = require("../validation/correctness")
 const { normalize } = require("../utils/normalize.js")
+const logger = require("../config/logger")
 const serializeSubmittedAnswer = (answer) => JSON.stringify(answer)
 
 async function wordsToPropositionsHelper(answer, taskId, userId, response) {
@@ -297,7 +298,7 @@ async function naturalDeductionHelper(answer, goal, userId, taskId, response) {
   try {
     const { premises, allowed_rules, prefilled_lines } =
       await dbFunc.getMetadata(taskId)
-    console.log(
+    logger.debug(
       "Given premise, allowedRules, prefilled_lines",
       premises,
       allowed_rules,
@@ -314,7 +315,7 @@ async function naturalDeductionHelper(answer, goal, userId, taskId, response) {
       allowedRules,
       normalizedPremises,
     )
-    console.log("Return value of accepted:", accepted)
+    logger.debug("Return value of accepted:", accepted)
     await dbFunc.insertAnswer(
       userId,
       taskId,
@@ -331,7 +332,7 @@ async function naturalDeductionHelper(answer, goal, userId, taskId, response) {
       .status(200)
       .json({ correct: false, answer: answer, feedback: accepted.feedback })
   } catch (error) {
-    console.log(error)
+    logger.error(error)
     return response.status(500).json({ error: "internal server error" })
   }
 }

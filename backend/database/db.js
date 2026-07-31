@@ -1,4 +1,5 @@
 const { Pool } = require("pg")
+const logger = require("../config/logger")
 const pool = new Pool({
   user: process.env.PGUSER,
   host: process.env.PGHOST,
@@ -6,7 +7,7 @@ const pool = new Pool({
   password: process.env.PGPASSWORD,
   port: process.env.PGPORT,
 })
-console.log("DB CONFIG USED:", {
+logger.debug("DB CONFIG USED:", {
   host: process.env.PGHOST,
   port: process.env.PGPORT,
 })

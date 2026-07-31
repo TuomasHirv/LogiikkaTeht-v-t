@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken")
+const logger = require("../config/logger")
 
 const JWT_secret = process.env.JWT_SECRET
 
@@ -17,7 +18,7 @@ const authenticateToken = (request, response, next) => {
 
     next()
   } catch (error) {
-    console.log(error)
+    logger.error(error)
     return response.status(403).json({ error: "bad token" })
   }
 }

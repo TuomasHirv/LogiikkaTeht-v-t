@@ -1,11 +1,12 @@
 require("dotenv").config()
 const db = require("../database/db")
 const tasks = require("./taskSeed")
+const logger = require("../config/logger")
 // I have designed the database structure my self. Many of the tasks are AI-generated.
 
 const seedDatabase = async () => {
   try {
-    console.log("🔄 Starting database seeding...")
+    logger.info("🔄 Starting database seeding...")
     await db.query("TRUNCATE TABLE tasks CASCADE")
     const qInsert = `
       INSERT INTO tasks (type, module_name, question, correct_answer, metadata) 
@@ -22,11 +23,11 @@ const seedDatabase = async () => {
       ])
     }
 
-    console.log(
+    logger.info(
       `✅ Successfully seeded ${tasks.length} tasks into the database!`,
     )
   } catch (error) {
-    console.error("❌ Error while seeding database:", error)
+    logger.error(error, "❌ Error while seeding database")
   } finally {
     if (db.end) {
       await db.end()

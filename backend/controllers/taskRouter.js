@@ -1,6 +1,7 @@
 const taskRouter = require("express").Router()
 const db = require("../database/db")
 const dbFunc = require("../database/dbFunc.js")
+const logger = require("../config/logger")
 
 taskRouter.get("/", async (request, response) => {
   const q = "SELECT type, question, metadata FROM tasks"
@@ -8,7 +9,7 @@ taskRouter.get("/", async (request, response) => {
     const result = await db.query(q)
     return response.json(result.rows)
   } catch (err) {
-    console.log("couldn't get tasks:", err)
+    logger.error(err, "couldn't get tasks")
     return response.json({ error: err })
   }
 })
@@ -44,7 +45,7 @@ taskRouter.get("/count", async (request, response) => {
     const result = await db.query(q)
     return response.json(result.rows)
   } catch (error) {
-    console.log("Error in counting all tasks:", error)
+    logger.error(error, "Error in counting all tasks")
     return response.json({ error: error })
   }
 })
@@ -60,7 +61,7 @@ taskRouter.get("/:module", async (request, response) => {
     }
     return response.json(result.rows)
   } catch (err) {
-    console.log("couldn't get tasks:", err)
+    logger.error(err, "couldn't get tasks")
     return response.json({ error: err })
   }
 })

@@ -1,20 +1,21 @@
 const db = require("./db")
+const logger = require("../config/logger")
 
 const initDB = async () => {
   try {
     await createExtensions()
-    console.log("Extensions initialized")
+    logger.info("Extensions initialized")
 
     await createTasksTable()
-    console.log("Tasks table initialized")
+    logger.info("Tasks table initialized")
 
     await createUsersTable()
-    console.log("Users table initialized")
+    logger.info("Users table initialized")
 
     await createAnswersTable()
-    console.log("Answers table initialized")
+    logger.info("Answers table initialized")
   } catch (err) {
-    console.error("Initializing tables failed", err)
+    logger.error(err, "Initializing tables failed")
   }
 }
 
