@@ -7,6 +7,12 @@ jobs:
   test:
     name: Run backend tests
     runs-on: ubuntu-latest
+    environment: test
+
+    env:
+      NODE_ENV: test
+      DB_URL: ${{ secrets.DB_URL }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
     steps:
       - name: Checkout repository
@@ -18,7 +24,10 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: backend/package-lock.json
-
+      - name: Verify required env
+        run: |
+          : "${DB_URL:?DB_URL is not set}"
+          : "${JWT_SECRET:?JWT_SECRET is not set}"
       - name: Install backend dependencies
         run: npm ci
         working-directory: backend
