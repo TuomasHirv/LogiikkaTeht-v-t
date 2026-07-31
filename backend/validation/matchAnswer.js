@@ -38,7 +38,7 @@ function recurseChildren(object, node) {
     return { accepted: true, feedback: "Pass" }
   }
   if (!node.children) {
-    return false
+    return { accepted: false, feedback: `There should be more branches` }
   }
   if (object.children.length !== node.children.length) {
     return {

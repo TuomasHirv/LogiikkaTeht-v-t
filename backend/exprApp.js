@@ -1,3 +1,5 @@
+require("dotenv").config()
+
 const express = require("express")
 const cors = require("cors")
 const app = express()
@@ -5,15 +7,25 @@ const initDB = require("./database/initDb")
 const taskRouter = require("./controllers/taskRouter")
 const answerRouter = require("./controllers/answerRouter")
 const userRouter = require("./controllers/userRouter")
-require("dotenv").config()
+const corsOptions = require("./config/cors")
+const notFound = require("./middleware/notFound")
+const errorHandler = require("./middleware/errorHandler")
+const pinoHttp = require("pino-http")
+const logger = require("./config/logger")
 
-app.use(cors())
+app.use(pinoHttp({ logger }))
+
+app.use(cors(corsOptions))
 app.use(express.json())
-
 initDB()
-
+  .then(() => console.log("DB initialized"))
+  .catch((error) => {
+    console.error("DB init failed:", error)
+    process.exit(1)
+  })
 app.use("/api/tasks", taskRouter)
 app.use("/api/answers", answerRouter)
 app.use("/api/users", userRouter)
-
+app.use(notFound)
+app.use(errorHandler)
 module.exports = app

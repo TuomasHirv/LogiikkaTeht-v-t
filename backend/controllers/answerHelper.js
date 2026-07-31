@@ -11,7 +11,7 @@ async function wordsToPropositionsHelper(answer, taskId, userId, response) {
       return response.status(422).json({ error: "Syntax error" })
     }
     const accepted = await evaluator.matchPropositions(answer, taskId)
-    feedback = accepted ? "Pass" : "Fail"
+    const feedback = accepted ? "Pass" : "Fail"
     await dbFunc.insertAnswer(
       userId,
       taskId,
