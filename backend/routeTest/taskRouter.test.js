@@ -73,14 +73,13 @@ describe("taskRouter", async () => {
     })
     test("returns correctly with multiple modules", async () => {
       await helperFunc.insertTruthTableTasksDb(db)
-      const sent = await helperFunc.postToTasks(
-        app,
-        "test",
-        MODULENAMES.WORDS_TO_PROPOSITIONS,
-        "question",
-        { test: "This should be in json" },
-        { metadata: "also json" },
-      )
+      await helperFunc.insertTaskDb(db, {
+        type: "test",
+        module_name: MODULENAMES.WORDS_TO_PROPOSITIONS,
+        question: "question",
+        correct_answer: { test: "This should be in json" },
+        metadata: { metadata: "also json" },
+      })
       const response = await supertest(app).get("/api/tasks/count").expect(200)
       const data = response.body
       assert.strictEqual(data.length, 2)

@@ -85,9 +85,6 @@ const insertTruthTableTasks = async (testApp) => {
   }
 }
 
-// Inserts a task directly through the db connection, bypassing the HTTP
-// layer, so suites for other routes can arrange fixtures without depending
-// on POST /api/tasks working correctly.
 const insertTaskDb = async (db, task) => {
   const q = `
     INSERT INTO tasks (type, module_name, question, correct_answer, metadata)
