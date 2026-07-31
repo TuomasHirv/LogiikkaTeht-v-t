@@ -14,29 +14,8 @@ taskRouter.get("/", async (request, response) => {
   }
 })
 
-// Post is turned off as there is no interface to create tasks with.
-// Creating tasks is done with npm run seed on the backend directory
-// To implement this it would require atleast: 1. authentication 2. Frontend interface 3. Validation on input
-const taskRouterPost = false
-taskRouter.post("/", async (request, response) => {
-  if (!taskRouterPost) {
-    return response.status(404).json({ error: "This route is turned off" })
-  }
-  const { type, module_name, question, correct_answer, metadata } = request.body
-
-  try {
-    const result = await dbFunc.insertTask(
-      type,
-      module_name,
-      question,
-      correct_answer,
-      metadata,
-    )
-    return response.status(201).json({ id: result.rows[0].id })
-  } catch (err) {
-    return response.status(500).json({ error: err })
-  }
-})
+// Removed POST route since it isn't used. And wont be able to be created in time.
+// Creating tasks is done by Seeding them in to the database
 
 taskRouter.get("/count", async (request, response) => {
   const q =
