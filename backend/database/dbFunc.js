@@ -155,8 +155,8 @@ const getAnswerAndModule = async (task_id) => {
         throw new Error("Module name isnt in presets:", rows.module_name)
     }
   } catch (error) {
-    if (moduleName) {
-      console.log("Couldnt receive answer and module from db:", moduleName)
+    if (task_id) {
+      console.log("Couldnt receive answer and module for:", task_id)
     }
     console.log("Module name was undefined")
   }

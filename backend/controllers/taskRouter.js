@@ -13,7 +13,14 @@ taskRouter.get("/", async (request, response) => {
   }
 })
 
+// Post is turned off as there is no interface to create tasks with.
+// Creating tasks is done with npm run seed on the backend directory
+// To implement this it would require atleast: 1. authentication 2. Frontend interface 3. Validation on input
+const taskRouterPost = false
 taskRouter.post("/", async (request, response) => {
+  if (!taskRouterPost) {
+    return response.status(404).json({ error: "This route is turned off" })
+  }
   const { type, module_name, question, correct_answer, metadata } = request.body
 
   try {

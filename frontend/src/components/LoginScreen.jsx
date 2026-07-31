@@ -1,17 +1,33 @@
 import { useState } from "react"
 import useUserStore, { useUserActions } from "../store"
 import { useSimpleField } from "../hooks"
+import Feedback from "./AnswerFeedback"
 
 const LoginScreen = () => {
   const user = useUserStore((state) => state.user)
   const { loginUser, logoutUser } = useUserActions()
+  const [feedback, setFeedback] = useState({})
   const username = useSimpleField("text")
-  const password = useSimpleField("text")
+  const password = useSimpleField("password")
 
   const loginFunc = async (event) => {
     event.preventDefault()
 
     if (!username.inputProps.value || !password.inputProps.value) {
+      return
+    }
+    if (username.inputProps.value.length < 6) {
+      setFeedback({
+        correct: false,
+        feedback: "Username is always atleast 6 characters long",
+      })
+      return
+    }
+    if (password.inputProps.value.length < 6) {
+      setFeedback({
+        correct: false,
+        feedback: "password is always atleast 6 characters long",
+      })
       return
     }
 
@@ -34,6 +50,11 @@ const LoginScreen = () => {
             <button type="submit"> Log in </button>
           </div>
         </form>
+        {feedback?.feedback && (
+          <div>
+            <Feedback feedback={feedback} />
+          </div>
+        )}
       </div>
     </>
   )

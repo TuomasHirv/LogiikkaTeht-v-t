@@ -3,7 +3,7 @@
 const { PostgreSqlContainer } = require("@testcontainers/postgresql")
 const jwt = require("jsonwebtoken")
 
-const JWT_secret = "JSON_ASOIDJAPOSJD"
+const JWT_secret = process.env.JWT_SECRET
 
 let container
 let app

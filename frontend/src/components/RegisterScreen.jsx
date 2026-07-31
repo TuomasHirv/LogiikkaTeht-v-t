@@ -1,17 +1,33 @@
 import { useState } from "react"
 import useUserStore, { useUserActions } from "../store"
 import { useSimpleField } from "../hooks"
+import Feedback from "./AnswerFeedback"
 
 const RegisterScreen = () => {
   const user = useUserStore((state) => state.user)
   const { loginUser, logoutUser, registerUser } = useUserActions()
+  const [feedback, setFeedback] = useState({})
   const username = useSimpleField("text")
-  const password = useSimpleField("text")
+  const password = useSimpleField("password")
 
   const registerFunc = async (event) => {
     event.preventDefault()
 
     if (!username.inputProps.value || !password.inputProps.value) {
+      return
+    }
+    if (username.inputProps.value.length < 6) {
+      setFeedback({
+        correct: false,
+        feedback: "Username has to be atleast 6 characters long",
+      })
+      return
+    }
+    if (password.inputProps.value.length < 6) {
+      setFeedback({
+        correct: false,
+        feedback: "password has to be atleast 6 characters long",
+      })
       return
     }
 
@@ -38,6 +54,11 @@ const RegisterScreen = () => {
             Register{" "}
           </button>
         </form>
+        {feedback?.feedback && (
+          <div>
+            <Feedback feedback={feedback} />
+          </div>
+        )}
       </div>
     </>
   )

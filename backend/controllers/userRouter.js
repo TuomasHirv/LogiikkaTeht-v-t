@@ -3,11 +3,18 @@ const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 const db = require("../database/db")
 
-const JWT_secret = "JSON_ASOIDJAPOSJD"
+const JWT_secret = process.env.JWT_SECRET
 const dbFunc = require("../database/dbFunc.js")
 
 userRouter.post("/", async (request, response) => {
   const { username, password } = request.body
+  if (username < 6) {
+    return response.status(401).json({ error: "Username is too short" })
+  }
+  if (password < 6) {
+    return response.status(401).json({ error: "password is too short" })
+  }
+
   const saltRounds = 10
 
   try {
@@ -35,6 +42,12 @@ userRouter.post("/", async (request, response) => {
 
 userRouter.post("/login", async (request, response) => {
   const { username, password } = request.body
+  if (username < 6) {
+    return response.status(401).json({ error: "Username is too short" })
+  }
+  if (password < 6) {
+    return response.status(401).json({ error: "password is too short" })
+  }
   try {
     const checkUsername = `
     SELECT * FROM users WHERE username = $1
