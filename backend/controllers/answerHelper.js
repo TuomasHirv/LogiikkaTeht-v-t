@@ -6,45 +6,35 @@ const { normalize } = require("../utils/normalize.js")
 const logger = require("../config/logger")
 const serializeSubmittedAnswer = (answer) => JSON.stringify(answer)
 
-async function wordsToPropositionsHelper(answer, taskId, userId, response) {
-  try {
-    if (!validatePropositional(answer)) {
-      return response.status(422).json({ error: "Syntax error" })
-    }
-    const accepted = await evaluator.matchPropositions(answer, taskId)
-    const feedback = accepted ? "Pass" : "Fail"
-    await dbFunc.insertAnswer(
-      userId,
-      taskId,
-      serializeSubmittedAnswer(answer),
-      accepted,
-    )
-    if (accepted) {
-      return response
-        .status(200)
-        .json({ correct: true, answer: answer, feedback: feedback })
-    }
-    return response
-      .status(200)
-      .json({ correct: false, answer: answer, feedback: feedback })
-  } catch (error) {
-    return response.status(500).json({ error: "internal server error" })
+class ValidationError extends Error {
+  constructor(message) {
+    super(message)
+    this.status = 422
   }
 }
 
-async function subFormulaHelper(answer, taskId, dbAnswer, userId, response) {
+async function runEvaluation(
+  evalFunc,
+  answer,
+  taskId,
+  userId,
+  evalParams,
+  response,
+) {
   try {
-    const accepted = await evaluator.matchSubFormula(answer, taskId, dbAnswer)
+    const accepted = await evalFunc(evalParams)
+    const defaultAccepted = accepted?.accepted || false
     const defaultFeedback =
       accepted?.feedback || "served failed to evaluate answer"
+
     await dbFunc.insertAnswer(
       userId,
       taskId,
       serializeSubmittedAnswer(answer),
-      accepted.accepted,
+      defaultAccepted,
       defaultFeedback,
     )
-    if (accepted.accepted) {
+    if (defaultAccepted) {
       return response
         .status(200)
         .json({ correct: true, answer: answer, feedback: defaultFeedback })
@@ -53,54 +43,84 @@ async function subFormulaHelper(answer, taskId, dbAnswer, userId, response) {
       .status(200)
       .json({ correct: false, answer: answer, feedback: defaultFeedback })
   } catch (error) {
+    if (error instanceof ValidationError) {
+      return response.status(error.status).json({ error: error.message })
+    }
+    if (error.message) {
+      return response.status(500).json({ error: error.message })
+    }
     return response.status(500).json({ error: "internal server error" })
   }
+}
+
+async function wordsToPropositionsHelper(answer, taskId, userId, response) {
+  async function wTPEvaluation(evalParams) {
+    if (!validatePropositional(evalParams.answer)) {
+      throw new ValidationError("Syntax error")
+    }
+    return await evaluator.matchPropositions(
+      evalParams.answer,
+      evalParams.taskId,
+    )
+  }
+  const evalParams = { answer: answer, taskId: taskId }
+  return await runEvaluation(
+    wTPEvaluation,
+    answer,
+    taskId,
+    userId,
+    evalParams,
+    response,
+  )
+}
+
+async function subFormulaHelper(answer, taskId, userId, response) {
+  async function subFormulaEvaluation(evalParams) {
+    return evaluator.matchSubFormula(evalParams.answer, evalParams.taskId)
+  }
+  const evalParams = { answer: answer, taskId: taskId }
+  return await runEvaluation(
+    subFormulaEvaluation,
+    answer,
+    taskId,
+    userId,
+    evalParams,
+    response,
+  )
 }
 
 async function truthTableHelper(answer, taskId, userId, response) {
-  try {
-    const accepted = await evaluator.matchTruthTable(answer, taskId)
-    feedback = accepted ? "Pass" : "Fail"
-    await dbFunc.insertAnswer(
-      userId,
-      taskId,
-      serializeSubmittedAnswer(answer),
-      accepted,
-    )
-    if (accepted) {
-      return response
-        .status(200)
-        .json({ correct: true, answer: answer, feedback: feedback })
-    }
-    return response
-      .status(200)
-      .json({ correct: false, answer: answer, feedback: feedback })
-  } catch (error) {
-    return response.status(500).json({ error: "internal server error" })
+  async function truthTableEvaluation(evalParams) {
+    return await evaluator.matchTruthTable(evalParams.answer, evalParams.taskId)
   }
+  const evalParams = { answer: answer, taskId: taskId }
+  return await runEvaluation(
+    truthTableEvaluation,
+    answer,
+    taskId,
+    userId,
+    evalParams,
+    response,
+  )
 }
 
 async function equivalenceRuleHelper(answer, rule, userId, taskId, response) {
-  try {
-    const accepted = await evaluator.matchEquivalenceAnswer(answer, rule)
-    await dbFunc.insertAnswer(
-      userId,
-      taskId,
-      serializeSubmittedAnswer(answer),
-      accepted.accepted,
-      accepted.feedback,
+  async function equivalenceEvaluation(evalParams) {
+    return await evaluator.matchEquivalenceAnswer(
+      evalParams.answer,
+      evalParams.rule,
     )
-    if (accepted.accepted) {
-      return response
-        .status(200)
-        .json({ correct: true, answer: answer, feedback: accepted.feedback })
-    }
-    return response
-      .status(200)
-      .json({ correct: false, answer: answer, feedback: accepted.feedback })
-  } catch (error) {
-    return response.status(500).json({ error: "internal server error" })
   }
+  const evalParams = { answer: answer, rule: rule }
+
+  return await runEvaluation(
+    equivalenceEvaluation,
+    answer,
+    taskId,
+    userId,
+    evalParams,
+    response,
+  )
 }
 
 async function TTFormHelper(
@@ -110,30 +130,26 @@ async function TTFormHelper(
   taskId,
   response,
 ) {
-  try {
-    const accepted = evaluator.matchTTFormAnswer(
-      answer,
-      correctAnswerAndForm[1],
-      correctAnswerAndForm[0],
+  async function TTFormEvaluation(evalParams) {
+    return await evaluator.matchTTFormAnswer(
+      evalParams.answer,
+      evalParams.correctAnswer,
+      evalParams.form,
     )
-    await dbFunc.insertAnswer(
-      userId,
-      taskId,
-      serializeSubmittedAnswer(answer),
-      accepted.accepted,
-      accepted.feedback,
-    )
-    if (accepted.accepted) {
-      return response
-        .status(200)
-        .json({ correct: true, answer: answer, feedback: accepted.feedback })
-    }
-    return response
-      .status(200)
-      .json({ correct: false, answer: answer, feedback: accepted.feedback })
-  } catch (error) {
-    return response.status(500).json({ error: "internal server error" })
   }
+  const evalParams = {
+    answer: answer,
+    correctAnswer: correctAnswerAndForm[0],
+    form: correctAnswerAndForm[1],
+  }
+  return await runEvaluation(
+    TTFormEvaluation,
+    answer,
+    taskId,
+    userId,
+    evalParams,
+    response,
+  )
 }
 
 async function equivalenceFormHelper(
@@ -143,123 +159,104 @@ async function equivalenceFormHelper(
   taskId,
   response,
 ) {
-  try {
-    const rule = ruleAndForm[0]
-    const form = ruleAndForm[1]
-    const transformCheck = await evaluator.matchEquivalenceAnswer(answer, rule)
-    if (!transformCheck.accepted) {
-      return response.status(200).json({
-        correct: false,
-        answer: answer,
-        feedback: transformCheck.feedback,
-      })
-    }
-    const accepted = evaluator.checkIfCorrectForm(answer.at(-1), form)
-    await dbFunc.insertAnswer(
-      userId,
-      taskId,
-      serializeSubmittedAnswer(answer),
-      accepted.accepted,
-      accepted.feedback,
+  async function equivalenceFormEvaluation(evalParams) {
+    const transformCheck = await evaluator.matchEquivalenceAnswer(
+      evalParams.answer,
+      evalParams.rule,
     )
-    if (accepted.accepted) {
-      return response
-        .status(200)
-        .json({ correct: true, answer: answer, feedback: accepted.feedback })
+    if (!transformCheck) {
+      return {
+        accepted: transformCheck.accepted,
+        feedback: transformCheck.feedback,
+      }
     }
-    return response
-      .status(200)
-      .json({ correct: false, answer: answer, feedback: accepted.feedback })
-  } catch (error) {
-    return response.status(500).json({ error: "internal server error" })
+    return evaluator.checkIfCorrectForm(
+      evalParams.answer.at(-1),
+      evalParams.form,
+    )
   }
+  const evalParams = {
+    answer: answer,
+    rule: ruleAndForm[0],
+    form: ruleAndForm[1],
+  }
+  return await runEvaluation(
+    equivalenceFormEvaluation,
+    answer,
+    taskId,
+    userId,
+    evalParams,
+    response,
+  )
 }
 
 async function resolutionHelper(answer, reqClauses, userId, taskId, response) {
-  try {
-    const requiredClauses = reqClauses[0]
-    const assumptionCount = reqClauses[1]
-    const correctAssumptions = reqClauses[2]
-    const accepted = evaluator.matchResolutionTask(
-      answer,
-      assumptionCount,
-      requiredClauses,
-      correctAssumptions,
+  async function resolutionEvaluation(evalParams) {
+    return evaluator.matchResolutionTask(
+      evalParams.answer,
+      evalParams.assumptionCount,
+      evalParams.requiredClauses,
+      evalParams.correctAssumptions,
     )
-    await dbFunc.insertAnswer(
-      userId,
-      taskId,
-      serializeSubmittedAnswer(answer),
-      accepted.accepted,
-      accepted.feedback,
-    )
-    if (accepted.accepted) {
-      return response
-        .status(200)
-        .json({ correct: true, answer: answer, feedback: accepted.feedback })
-    }
-    return response
-      .status(200)
-      .json({ correct: false, answer: answer, feedback: accepted.feedback })
-  } catch (error) {
-    return response.status(500).json({ error: "internal server error" })
   }
+  const evalParams = {
+    answer: answer,
+    requiredClauses: reqClauses[0],
+    assumptionCount: reqClauses[1],
+    correctAssumptions: reqClauses[2],
+  }
+  return await runEvaluation(
+    resolutionEvaluation,
+    answer,
+    taskId,
+    userId,
+    evalParams,
+    response,
+  )
 }
 
 async function shorthandHelper(answer, FinalAllowed, userId, taskId, response) {
-  try {
-    const question = await dbFunc.getQuestion(taskId)
-    const accepted = await evaluator.validateShorthandtask(
-      answer,
-      FinalAllowed,
+  async function shorthandEvaluation(evalParams) {
+    const question = await dbFunc.getQuestion(evalParams.taskId)
+    return await evaluator.validateShorthandtask(
+      evalParams.answer,
+      evalParams.FinalAllowed,
       question[0].question,
     )
-    await dbFunc.insertAnswer(
-      userId,
-      taskId,
-      serializeSubmittedAnswer(answer),
-      accepted.accepted,
-      accepted.feedback,
-    )
-    if (accepted.accepted) {
-      return response
-        .status(200)
-        .json({ correct: true, answer: answer, feedback: "Pass" })
-    }
-    return response
-      .status(200)
-      .json({ correct: false, answer: answer, feedback: accepted.feedback })
-  } catch (error) {
-    return response.status(500).json({ error: "internal server error" })
   }
+  const evalParams = {
+    answer: answer,
+    FinalAllowed: FinalAllowed,
+    taskId: taskId,
+  }
+  return await runEvaluation(
+    shorthandEvaluation,
+    answer,
+    taskId,
+    userId,
+    evalParams,
+    response,
+  )
 }
 
 async function semanticTreeHelper(answer, reqLines, userId, taskId, response) {
-  try {
-    const question = await dbFunc.getQuestion(taskId)
-    const accepted = await evaluator.checkSemanticTreeTask(
-      answer,
-      reqLines,
+  async function semanticTreeEvaluation(evalParams) {
+    const question = await dbFunc.getQuestion(evalParams.taskId)
+    return await evaluator.checkSemanticTreeTask(
+      evalParams.answer,
+      evalParams.reqLines,
       question[0].question,
     )
-    await dbFunc.insertAnswer(
-      userId,
-      taskId,
-      serializeSubmittedAnswer(answer),
-      accepted.accepted,
-      accepted.feedback,
-    )
-    if (accepted.accepted) {
-      return response
-        .status(200)
-        .json({ correct: true, answer: answer, feedback: "Pass" })
-    }
-    return response
-      .status(200)
-      .json({ correct: false, answer: answer, feedback: accepted.feedback })
-  } catch (error) {
-    return response.status(500).json({ error: "internal server error" })
   }
+  const evalParams = { answer: answer, reqLines: reqLines, taskId: taskId }
+  return await runEvaluation(
+    semanticTreeEvaluation,
+    answer,
+    taskId,
+    userId,
+    evalParams,
+    response,
+  )
 }
 
 async function multipleChoiceHelper(
@@ -270,71 +267,49 @@ async function multipleChoiceHelper(
   taskId,
   response,
 ) {
-  if (answer === reqAnswer) {
-    await dbFunc.insertAnswer(
-      userId,
-      taskId,
-      serializeSubmittedAnswer(answer),
-      true,
-      "Pass",
-    )
-    return response
-      .status(200)
-      .json({ correct: true, answer: answer, feedback: "Pass" })
+  function multipleChoiceEvaluation(evalParams) {
+    if (evalParams.answer === evalParams.reqAnswer) {
+      return { accepted: true, feedback: "Pass" }
+    }
+    return { accepted: false, feedback: evalParams.feedback }
   }
-  await dbFunc.insertAnswer(
-    userId,
+  const evalParams = {
+    answer: answer,
+    reqAnswer: reqAnswer,
+    feedback: feedback,
+  }
+  return await runEvaluation(
+    multipleChoiceEvaluation,
+    answer,
     taskId,
-    serializeSubmittedAnswer(answer),
-    false,
-    feedback,
+    userId,
+    evalParams,
+    response,
   )
-  return response
-    .status(200)
-    .json({ correct: false, answer: answer, feedback: feedback })
 }
 
 async function naturalDeductionHelper(answer, goal, userId, taskId, response) {
-  try {
+  async function naturalDeductionEvaluation(evalParams) {
     const { premises, allowed_rules, prefilled_lines } =
       await dbFunc.getMetadata(taskId)
-    logger.debug(
-      "Given premise, allowedRules, prefilled_lines",
-      premises,
-      allowed_rules,
-      prefilled_lines,
-      "Given answer and expected GOAL:",
-      answer,
-      goal,
-    )
     const normalizedPremises = premises.map(normalize)
     const allowedRules = new Set(allowed_rules.map(normalize))
-    const accepted = evaluator.matchNaturalDeduction(
-      answer,
-      goal.replace(/\s+/g, ""),
+    return evaluator.matchNaturalDeduction(
+      evalParams.answer,
+      evalParams.goal.replace(/\s+/g, ""),
       allowedRules,
       normalizedPremises,
     )
-    logger.debug("Return value of accepted:", accepted)
-    await dbFunc.insertAnswer(
-      userId,
-      taskId,
-      serializeSubmittedAnswer(answer),
-      accepted.accepted,
-      accepted.feedback,
-    )
-    if (accepted.accepted) {
-      return response
-        .status(200)
-        .json({ correct: true, answer: answer, feedback: "Pass" })
-    }
-    return response
-      .status(200)
-      .json({ correct: false, answer: answer, feedback: accepted.feedback })
-  } catch (error) {
-    logger.error(error)
-    return response.status(500).json({ error: "internal server error" })
   }
+  const evalParams = { answer: answer, goal: goal }
+  return await runEvaluation(
+    naturalDeductionEvaluation,
+    answer,
+    taskId,
+    userId,
+    evalParams,
+    response,
+  )
 }
 
 module.exports = {

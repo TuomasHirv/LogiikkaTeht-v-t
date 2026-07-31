@@ -28,9 +28,9 @@ const TruthTableField = forwardRef(
         <form
           onSubmit={(event) => {
             event.preventDefault()
-            if (textInput.value) {
+            if (textInput.inputProps.value) {
               setLocked(true)
-              submitFunc(textInput.value, x, y)
+              submitFunc(textInput.inputProps.value, x, y)
             }
           }}
         >
@@ -39,9 +39,9 @@ const TruthTableField = forwardRef(
             ref={ref}
             onKeyDown={handleKeyDown}
             onBlur={() => {
-              if (textInput.value) {
+              if (textInput.inputProps.value) {
                 setLocked(true)
-                submitFunc(textInput.value, x, y)
+                submitFunc(textInput.inputProps.value, x, y)
               }
             }}
             className={`${bgClass} text-black text-xl border-black border-2 w-25 h-7`}

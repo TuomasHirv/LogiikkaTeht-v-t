@@ -16,9 +16,13 @@ const matchPropositions = async (userAnswer, taskId) => {
   const correctAnswerList = databaseAnswer.rows[0].correct_answer.answers
   const normalizedUserAnswer = normalizeProposition(userAnswer)
 
-  return correctAnswerList.some((answer) =>
+  const accepted = correctAnswerList.some((answer) =>
     areLogicallyEquivalent(normalizeProposition(answer), normalizedUserAnswer),
   )
+  if (accepted) {
+    return { accepted: true, feedback: "Pass" }
+  }
+  return { accepted: false, feedback: "Fail" }
 }
 const matchSubFormula = async (userObject, answerId) => {
   const q = `SELECT correct_answer FROM tasks WHERE id = $1`
@@ -85,7 +89,7 @@ const matchTruthTable = async (userTable, taskId) => {
   const databaseAnswer = await db.query(q, [taskId])
   const correctTable = databaseAnswer.rows[0].correct_answer.answer
   if (correctTable.length !== userTable.length) {
-    return false
+    return { accepted: false, feedback: "Fail" }
   }
   const normCorrect = correctTable.map(normalizeRow)
   const normUser = userTable.map(normalizeRow)
@@ -94,7 +98,10 @@ const matchTruthTable = async (userTable, taskId) => {
       (b) => a.length === b.length && a.every((val, i) => val === b[i]),
     ),
   )
-  return value
+  if (value) {
+    return { accepted: true, feedback: "Pass" }
+  }
+  return { accepted: false, feedback: "Fail" }
 }
 
 const matchEquivalenceAnswer = (answerList, excluded) => {

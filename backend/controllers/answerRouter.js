@@ -33,7 +33,6 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
       return await routerHelper.subFormulaHelper(
         answer,
         taskId,
-        answerModuleName.answer,
         userId,
         response,
       )
