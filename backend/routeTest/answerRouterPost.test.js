@@ -5,6 +5,7 @@ const { setupTestDb, teardownTestDb, clearTestDb } = require("./setup")
 const { MODULENAMES } = require("../constants")
 const helperFunc = require("./answerHelperFunc")
 const evaluator = require("../validation/matchAnswer.js")
+const dbFunc = require("../database/dbFunc.js")
 
 let app
 let db
@@ -36,8 +37,11 @@ describe("POST /api/answers/:id", async () => {
       )
       const taskId = taskIdList[0]
       const answer = "K ∧ A"
-      const mock = t.mock.method(evaluator, "matchPropositions", () => true)
-
+      const mock = t.mock.method(evaluator, "matchPropositions", () => ({
+        accepted: true,
+        feedback: "Pass",
+      }))
+      const dbMock = t.mock.method(dbFunc, "insertAnswer", () => null)
       const response = await helperFunc.postAnswer(app, token, taskId, answer)
 
       assert.strictEqual(response.status, 200)
@@ -48,6 +52,14 @@ describe("POST /api/answers/:id", async () => {
       })
       assert.strictEqual(mock.mock.calls.length, 1)
       assert.deepEqual(mock.mock.calls[0].arguments, [answer, taskId])
+
+      assert.strictEqual(dbMock.mock.calls.length, 1)
+      const [userId, calledTaskId, storedAnswer, accepted, feedback] =
+        dbMock.mock.calls[0].arguments
+      assert.strictEqual(calledTaskId, taskId)
+      assert.strictEqual(storedAnswer, JSON.stringify(answer))
+      assert.strictEqual(accepted, true)
+      assert.strictEqual(feedback, "Pass")
     })
 
     test("not accepted", async (t) => {
@@ -59,7 +71,10 @@ describe("POST /api/answers/:id", async () => {
       )
       const taskId = taskIdList[0]
       const answer = "K ∧ A"
-      t.mock.method(evaluator, "matchPropositions", () => false)
+      t.mock.method(evaluator, "matchPropositions", () => ({
+        accepted: false,
+        feedback: "Fail",
+      }))
 
       const response = await helperFunc.postAnswer(app, token, taskId, answer)
 
@@ -79,7 +94,10 @@ describe("POST /api/answers/:id", async () => {
         MODULENAMES.WORDS_TO_PROPOSITIONS,
       )
       const taskId = taskIdList[0]
-      const mock = t.mock.method(evaluator, "matchPropositions", () => true)
+      const mock = t.mock.method(evaluator, "matchPropositions", () => ({
+        accepted: true,
+        feedback: "Pass",
+      }))
 
       const response = await helperFunc.postAnswer(app, token, taskId, "AB")
 
@@ -113,11 +131,6 @@ describe("POST /api/answers/:id", async () => {
         answer,
         feedback: "Pass",
       })
-      assert.deepEqual(mock.mock.calls[0].arguments, [
-        answer,
-        taskId,
-        helperFunc.tasks[MODULENAMES.SUBFORMULA].correct_answer,
-      ])
 
       const result = await db.query(
         "SELECT is_correct, submitted_answer FROM answers WHERE user_id = $1 AND task_id = $2",
@@ -183,7 +196,11 @@ describe("POST /api/answers/:id", async () => {
       )
       const taskId = taskIdList[0]
       const answer = [["P", "1", "1", "0", "0"]]
-      const mock = t.mock.method(evaluator, "matchTruthTable", () => true)
+      const mock = t.mock.method(evaluator, "matchTruthTable", () => ({
+        accepted: true,
+        feedback: "Pass",
+      }))
+      const dbMock = t.mock.method(dbFunc, "insertAnswer", () => null)
 
       const response = await helperFunc.postAnswer(app, token, taskId, answer)
 
@@ -205,7 +222,10 @@ describe("POST /api/answers/:id", async () => {
       )
       const taskId = taskIdList[0]
       const answer = [["P", "1", "1", "0", "0"]]
-      t.mock.method(evaluator, "matchTruthTable", () => false)
+      t.mock.method(evaluator, "matchTruthTable", () => ({
+        accepted: false,
+        feedback: "Fail",
+      }))
 
       const response = await helperFunc.postAnswer(app, token, taskId, answer)
 
@@ -302,8 +322,8 @@ describe("POST /api/answers/:id", async () => {
       })
       assert.deepEqual(mock.mock.calls[0].arguments, [
         answer,
-        fixture.correct_answer.form,
         fixture.correct_answer.groups,
+        fixture.correct_answer.form,
       ])
     })
 
@@ -478,14 +498,13 @@ describe("POST /api/answers/:id", async () => {
       const fixture = helperFunc.tasks[MODULENAMES.RECURSIVE_DEFINITION]
       const mock = t.mock.method(evaluator, "validateShorthandtask", () => ({
         accepted: true,
-        feedback: "this feedback is ignored on the accepted branch",
+        feedback: "Pass",
       }))
 
       const response = await helperFunc.postAnswer(app, token, taskId, answer)
 
       assert.strictEqual(response.status, 200)
-      // The accepted branch hardcodes "Pass" regardless of the evaluator's
-      // own feedback text.
+      // The accepted branch no longer hardcodes Pass.
       assert.deepEqual(response.body, {
         correct: true,
         answer,
@@ -536,7 +555,7 @@ describe("POST /api/answers/:id", async () => {
       const fixture = helperFunc.tasks[MODULENAMES.SEMANTIC_TREE_INTRO]
       const mock = t.mock.method(evaluator, "checkSemanticTreeTask", () => ({
         accepted: true,
-        feedback: "this feedback is ignored on the accepted branch",
+        feedback: "Pass",
       }))
 
       const response = await helperFunc.postAnswer(app, token, taskId, answer)

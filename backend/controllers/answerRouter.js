@@ -18,7 +18,7 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
   try {
     answerModuleName = await dbFunc.getAnswerAndModule(taskId)
   } catch (err) {
-    return response.status(404).json({ error: err })
+    return response.status(404).json({ error: err.message })
   }
   logger.debug("BEFORE SWITCH:", answerModuleName)
   switch (answerModuleName.moduleName) {

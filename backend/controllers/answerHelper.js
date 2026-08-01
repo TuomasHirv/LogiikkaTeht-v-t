@@ -1,9 +1,7 @@
 const dbFunc = require("../database/dbFunc.js")
 const evaluator = require("../validation/matchAnswer.js")
-const matchTree = require("../validation/matchTree.js")
 const validatePropositional = require("../validation/correctness")
 const { normalize } = require("../utils/normalize.js")
-const logger = require("../config/logger")
 const serializeSubmittedAnswer = (answer) => JSON.stringify(answer)
 
 class ValidationError extends Error {
@@ -53,18 +51,15 @@ async function runEvaluation(
   }
 }
 
-async function wordsToPropositionsHelper(answer, taskId, userId, response) {
-  async function wTPEvaluation(evalParams) {
+function wordsToPropositionsHelper(answer, taskId, userId, response) {
+  function wTPEvaluation(evalParams) {
     if (!validatePropositional(evalParams.answer)) {
       throw new ValidationError("Syntax error")
     }
-    return await evaluator.matchPropositions(
-      evalParams.answer,
-      evalParams.taskId,
-    )
+    return evaluator.matchPropositions(evalParams.answer, evalParams.taskId)
   }
   const evalParams = { answer: answer, taskId: taskId }
-  return await runEvaluation(
+  return runEvaluation(
     wTPEvaluation,
     answer,
     taskId,
@@ -74,12 +69,12 @@ async function wordsToPropositionsHelper(answer, taskId, userId, response) {
   )
 }
 
-async function subFormulaHelper(answer, taskId, userId, response) {
-  async function subFormulaEvaluation(evalParams) {
+function subFormulaHelper(answer, taskId, userId, response) {
+  function subFormulaEvaluation(evalParams) {
     return evaluator.matchSubFormula(evalParams.answer, evalParams.taskId)
   }
   const evalParams = { answer: answer, taskId: taskId }
-  return await runEvaluation(
+  return runEvaluation(
     subFormulaEvaluation,
     answer,
     taskId,
@@ -89,12 +84,12 @@ async function subFormulaHelper(answer, taskId, userId, response) {
   )
 }
 
-async function truthTableHelper(answer, taskId, userId, response) {
-  async function truthTableEvaluation(evalParams) {
-    return await evaluator.matchTruthTable(evalParams.answer, evalParams.taskId)
+function truthTableHelper(answer, taskId, userId, response) {
+  function truthTableEvaluation(evalParams) {
+    return evaluator.matchTruthTable(evalParams.answer, evalParams.taskId)
   }
   const evalParams = { answer: answer, taskId: taskId }
-  return await runEvaluation(
+  return runEvaluation(
     truthTableEvaluation,
     answer,
     taskId,
@@ -106,10 +101,7 @@ async function truthTableHelper(answer, taskId, userId, response) {
 
 async function equivalenceRuleHelper(answer, rule, userId, taskId, response) {
   async function equivalenceEvaluation(evalParams) {
-    return await evaluator.matchEquivalenceAnswer(
-      evalParams.answer,
-      evalParams.rule,
-    )
+    return evaluator.matchEquivalenceAnswer(evalParams.answer, evalParams.rule)
   }
   const evalParams = { answer: answer, rule: rule }
 
@@ -164,7 +156,7 @@ async function equivalenceFormHelper(
       evalParams.answer,
       evalParams.rule,
     )
-    if (!transformCheck) {
+    if (!transformCheck.accepted) {
       return {
         accepted: transformCheck.accepted,
         feedback: transformCheck.feedback,

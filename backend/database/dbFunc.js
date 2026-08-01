@@ -160,6 +160,7 @@ const getAnswerAndModule = async (task_id) => {
       logger.error("Couldnt receive answer and module for:", task_id)
     }
     logger.error("Module name was undefined")
+    throw new Error("Module not in Constants")
   }
 }
 

@@ -10,7 +10,7 @@ taskRouter.get("/", async (request, response) => {
     return response.json(result.rows)
   } catch (err) {
     logger.error(err, "couldn't get tasks")
-    return response.json({ error: err })
+    return response.status(500).json({ error: err.message })
   }
 })
 
@@ -25,7 +25,7 @@ taskRouter.get("/count", async (request, response) => {
     return response.json(result.rows)
   } catch (error) {
     logger.error(error, "Error in counting all tasks")
-    return response.json({ error: error })
+    return response.status(500).json({ error: error.message })
   }
 })
 
@@ -41,7 +41,7 @@ taskRouter.get("/:module", async (request, response) => {
     return response.json(result.rows)
   } catch (err) {
     logger.error(err, "couldn't get tasks")
-    return response.json({ error: err })
+    return response.status(500).json({ error: err.message })
   }
 })
 

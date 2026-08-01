@@ -64,6 +64,16 @@ describe("userRouter", async () => {
       const result = await db.query("SELECT * FROM users")
       assert.deepEqual(result.rows, [])
     })
+    test("doesn't create a user when username is too short", async (t) => {
+      t.mock.method(console, "log", () => {})
+      const response = await supertest(app)
+        .post("/api/users")
+        .send({ username: "test   ", password: "testerPassword" })
+      assert.strictEqual(response.status, 401)
+
+      const result = await db.query("SELECT * FROM users")
+      assert.deepEqual(result.rows, [])
+    })
   })
 
   describe("POST /api/users/login", async () => {

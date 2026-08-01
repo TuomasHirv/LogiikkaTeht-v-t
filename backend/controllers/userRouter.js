@@ -3,16 +3,18 @@ const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 const db = require("../database/db")
 const logger = require("../config/logger")
-
+const { normalize } = require("../utils/normalize.js")
 const JWT_secret = process.env.JWT_SECRET
 const dbFunc = require("../database/dbFunc.js")
 
 userRouter.post("/", async (request, response) => {
   const { username, password } = request.body
-  if (username < 6) {
+  const normUsername = normalize(username)
+  const normPassword = normalize(password)
+  if (normUsername.length < 6) {
     return response.status(401).json({ error: "Username is too short" })
   }
-  if (password < 6) {
+  if (normPassword.length < 6) {
     return response.status(401).json({ error: "password is too short" })
   }
 

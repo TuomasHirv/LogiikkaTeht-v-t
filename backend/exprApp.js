@@ -1,3 +1,5 @@
+const path = require("path")
+
 if (process.env.NODE_ENV !== "test" || !process.env.CI) {
   require("dotenv").config({ path: path.resolve(__dirname, "../.env") })
 }
@@ -17,12 +19,9 @@ const logger = require("./config/logger")
 app.use(pinoHttp({ logger }))
 app.use(cors(corsOptions))
 app.use(express.json())
+
 initDB()
-  .then(() => logger.info("DB initialized"))
-  .catch((error) => {
-    logger.error(error, "DB init failed")
-    process.exit(1)
-  })
+
 app.use("/api/tasks", taskRouter)
 app.use("/api/answers", answerRouter)
 app.use("/api/users", userRouter)
