@@ -20,7 +20,9 @@ app.use(pinoHttp({ logger }))
 app.use(cors(corsOptions))
 app.use(express.json())
 
-initDB()
+if (process.env.DB_ALREADY_INITIALIZED !== "true") {
+  initDB()
+}
 
 app.use("/api/tasks", taskRouter)
 app.use("/api/answers", answerRouter)
