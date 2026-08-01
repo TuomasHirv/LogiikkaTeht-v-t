@@ -29,16 +29,19 @@ const TruthTable = ({ task, start, showSubmitButton = true }) => {
   })
 
   useEffect(() => {
-    if (showSubmitButton) {
-      const savedFeedback = buildSavedAnswerFeedback(savedAnswer)
-      if (!savedFeedback) {
-        return
-      }
+    function effectFunc(showSubmitButton) {
+      if (showSubmitButton) {
+        const savedFeedback = buildSavedAnswerFeedback(savedAnswer)
+        if (!savedFeedback) {
+          return
+        }
 
-      setFeedback(savedFeedback)
-      setInputFields(savedAnswer.submitted_answer)
+        setFeedback(savedFeedback)
+        setInputFields(savedAnswer.submitted_answer)
+      }
     }
-  }, [task.id, savedAnswer])
+    effectFunc(showSubmitButton)
+  }, [task.id, savedAnswer, showSubmitButton])
 
   const submitAnswer = async (event) => {
     if (showSubmitButton) {
@@ -91,7 +94,6 @@ const TruthTable = ({ task, start, showSubmitButton = true }) => {
     setInputFields((prev) => prev.map((row) => [...row, "", ""]))
   }
   const numRows = inputFields[0]?.length || 1
-  const numCols = inputFields.length
 
   return (
     <div className="relative w-fit">

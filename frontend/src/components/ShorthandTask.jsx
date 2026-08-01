@@ -6,10 +6,6 @@ import useUserStore, { useUserActions } from "../store"
 import AnswerFeedback from "./AnswerFeedback"
 import { submitTaskAnswer } from "../hooks/submitAnswer"
 import { useLastSavedAnswer } from "../hooks/useTaskHooks"
-import {
-  buildSavedAnswerFeedback,
-  parseSavedEliminationAnswer,
-} from "../hooks/savedAnswer"
 import { SHORTHAND_CHAIN_LINE_LIMITS } from "../constants"
 
 const Line = ({ initValue, index, change }) => {
@@ -58,8 +54,12 @@ const ShorthandExpansionTask = ({ task }) => {
   const lines = useLineList([start, ""], SHORTHAND_CHAIN_LINE_LIMITS)
 
   useEffect(() => {
-    lines.setLines([start, ""])
-    setFeedback(null)
+    function effectFunc() {
+      lines.setLines([start, ""])
+      setFeedback(null)
+    }
+    effectFunc()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [start, task.id])
 
   const parseAnswer = (x) => x

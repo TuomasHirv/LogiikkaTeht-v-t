@@ -1,7 +1,7 @@
 import { useField } from "../hooks"
 
 const TextField = ({ onLock }) => {
-  const { reset: reset, ...textInput } = useField("text")
+  const { ...textInput } = useField("text")
 
   const handleLock = (event) => {
     event.preventDefault()

@@ -17,7 +17,7 @@ const normalizeSubmittedAnswer = (submittedAnswer) => {
 
 const useUserStore = create(
   persist(
-    (set, get) => ({
+    (set) => ({
       user: null,
       token: null,
       answers: {},
@@ -55,7 +55,6 @@ const useUserStore = create(
 
         initialize: async () => {
           try {
-            const currentToken = get().token
             const responseData = await answerService.getAll()
 
             const mappedAnswers = {}

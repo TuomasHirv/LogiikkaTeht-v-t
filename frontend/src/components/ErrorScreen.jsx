@@ -1,5 +1,3 @@
-import { ErrorBoundary } from "react-error-boundary"
-
 const ErrorScreen = () => {
   return (
     <div>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, forwardRef } from "react"
+import { useState, forwardRef } from "react"
 import { useField } from "../hooks"
 // This file is mostly AI generated
 const DIRECTIONS = {

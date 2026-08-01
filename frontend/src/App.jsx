@@ -1,14 +1,7 @@
 import "./App.css"
 import { useEffect } from "react"
 import useUserStore, { useUserActions } from "./store"
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-  useMatch,
-  useNavigate,
-} from "react-router-dom"
+import { Routes, Route } from "react-router-dom"
 import { ErrorBoundary } from "react-error-boundary"
 
 import NotFound from "./components/NotFound"

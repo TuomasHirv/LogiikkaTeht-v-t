@@ -1,7 +1,7 @@
 import useUserStore from "../store"
 import { taskService } from "../services/taskService"
 import { useEffect, useState } from "react"
-import { MODULE_NAMES, MODULE_ORDER } from "../constants"
+import { MODULE_ORDER } from "../constants"
 
 const UserPage = () => {
   const user = useUserStore((state) => state.user)
@@ -9,7 +9,6 @@ const UserPage = () => {
 
   const answerList = Object.values(answers)
   const [moduleTaskCount, setModuleTaskCount] = useState({})
-  const [moduleNames, setModuleNames] = useState([])
   useEffect(() => {
     const getCount = async () => {
       const result = await taskService.getCount()
@@ -20,7 +19,6 @@ const UserPage = () => {
         modNames.push(row.module_name)
       })
       setModuleTaskCount(countDict)
-      setModuleNames(modNames)
     }
     getCount()
   }, [])

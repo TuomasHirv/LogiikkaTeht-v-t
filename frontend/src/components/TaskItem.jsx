@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useField } from "../hooks"
-import { buildSavedAnswerFeedback } from "../hooks/savedAnswer"
 import { submitTaskAnswer } from "../hooks/submitAnswer"
 import { useLastSavedAnswer } from "../hooks/useTaskHooks"
 
@@ -8,11 +7,9 @@ import AnswerFeedback from "./AnswerFeedback"
 import useUserStore, { useUserActions } from "../store"
 
 const TaskItem = ({ task }) => {
-  const token = useUserStore((state) => state.token)
   const { addAnswer } = useUserActions()
   const answerInput = useField("text")
   const [feedback, setFeedback] = useState(null)
-  const allAnswers = useUserStore((state) => state.answers)
   const savedAnswer = useUserStore((state) => state.answers[task.id])
 
   const parseAnswer = (x) => {

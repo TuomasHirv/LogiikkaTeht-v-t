@@ -7,10 +7,13 @@ const InstructionScreen = () => {
   const { id, section } = useParams()
   const [content, setContent] = useState(null)
   useEffect(() => {
-    setContent(null)
-    import(`../content/instructions/part${id}section${section}.js`)
-      .then((module) => setContent(module.default))
-      .catch(() => setContent(null))
+    function effectFunc() {
+      setContent(null)
+      import(`../content/instructions/part${id}section${section}.js`)
+        .then((module) => setContent(module.default))
+        .catch(() => setContent(null))
+    }
+    effectFunc()
   }, [id, section])
   if (!content) {
     return <p> NOT DONE YET</p>

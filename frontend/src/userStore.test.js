@@ -53,7 +53,7 @@ describe("Store tests:", () => {
       })
       expect(useUserStore.getState().token).toEqual("token")
     })
-    it("Logout", async () => {
+    it("Logout", () => {
       useUserStore.setState({
         user: { id: 1, username: "tester" },
         token: "token",

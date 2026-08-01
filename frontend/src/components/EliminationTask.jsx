@@ -8,10 +8,6 @@ import { useLastSavedAnswer } from "../hooks/useTaskHooks"
 
 import { ELIMINATION_LINE_LIMITS } from "../constants"
 
-import {
-  buildSavedAnswerFeedback,
-  parseSavedEliminationAnswer,
-} from "../hooks/savedAnswer"
 import { useLineList } from "../hooks/lineList"
 const Line = ({ initValue, index, change }) => {
   const lineInput = useField("text", initValue)
@@ -41,8 +37,12 @@ const EliminationTask = ({ task }) => {
   const { ...propositions } = useLineList([start, ""], ELIMINATION_LINE_LIMITS)
 
   useEffect(() => {
-    propositions.setLines([start, ""])
-    setFeedback(null)
+    function effectFunc() {
+      propositions.setLines([start, ""])
+      setFeedback(null)
+    }
+    effectFunc()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [start, taskId])
   const parseAnswer = (x) => x
   useLastSavedAnswer({

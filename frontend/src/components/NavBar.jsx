@@ -1,11 +1,9 @@
 import { Link } from "react-router-dom"
-import { useNavigate } from "react-router-dom"
 import useUserStore, { useUserActions } from "../store"
 
 const NavBar = () => {
   const user = useUserStore((state) => state.user)
   const { logoutUser } = useUserActions()
-  const navigate = useNavigate()
   return (
     <nav className="fixed top-0 left-0 w-full h-20 bg-blue-300 flex items-center box-border px-8">
       <div

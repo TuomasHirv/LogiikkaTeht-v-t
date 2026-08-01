@@ -106,9 +106,12 @@ export const useTextField = (type, initValue = "", options = {}) => {
   const [syntaxError, setSyntaxError] = useState("")
 
   useEffect(() => {
-    if (trackInitValue) {
-      setValue(initValue || "")
+    function trackVal(trackInitValue) {
+      if (trackInitValue) {
+        setValue(initValue || "")
+      }
     }
+    trackVal(trackInitValue)
   }, [initValue, trackInitValue])
 
   const onChange = (event) => {

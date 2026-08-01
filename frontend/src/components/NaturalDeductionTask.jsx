@@ -1,15 +1,11 @@
 import React from "react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useNaturalDeductionField } from "../hooks"
 import { submitTaskAnswer } from "../hooks/submitAnswer"
 import useUserStore, { useUserActions } from "../store"
 import { useLineList } from "../hooks/lineList"
 import { NATURALDEDUCTION_LINE_LIMITS } from "../constants"
 import { useLastSavedAnswer } from "../hooks/useTaskHooks"
-import {
-  buildSavedAnswerFeedback,
-  parseSavedEliminationAnswer,
-} from "../hooks/savedAnswer"
 import AnswerFeedback from "./AnswerFeedback"
 
 const Line = ({ initValue, index, change }) => {
@@ -62,7 +58,6 @@ const NaturalDeductionTask = ({ task }) => {
   const { addAnswer } = useUserActions()
   const [feedback, setFeedback] = useState(null)
   const savedAnswer = useUserStore((state) => state.answers[task.id])
-  const start = task?.question || ""
   const { ...clauses } = useLineList([""], NATURALDEDUCTION_LINE_LIMITS)
 
   const parseAnswer = (x) => x

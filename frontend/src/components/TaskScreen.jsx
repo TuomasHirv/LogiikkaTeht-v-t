@@ -22,15 +22,18 @@ const TaskScreen = () => {
   const [loading, setLoading] = useState(true)
   const [continued, setContinued] = useState(false)
   useEffect(() => {
-    setContinued(false)
-    import(`../content/instructions/part${id}section${section}.js`)
-      .then(() => setContinued(true))
-      .catch(() => setContinued(false))
+    function effectFunc() {
+      setContinued(false)
+      import(`../content/instructions/part${id}section${section}.js`)
+        .then(() => setContinued(true))
+        .catch(() => setContinued(false))
 
-    const nextSection = Number(section) + 1
-    import(`../content/instructions/part${id}section${nextSection}.js`).catch(
-      () => {},
-    )
+      const nextSection = Number(section) + 1
+      import(`../content/instructions/part${id}section${nextSection}.js`).catch(
+        () => {},
+      )
+    }
+    effectFunc()
   }, [id, section])
 
   const instructionLink = ROUTES.instructions(id, nextSection)

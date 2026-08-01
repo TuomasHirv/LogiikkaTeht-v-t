@@ -1,11 +1,10 @@
 import { useState } from "react"
-import useUserStore, { useUserActions } from "../store"
+import { useUserActions } from "../store"
 import { useSimpleField } from "../hooks"
 import Feedback from "./AnswerFeedback"
 
 const LoginScreen = () => {
-  const user = useUserStore((state) => state.user)
-  const { loginUser, logoutUser } = useUserActions()
+  const { loginUser } = useUserActions()
   const [feedback, setFeedback] = useState({})
   const username = useSimpleField("text")
   const password = useSimpleField("password")
