@@ -1,5 +1,5 @@
 // This file is AI-generated
-
+const { logger } = require("../config/logger")
 const { PostgreSqlContainer } = require("@testcontainers/postgresql")
 const jwt = require("jsonwebtoken")
 
@@ -41,8 +41,13 @@ const setupTestDb = async () => {
 
 // Call from test.after().
 const teardownTestDb = async () => {
-  await db.end()
-  await container.stop()
+  logger.info("globalTeardown: start")
+  try {
+    await db?.end()
+    await container?.stop()
+  } catch (err) {
+    console.warn("container stop failed", { cause: err })
+  }
 }
 
 // Call from test.afterEach() to isolate tests from each other.
