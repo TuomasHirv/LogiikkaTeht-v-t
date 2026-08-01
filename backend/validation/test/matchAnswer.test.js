@@ -35,7 +35,7 @@ function loadMatchAnswerWithDbStub(dbExport) {
 
 test("accepts logically equivalent answer for proposition task", async () => {
   const { matchPropositions } = loadMatchAnswerWithDbStub({
-    query: async () => ({
+    query: () => ({
       rows: [{ correct_answer: { answers: ["A→B"] } }],
     }),
   })
@@ -47,7 +47,7 @@ test("accepts logically equivalent answer for proposition task", async () => {
 
 test("rejects non-equivalent answer for proposition task", async () => {
   const { matchPropositions } = loadMatchAnswerWithDbStub({
-    query: async () => ({
+    query: () => ({
       rows: [{ correct_answer: { answers: ["A→B"] } }],
     }),
   })
@@ -59,7 +59,7 @@ test("rejects non-equivalent answer for proposition task", async () => {
 
 test("keeps case-insensitive proposition matching", async () => {
   const { matchPropositions } = loadMatchAnswerWithDbStub({
-    query: async () => ({
+    query: () => ({
       rows: [{ correct_answer: { answers: ["A→B"] } }],
     }),
   })

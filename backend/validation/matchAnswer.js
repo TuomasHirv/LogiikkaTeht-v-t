@@ -55,8 +55,6 @@ function recurseChildren(object, node) {
   }
 
   if (node.children && node.children.length > 0) {
-    const userChildren = new Set()
-
     for (const cNode of node.children) {
       let found = false
       for (const child of object.children) {
@@ -106,7 +104,7 @@ const matchTruthTable = async (userTable, taskId) => {
 
 const matchEquivalenceAnswer = (answerList, excluded) => {
   const lastAnswer = answerList[answerList.length - 1]
-  for (i = 0; i < excluded.length; i++) {
+  for (let i = 0; i < excluded.length; i++) {
     if (lastAnswer.includes(excluded[i])) {
       return {
         accepted: false,
@@ -116,7 +114,7 @@ const matchEquivalenceAnswer = (answerList, excluded) => {
   }
 
   let accepted = false
-  for (i = 1; i < answerList.length; i++) {
+  for (let i = 1; i < answerList.length; i++) {
     accepted = matchText(answerList[i - 1], answerList[i])
     if (!accepted) {
       return {
@@ -284,7 +282,7 @@ function containsAllRequiredClauses(clauseList, requiredClauses) {
   )
 }
 
-async function validateShorthandtask(userList, finalAllowed, reqStart) {
+function validateShorthandtask(userList, finalAllowed, reqStart) {
   try {
     if (userList[0] !== reqStart) {
       return { accepted: false, feedback: "First line doesn't match question" }

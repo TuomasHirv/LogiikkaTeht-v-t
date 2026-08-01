@@ -1,5 +1,5 @@
 const assert = require("node:assert/strict")
-const { test, describe, it } = require("node:test")
+const { describe, it } = require("node:test")
 
 const validator = require("../validateNaturalDeduction")
 /** Checks that the reference path is legal @param {[{formula: "", depth: int, rule: "", refs: []}]} fakeLines*/
@@ -109,7 +109,7 @@ describe("validateNaturalDeduction", () => {
       assert.throws(() => validator.checkAndIntro(fakeLines, currLine))
     })
     it("Check that the current formula is the correct type", () => {
-      let currLine = { formula: "B ∨ A", depth: 0, rule: "∧I", refs: [0, 1] }
+      const currLine = { formula: "B ∨ A", depth: 0, rule: "∧I", refs: [0, 1] }
       assert.throws(() => validator.checkAndIntro(fakeLines, currLine))
     })
     it("Check that both sides are equivalent to refs", () => {
@@ -186,7 +186,7 @@ describe("validateNaturalDeduction", () => {
       )
       const secondLine = { formula: "A", depth: 0, rule: "→E", refs: [0, 2] }
       assert.throws(
-        () => validator.checkImpElim(testLines, currLine),
+        () => validator.checkImpElim(testLines, secondLine),
         /Incorrect refs/,
       )
     })
@@ -202,7 +202,7 @@ describe("validateNaturalDeduction", () => {
       )
       const secondLine = { formula: "B", depth: 0, rule: "→E", refs: [2, 0, 3] }
       assert.throws(
-        () => validator.checkImpElim(testLines, currLine),
+        () => validator.checkImpElim(testLines, secondLine),
         /→E Always takes two references/,
       )
     })
@@ -354,7 +354,7 @@ describe("validateNaturalDeduction", () => {
       )
       const secondLine = { formula: "A ∨ C", depth: 0, rule: "∨I", refs: [] }
       assert.throws(
-        () => validator.checkOrIntro(fakeLines, currLine),
+        () => validator.checkOrIntro(fakeLines, secondLine),
         /∨I Must have one reference/,
       )
     })
@@ -402,7 +402,7 @@ describe("validateNaturalDeduction", () => {
       )
       const secondLine = { formula: "A", depth: 0, rule: "¬E", refs: [0, 1] }
       assert.throws(
-        () => validator.checkNotElim(testLines, currLine),
+        () => validator.checkNotElim(testLines, secondLine),
         /¬E Must have one reference/,
       )
     })
@@ -418,7 +418,7 @@ describe("validateNaturalDeduction", () => {
       ]
       const secondLine = { formula: "A", depth: 0, rule: "¬E", refs: [0] }
       assert.throws(
-        () => validator.checkNotElim(testLines, currLine),
+        () => validator.checkNotElim(secondLines, secondLine),
         /isn't a double negation of/,
       )
     })

@@ -1,4 +1,4 @@
-const { test, describe, mock } = require("node:test")
+const { test, describe } = require("node:test")
 const assert = require("node:assert/strict")
 const supertest = require("supertest")
 const { setupTestDb, teardownTestDb, clearTestDb } = require("./setup")
@@ -17,8 +17,8 @@ test.after(async () => {
 test.afterEach(async () => {
   await clearTestDb()
 })
-describe("taskRouter", async () => {
-  describe("GET /api/tasks", async () => {
+describe("taskRouter", () => {
+  describe("GET /api/tasks", () => {
     test("returns an empty list when no tasks exist", async () => {
       const response = await supertest(app).get("/api/tasks").expect(200)
       assert.deepEqual(response.body, [])
@@ -60,7 +60,7 @@ describe("taskRouter", async () => {
       )
     })
   })
-  describe("GET /api/tasks/count", async () => {
+  describe("GET /api/tasks/count", () => {
     test("returns the count of all tasks", async () => {
       await helperFunc.insertTruthTableTasksDb(db)
       const response = await supertest(app).get("/api/tasks/count").expect(200)
@@ -89,7 +89,7 @@ describe("taskRouter", async () => {
       assert.strictEqual(data[1].count, "1")
     })
   })
-  describe("GET /api/tasks/:module", async () => {
+  describe("GET /api/tasks/:module", () => {
     test("works correctly", async () => {
       await helperFunc.insertTruthTableTasksDb(db)
       const response = await supertest(app)

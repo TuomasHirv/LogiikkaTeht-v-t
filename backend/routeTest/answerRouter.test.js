@@ -1,12 +1,7 @@
-const { test, describe, mock } = require("node:test")
+const { test, describe } = require("node:test")
 const assert = require("node:assert/strict")
 const supertest = require("supertest")
-const {
-  setupTestDb,
-  teardownTestDb,
-  clearTestDb,
-  generateTestToken,
-} = require("./setup")
+const { setupTestDb, teardownTestDb, clearTestDb } = require("./setup")
 const { MODULENAMES } = require("../constants")
 const helperFunc = require("./answerHelperFunc")
 let app
@@ -23,8 +18,8 @@ test.afterEach(async () => {
   await clearTestDb()
 })
 
-describe("answerRouter", async () => {
-  describe("GET /api/answers", async () => {
+describe("answerRouter", () => {
+  describe("GET /api/answers", () => {
     test("no answers results in 404 status", async () => {
       const signupResponse = await helperFunc.signup(app, "tester", "password")
       const token = signupResponse.body.token
@@ -83,7 +78,7 @@ describe("answerRouter", async () => {
   })
   // I decided to not test everything from answer router with supertest since it is a very long route.
   // Unit tests are better for it since it is very logic heavy
-  describe("POST /api/answers", async () => {
+  describe("POST /api/answers", () => {
     test("words-to-propositions task works with correct answer", async () => {
       const signupResponse = await helperFunc.signup(app, "tester", "password")
       const token = signupResponse.body.token
@@ -139,7 +134,6 @@ describe("answerRouter", async () => {
     test("returns 400 with a not supported modulename", async () => {
       const signupResponse = await helperFunc.signup(app, "tester", "password")
       const token = signupResponse.body.token
-      const userId = signupResponse.body.user.id
       const taskId = "89202dd7-7fbb-4912-ae18-0d5d05f69cd2"
       const wrongAnswer = "B ∧ C"
 

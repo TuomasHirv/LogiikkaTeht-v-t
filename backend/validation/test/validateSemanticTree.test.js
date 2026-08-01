@@ -1,5 +1,5 @@
 const assert = require("node:assert/strict")
-const { test, describe, it } = require("node:test")
+const { test, describe } = require("node:test")
 
 const semTree = require("../validateSemanticTree")
 const {
@@ -87,7 +87,7 @@ describe("validateSemanticTree tests", () => {
   })
   describe("expandNegation", () => {
     test("Variable returns null", () => {
-      text = "p"
+      const text = "p"
       const result = semTree.expandNegation(text)
       if (result) {
         assert.fail("Result wasn't null")
@@ -173,25 +173,21 @@ describe("validateSemanticTree tests", () => {
         pending: new Set(["p ∧ a"]),
         literals: new Set([]),
       }
-      const result = semTree.evaluateNode(testNodeOneAnd, state, [])
+      semTree.evaluateNode(testNodeOneAnd, state, [])
     })
     test("Simple proposition with contradiction", () => {
       const state = {
         pending: new Set(["p ∧ ¬p"]),
         literals: new Set([]),
       }
-      const result = semTree.evaluateNode(
-        testNodeOneAndContradiction,
-        state,
-        [],
-      )
+      semTree.evaluateNode(testNodeOneAndContradiction, state, [])
     })
     test("Testing sample task", () => {
       const state = {
         pending: new Set(["(P ↔ Q) ∧ ¬P"]),
         literals: new Set([]),
       }
-      const result = semTree.evaluateNode(bigTest, state, [])
+      semTree.evaluateNode(bigTest, state, [])
     })
     test("Throws on incorrect X", () => {
       const state = {

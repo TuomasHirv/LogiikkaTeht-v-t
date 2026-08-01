@@ -99,13 +99,13 @@ function truthTableHelper(answer, taskId, userId, response) {
   )
 }
 
-async function equivalenceRuleHelper(answer, rule, userId, taskId, response) {
-  async function equivalenceEvaluation(evalParams) {
+function equivalenceRuleHelper(answer, rule, userId, taskId, response) {
+  function equivalenceEvaluation(evalParams) {
     return evaluator.matchEquivalenceAnswer(evalParams.answer, evalParams.rule)
   }
   const evalParams = { answer: answer, rule: rule }
 
-  return await runEvaluation(
+  return runEvaluation(
     equivalenceEvaluation,
     answer,
     taskId,
@@ -115,15 +115,9 @@ async function equivalenceRuleHelper(answer, rule, userId, taskId, response) {
   )
 }
 
-async function TTFormHelper(
-  answer,
-  correctAnswerAndForm,
-  userId,
-  taskId,
-  response,
-) {
-  async function TTFormEvaluation(evalParams) {
-    return await evaluator.matchTTFormAnswer(
+function TTFormHelper(answer, correctAnswerAndForm, userId, taskId, response) {
+  function TTFormEvaluation(evalParams) {
+    return evaluator.matchTTFormAnswer(
       evalParams.answer,
       evalParams.correctAnswer,
       evalParams.form,
@@ -134,7 +128,7 @@ async function TTFormHelper(
     correctAnswer: correctAnswerAndForm[0],
     form: correctAnswerAndForm[1],
   }
-  return await runEvaluation(
+  return runEvaluation(
     TTFormEvaluation,
     answer,
     taskId,
@@ -144,13 +138,7 @@ async function TTFormHelper(
   )
 }
 
-async function equivalenceFormHelper(
-  answer,
-  ruleAndForm,
-  userId,
-  taskId,
-  response,
-) {
+function equivalenceFormHelper(answer, ruleAndForm, userId, taskId, response) {
   async function equivalenceFormEvaluation(evalParams) {
     const transformCheck = await evaluator.matchEquivalenceAnswer(
       evalParams.answer,
@@ -172,7 +160,7 @@ async function equivalenceFormHelper(
     rule: ruleAndForm[0],
     form: ruleAndForm[1],
   }
-  return await runEvaluation(
+  return runEvaluation(
     equivalenceFormEvaluation,
     answer,
     taskId,
@@ -182,8 +170,8 @@ async function equivalenceFormHelper(
   )
 }
 
-async function resolutionHelper(answer, reqClauses, userId, taskId, response) {
-  async function resolutionEvaluation(evalParams) {
+function resolutionHelper(answer, reqClauses, userId, taskId, response) {
+  function resolutionEvaluation(evalParams) {
     return evaluator.matchResolutionTask(
       evalParams.answer,
       evalParams.assumptionCount,
@@ -197,7 +185,7 @@ async function resolutionHelper(answer, reqClauses, userId, taskId, response) {
     assumptionCount: reqClauses[1],
     correctAssumptions: reqClauses[2],
   }
-  return await runEvaluation(
+  return runEvaluation(
     resolutionEvaluation,
     answer,
     taskId,
@@ -207,10 +195,10 @@ async function resolutionHelper(answer, reqClauses, userId, taskId, response) {
   )
 }
 
-async function shorthandHelper(answer, FinalAllowed, userId, taskId, response) {
+function shorthandHelper(answer, FinalAllowed, userId, taskId, response) {
   async function shorthandEvaluation(evalParams) {
     const question = await dbFunc.getQuestion(evalParams.taskId)
-    return await evaluator.validateShorthandtask(
+    return evaluator.validateShorthandtask(
       evalParams.answer,
       evalParams.FinalAllowed,
       question[0].question,
@@ -221,7 +209,7 @@ async function shorthandHelper(answer, FinalAllowed, userId, taskId, response) {
     FinalAllowed: FinalAllowed,
     taskId: taskId,
   }
-  return await runEvaluation(
+  return runEvaluation(
     shorthandEvaluation,
     answer,
     taskId,
@@ -231,17 +219,17 @@ async function shorthandHelper(answer, FinalAllowed, userId, taskId, response) {
   )
 }
 
-async function semanticTreeHelper(answer, reqLines, userId, taskId, response) {
+function semanticTreeHelper(answer, reqLines, userId, taskId, response) {
   async function semanticTreeEvaluation(evalParams) {
     const question = await dbFunc.getQuestion(evalParams.taskId)
-    return await evaluator.checkSemanticTreeTask(
+    return evaluator.checkSemanticTreeTask(
       evalParams.answer,
       evalParams.reqLines,
       question[0].question,
     )
   }
   const evalParams = { answer: answer, reqLines: reqLines, taskId: taskId }
-  return await runEvaluation(
+  return runEvaluation(
     semanticTreeEvaluation,
     answer,
     taskId,
@@ -251,7 +239,7 @@ async function semanticTreeHelper(answer, reqLines, userId, taskId, response) {
   )
 }
 
-async function multipleChoiceHelper(
+function multipleChoiceHelper(
   answer,
   reqAnswer,
   feedback,
@@ -270,7 +258,7 @@ async function multipleChoiceHelper(
     reqAnswer: reqAnswer,
     feedback: feedback,
   }
-  return await runEvaluation(
+  return runEvaluation(
     multipleChoiceEvaluation,
     answer,
     taskId,
@@ -280,10 +268,9 @@ async function multipleChoiceHelper(
   )
 }
 
-async function naturalDeductionHelper(answer, goal, userId, taskId, response) {
+function naturalDeductionHelper(answer, goal, userId, taskId, response) {
   async function naturalDeductionEvaluation(evalParams) {
-    const { premises, allowed_rules, prefilled_lines } =
-      await dbFunc.getMetadata(taskId)
+    const { premises, allowed_rules } = await dbFunc.getMetadata(taskId)
     const normalizedPremises = premises.map(normalize)
     const allowedRules = new Set(allowed_rules.map(normalize))
     return evaluator.matchNaturalDeduction(
@@ -294,7 +281,7 @@ async function naturalDeductionHelper(answer, goal, userId, taskId, response) {
     )
   }
   const evalParams = { answer: answer, goal: goal }
-  return await runEvaluation(
+  return runEvaluation(
     naturalDeductionEvaluation,
     answer,
     taskId,

@@ -1,6 +1,5 @@
 const taskRouter = require("express").Router()
 const db = require("../database/db")
-const dbFunc = require("../database/dbFunc.js")
 const logger = require("../config/logger")
 
 taskRouter.get("/", async (request, response) => {

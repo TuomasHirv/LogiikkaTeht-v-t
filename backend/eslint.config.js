@@ -20,6 +20,7 @@ module.exports = [
       // catches typos and missing requires (e.g. using `path` without requiring it)
       "no-undef": "error",
 
+      "preserve-caught-error": "off",
       "no-unused-vars": [
         "warn",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },

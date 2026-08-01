@@ -1,4 +1,4 @@
-const { parseAllLines, allowedRef } = require("./parseNaturalDeduction")
+const { allowedRef } = require("./parseNaturalDeduction")
 const { findMainConnective } = require("./validateSemanticTree")
 
 function formulasEqual(f1, f2) {
@@ -35,7 +35,6 @@ function checkReiteration(lines, currLine) {
  * @returns
  */
 function checkPremise(currLine, premises) {
-  let found = false
   for (const premise of premises) {
     if (premise === currLine.formula) {
       return

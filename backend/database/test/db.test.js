@@ -1,6 +1,8 @@
 const test = require("node:test")
-const assert = require("node:assert/strict")
 const { PostgreSqlContainer } = require("@testcontainers/postgresql")
+
+let container
+let db
 
 test.before(async () => {
   container = await new PostgreSqlContainer("postgres:16-alpine")

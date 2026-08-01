@@ -1,5 +1,4 @@
 const supertest = require("supertest")
-const bcrypt = require("bcrypt")
 const { MODULENAMES } = require("../constants")
 const tasks = {
   [MODULENAMES.WORDS_TO_PROPOSITIONS]: {
@@ -124,9 +123,9 @@ const tasks = {
   },
 }
 const createTasksForTest = async (db, taskModule) => {
-  let allIds = []
+  const allIds = []
   if (taskModule === "all") {
-    for (const [moduleName, taskData] of Object.entries(tasks)) {
+    for (const [_, taskData] of Object.entries(tasks)) {
       const id = await insertTaskDb(db, taskData)
       allIds.push(id)
     }
@@ -165,11 +164,11 @@ const insertAnswerDb = async (db, answer, userId, taskId) => {
   return result.rows[0].id
 }
 
-const signup = async (testApp, username, password) => {
+const signup = (testApp, username, password) => {
   return supertest(testApp).post("/api/users").send({ username, password })
 }
 
-const postAnswer = async (testApp, token, taskId, answer) => {
+const postAnswer = (testApp, token, taskId, answer) => {
   return supertest(testApp)
     .post(`/api/answers/${taskId}`)
     .set("Authorization", `Bearer ${token}`)

@@ -1,5 +1,5 @@
 const assert = require("node:assert/strict")
-const { test, describe, it } = require("node:test")
+const { describe, it } = require("node:test")
 
 const pnd = require("../parseNaturalDeduction")
 const fakeLines = [
@@ -115,7 +115,7 @@ describe("Parsing natural deduction lines", () => {
     })
 
     it("strips a trailing 'line'/'lines' suffix from the rule name", () => {
-      const { rule, refs } = pnd.parseJustification("MP,line:1")
+      const { refs } = pnd.parseJustification("MP,line:1")
       assert.deepEqual(refs, [1])
     })
 
@@ -123,7 +123,7 @@ describe("Parsing natural deduction lines", () => {
       assert.throws(() => pnd.parseJustification("MP"))
     })
     it("finds 2 refs in the same line", () => {
-      const { rule, refs } = pnd.parseJustification("MP,lines:1,2")
+      const { refs } = pnd.parseJustification("MP,lines:1,2")
       assert.deepEqual(refs, [1, 2])
     })
   })
@@ -153,7 +153,7 @@ describe("Parsing natural deduction lines", () => {
       assert.strictEqual(rule, "assumption")
     })
     it("parses when given many rules", () => {
-      const { formula, depth, rule } = pnd.turnTextToLine(
+      const { rule } = pnd.turnTextToLine(
         "A(→I lines: 1,2)",
         3,
         new Set(["premise", "assumption", "→I", "MP"]),

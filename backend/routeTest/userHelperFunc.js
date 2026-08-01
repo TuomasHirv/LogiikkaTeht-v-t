@@ -1,11 +1,11 @@
 const supertest = require("supertest")
 const bcrypt = require("bcrypt")
 
-const signup = async (testApp, username, password) => {
+const signup = (testApp, username, password) => {
   return supertest(testApp).post("/api/users").send({ username, password })
 }
 
-const login = async (testApp, username, password) => {
+const login = (testApp, username, password) => {
   return supertest(testApp)
     .post("/api/users/login")
     .send({ username, password })

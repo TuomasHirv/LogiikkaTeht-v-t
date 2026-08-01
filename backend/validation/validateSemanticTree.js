@@ -90,12 +90,13 @@ function expandObligation(text) {
   const parsed = findMainConnective(text)
 
   switch (parsed.type) {
-    case "AND":
+    case "AND": {
       const deeperResults = [
         ...searchMoreAnd(parsed.left),
         ...searchMoreAnd(parsed.right),
       ]
       return { kind: "chain", results: deeperResults }
+    }
     case "OR":
       return { kind: "fork", results: [parsed.left, parsed.right] }
     case "IMPLIES":
@@ -116,7 +117,7 @@ function expandObligation(text) {
 }
 
 function searchMoreAnd(text) {
-  let searchable = normalize(text)
+  const searchable = normalize(text)
   let matches = false
   if (searchable.startsWith("(") && searchable.endsWith(")")) {
     let depth = 0

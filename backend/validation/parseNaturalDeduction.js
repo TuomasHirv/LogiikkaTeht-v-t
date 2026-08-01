@@ -108,7 +108,6 @@ function turnTextToLine(text, index, allowedRules, lastDepth = 0) {
   if (!allowedRules.has(rule) && rule !== "premise" && rule !== "reiteration") {
     throw new Error(`Rule ${rule} is not allowed in this task`)
   }
-  let i = 0
   for (const ref of refs) {
     if (Array.isArray(ref)) {
       if (ref[0] >= index || ref[1] >= index || ref[0] > ref[1]) {
@@ -124,7 +123,7 @@ function turnTextToLine(text, index, allowedRules, lastDepth = 0) {
 function parseAllLines(userList, allowedRules) {
   let i = 0
   let lastDepth = 0
-  let lines = []
+  const lines = []
   while (i < userList.length) {
     const currText = userList[i]
     const newLine = turnTextToLine(currText, i, allowedRules, lastDepth)

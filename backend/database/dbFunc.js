@@ -156,11 +156,10 @@ const getAnswerAndModule = async (task_id) => {
         throw new Error("Module name isnt in presets:", rows.module_name)
     }
   } catch (error) {
-    if (task_id) {
-      logger.error("Couldnt receive answer and module for:", task_id)
+    if (error.message) {
+      throw new Error(error.message)
     }
-    logger.error("Module name was undefined")
-    throw new Error("Module not in Constants")
+    throw new Error("Module not in Constants:")
   }
 }
 

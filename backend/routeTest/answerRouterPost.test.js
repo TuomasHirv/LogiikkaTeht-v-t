@@ -26,8 +26,8 @@ test.afterEach(async () => {
 // they only check the router's own glue code: does it pass the right data
 // into the evaluator, and does it turn the evaluator's result into the right
 // HTTP response. The evaluators' own logic is covered by validation/test/.
-describe("POST /api/answers/:id", async () => {
-  describe("WORDS_TO_PROPOSITIONS", async () => {
+describe("POST /api/answers/:id", () => {
+  describe("WORDS_TO_PROPOSITIONS", () => {
     test("accepted", async (t) => {
       const signupResponse = await helperFunc.signup(app, "tester", "password")
       const token = signupResponse.body.token
@@ -54,7 +54,7 @@ describe("POST /api/answers/:id", async () => {
       assert.deepEqual(mock.mock.calls[0].arguments, [answer, taskId])
 
       assert.strictEqual(dbMock.mock.calls.length, 1)
-      const [userId, calledTaskId, storedAnswer, accepted, feedback] =
+      const [, calledTaskId, storedAnswer, accepted, feedback] =
         dbMock.mock.calls[0].arguments
       assert.strictEqual(calledTaskId, taskId)
       assert.strictEqual(storedAnswer, JSON.stringify(answer))
@@ -107,7 +107,7 @@ describe("POST /api/answers/:id", async () => {
     })
   })
 
-  describe("SUBFORMULA", async () => {
+  describe("SUBFORMULA", () => {
     test("accepted", async (t) => {
       const signupResponse = await helperFunc.signup(app, "tester", "password")
       const token = signupResponse.body.token
@@ -118,7 +118,7 @@ describe("POST /api/answers/:id", async () => {
       )
       const taskId = taskIdList[0]
       const answer = { text: "P", locked: true, children: null }
-      const mock = t.mock.method(evaluator, "matchSubFormula", () => ({
+      t.mock.method(evaluator, "matchSubFormula", () => ({
         accepted: true,
         feedback: "Pass",
       }))
@@ -186,7 +186,7 @@ describe("POST /api/answers/:id", async () => {
     })
   })
 
-  describe("TRUTHTABLE_TASK", async () => {
+  describe("TRUTHTABLE_TASK", () => {
     test("accepted", async (t) => {
       const signupResponse = await helperFunc.signup(app, "tester", "password")
       const token = signupResponse.body.token
@@ -200,7 +200,7 @@ describe("POST /api/answers/:id", async () => {
         accepted: true,
         feedback: "Pass",
       }))
-      const dbMock = t.mock.method(dbFunc, "insertAnswer", () => null)
+      t.mock.method(dbFunc, "insertAnswer", () => null)
 
       const response = await helperFunc.postAnswer(app, token, taskId, answer)
 
@@ -238,7 +238,7 @@ describe("POST /api/answers/:id", async () => {
     })
   })
 
-  describe("EQUIVALENCE_RULES_TASK", async () => {
+  describe("EQUIVALENCE_RULES_TASK", () => {
     test("accepted", async (t) => {
       const signupResponse = await helperFunc.signup(app, "tester", "password")
       const token = signupResponse.body.token
@@ -293,7 +293,7 @@ describe("POST /api/answers/:id", async () => {
     })
   })
 
-  describe("TT_METHOD_CONVERSION", async () => {
+  describe("TT_METHOD_CONVERSION", () => {
     test("accepted", async (t) => {
       const signupResponse = await helperFunc.signup(app, "tester", "password")
       const token = signupResponse.body.token
@@ -352,7 +352,7 @@ describe("POST /api/answers/:id", async () => {
     })
   })
 
-  describe("EQUIVALENCE_METHOD_TRANSFORM", async () => {
+  describe("EQUIVALENCE_METHOD_TRANSFORM", () => {
     test("rejected rule change short-circuits before checking the form", async (t) => {
       const signupResponse = await helperFunc.signup(app, "tester", "password")
       const token = signupResponse.body.token
@@ -427,7 +427,7 @@ describe("POST /api/answers/:id", async () => {
     })
   })
 
-  describe("RESOLUTION_INTRODUCTION", async () => {
+  describe("RESOLUTION_INTRODUCTION", () => {
     test("accepted", async (t) => {
       const signupResponse = await helperFunc.signup(app, "tester", "password")
       const token = signupResponse.body.token
@@ -485,7 +485,7 @@ describe("POST /api/answers/:id", async () => {
     })
   })
 
-  describe("RECURSIVE_DEFINITION", async () => {
+  describe("RECURSIVE_DEFINITION", () => {
     test("accepted", async (t) => {
       const signupResponse = await helperFunc.signup(app, "tester", "password")
       const token = signupResponse.body.token
@@ -542,7 +542,7 @@ describe("POST /api/answers/:id", async () => {
     })
   })
 
-  describe("SEMANTIC_TREE_INTRO", async () => {
+  describe("SEMANTIC_TREE_INTRO", () => {
     test("accepted", async (t) => {
       const signupResponse = await helperFunc.signup(app, "tester", "password")
       const token = signupResponse.body.token

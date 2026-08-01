@@ -22,7 +22,7 @@ function parse(tokens) {
 
     while (peek() === "<->") {
       consume()
-      let right = parseImplies()
+      const right = parseImplies()
       left = Node("BICOND", null, [left, right])
     }
 
@@ -34,7 +34,7 @@ function parse(tokens) {
 
     while (peek() === "->") {
       consume()
-      let right = parseImplies()
+      const right = parseImplies()
       left = Node("IMPLIES", null, [left, right])
     }
 
@@ -47,7 +47,7 @@ function parse(tokens) {
 
     while (peek() === "∨") {
       consume()
-      let right = parseAnd()
+      const right = parseAnd()
       left = Node("OR", null, [left, right])
     }
 
@@ -60,7 +60,7 @@ function parse(tokens) {
 
     while (peek() === "∧") {
       consume()
-      let right = parseNot()
+      const right = parseNot()
       left = Node("AND", null, [left, right])
     }
 
@@ -78,7 +78,7 @@ function parse(tokens) {
   function parsePrimary() {
     if (peek() === "(") {
       consume()
-      let expr = parseBiconditional()
+      const expr = parseBiconditional()
       if (peek() !== ")") {
         throw new Error("Missing closing parenthesis")
       }

@@ -69,7 +69,7 @@ const insertTruthTableTasks = async (testApp) => {
   try {
     let i = 0
     while (i < preSetTasks.length) {
-      const response = await postToTasks(
+      await postToTasks(
         testApp,
         preSetTasks[i].type,
         preSetTasks[i].module_name,
@@ -80,7 +80,7 @@ const insertTruthTableTasks = async (testApp) => {
       i++
     }
     return true
-  } catch (error) {
+  } catch {
     return false
   }
 }

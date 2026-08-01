@@ -1,4 +1,4 @@
-const { test, describe, mock } = require("node:test")
+const { test, describe } = require("node:test")
 const assert = require("node:assert/strict")
 const supertest = require("supertest")
 const jwt = require("jsonwebtoken")
@@ -20,8 +20,8 @@ test.afterEach(async () => {
   await clearTestDb()
 })
 
-describe("userRouter", async () => {
-  describe("POST /api/users", async () => {
+describe("userRouter", () => {
+  describe("POST /api/users", () => {
     test("creates a user and returns a token", async () => {
       const response = await userHelperFunc.signup(app, "tester", "password")
       assert.strictEqual(response.status, 201)
@@ -76,7 +76,7 @@ describe("userRouter", async () => {
     })
   })
 
-  describe("POST /api/users/login", async () => {
+  describe("POST /api/users/login", () => {
     test("logs in with correct credentials", async () => {
       const user = await userHelperFunc.insertUserDb(db, "tester", "password")
       const response = await userHelperFunc.login(app, "tester", "password")

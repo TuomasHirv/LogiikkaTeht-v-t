@@ -1,7 +1,5 @@
 const answerRouter = require("express").Router()
-const validatePropositional = require("../validation/correctness")
 const dbFunc = require("../database/dbFunc.js")
-const evaluator = require("../validation/matchAnswer.js")
 const authenticateToken = require("../middleware/auth.js")
 const routerHelper = require("./answerHelper.js")
 const { MODULENAMES } = require("../constants.js")
@@ -23,28 +21,18 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
   logger.debug("BEFORE SWITCH:", answerModuleName)
   switch (answerModuleName.moduleName) {
     case MODULENAMES.WORDS_TO_PROPOSITIONS:
-      return await routerHelper.wordsToPropositionsHelper(
+      return routerHelper.wordsToPropositionsHelper(
         answer,
         taskId,
         userId,
         response,
       )
     case MODULENAMES.SUBFORMULA:
-      return await routerHelper.subFormulaHelper(
-        answer,
-        taskId,
-        userId,
-        response,
-      )
+      return routerHelper.subFormulaHelper(answer, taskId, userId, response)
     case MODULENAMES.TRUTHTABLE_TASK:
-      return await routerHelper.truthTableHelper(
-        answer,
-        taskId,
-        userId,
-        response,
-      )
+      return routerHelper.truthTableHelper(answer, taskId, userId, response)
     case MODULENAMES.EQUIVALENCE_RULES_TASK:
-      return await routerHelper.equivalenceRuleHelper(
+      return routerHelper.equivalenceRuleHelper(
         answer,
         answerModuleName.answer,
         userId,
@@ -52,7 +40,7 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         response,
       )
     case MODULENAMES.TT_METHOD_CONVERSION:
-      return await routerHelper.TTFormHelper(
+      return routerHelper.TTFormHelper(
         answer,
         answerModuleName.answer,
         userId,
@@ -60,7 +48,7 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         response,
       )
     case MODULENAMES.EQUIVALENCE_METHOD_TRANSFORM:
-      return await routerHelper.equivalenceFormHelper(
+      return routerHelper.equivalenceFormHelper(
         answer,
         answerModuleName.answer,
         userId,
@@ -70,7 +58,7 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
     // Both tasks are evaluated in the same way. The only difference is in the database
     case MODULENAMES.RESOLUTION_REFUTATION:
     case MODULENAMES.RESOLUTION_INTRODUCTION:
-      return await routerHelper.resolutionHelper(
+      return routerHelper.resolutionHelper(
         answer,
         answerModuleName.answer,
         userId,
@@ -78,7 +66,7 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         response,
       )
     case MODULENAMES.RECURSIVE_DEFINITION:
-      return await routerHelper.shorthandHelper(
+      return routerHelper.shorthandHelper(
         answer,
         answerModuleName.answer,
         userId,
@@ -86,7 +74,7 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         response,
       )
     case MODULENAMES.SEMANTIC_TREE_INTRO:
-      return await routerHelper.semanticTreeHelper(
+      return routerHelper.semanticTreeHelper(
         answer,
         answerModuleName.answer,
         userId,
@@ -94,7 +82,7 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         response,
       )
     case MODULENAMES.MULTIPLE_CHOICE_NATURAL_DEDUCTION:
-      return await routerHelper.multipleChoiceHelper(
+      return routerHelper.multipleChoiceHelper(
         answer,
         answerModuleName.answerFeedback[0],
         answerModuleName.answerFeedback[1],
@@ -102,6 +90,7 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
         taskId,
         response,
       )
+    // all N-deduction use this helper
     case MODULENAMES.ASSUMPTIONS_AND_DISCHARGE_NATURAL_DEDUCTION:
     case MODULENAMES.BASIC_RULES_NATURAL_DEDUCTION:
       return routerHelper.naturalDeductionHelper(
