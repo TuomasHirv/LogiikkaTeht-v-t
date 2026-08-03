@@ -5,28 +5,10 @@ import useUserStore, { useUserActions } from "../store"
 import AnswerFeedback from "./AnswerFeedback"
 import { submitTaskAnswer } from "../hooks/submitAnswer"
 import { useLastSavedAnswer } from "../hooks/useTaskHooks"
-
+import Line from "./Line"
 import { ELIMINATION_LINE_LIMITS } from "../constants"
 
 import { useLineList } from "../hooks/lineList"
-const Line = ({ initValue, index, change }) => {
-  const lineInput = useField("text", initValue)
-  if (index === 0) {
-    return <div className="flex bg-amber-100 text-black"> {initValue} </div>
-  }
-  return (
-    <div className="flex bg-white text-black">
-      <input
-        {...lineInput.inputProps}
-        onBlur={() => {
-          if (lineInput.inputProps.value) {
-            change(lineInput.inputProps.value, index)
-          }
-        }}
-      />
-    </div>
-  )
-}
 
 const EliminationTask = ({ task }) => {
   const { addAnswer } = useUserActions()
@@ -92,6 +74,8 @@ const EliminationTask = ({ task }) => {
                 initValue={prop}
                 index={index}
                 change={propositions.change}
+                fieldType={useField}
+                disableFirstLine={true}
               />
             </React.Fragment>
           ))}

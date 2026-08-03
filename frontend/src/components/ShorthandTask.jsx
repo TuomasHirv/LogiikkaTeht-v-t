@@ -7,27 +7,7 @@ import AnswerFeedback from "./AnswerFeedback"
 import { submitTaskAnswer } from "../hooks/submitAnswer"
 import { useLastSavedAnswer } from "../hooks/useTaskHooks"
 import { SHORTHAND_CHAIN_LINE_LIMITS } from "../constants"
-
-const Line = ({ initValue, index, change }) => {
-  const field = useField("text", initValue)
-  if (index === 0) {
-    return (
-      <div className="flex bg-amber-100 text-black px-1"> {initValue} </div>
-    )
-  }
-  return (
-    <div className="flex bg-white text-black">
-      <input
-        {...field.inputProps}
-        onBlur={() => {
-          if (field.inputProps.value) {
-            change(field.inputProps.value, index)
-          }
-        }}
-      />
-    </div>
-  )
-}
+import Line from "./Line"
 
 const ShorthandReference = ({ shorthands }) => (
   <div className="bg-gray-200 border-2 border-black rounded px-3 py-2 w-fit">
@@ -106,7 +86,12 @@ const ShorthandExpansionTask = ({ task }) => {
         <div className="grid border border-black">
           {lines.lines.map((line, index) => (
             <React.Fragment key={index}>
-              <Line initValue={line} index={index} change={lines.change} />
+              <Line
+                initValue={line}
+                index={index}
+                change={lines.change}
+                fieldType={useField}
+              />
             </React.Fragment>
           ))}
         </div>

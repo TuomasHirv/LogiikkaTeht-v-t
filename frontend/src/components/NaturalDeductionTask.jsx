@@ -7,52 +7,7 @@ import { useLineList } from "../hooks/lineList"
 import { NATURALDEDUCTION_LINE_LIMITS } from "../constants"
 import { useLastSavedAnswer } from "../hooks/useTaskHooks"
 import AnswerFeedback from "./AnswerFeedback"
-
-const Line = ({ initValue, index, change }) => {
-  const lineInput = useNaturalDeductionField("text", initValue, index)
-
-  return (
-    <React.Fragment>
-      <div className="flex bg-white text-black">
-        <span className="inline-block w-5 text-center bg-gray-500">
-          {index}:
-        </span>
-
-        <input
-          {...lineInput.inputProps}
-          onBlur={() => {
-            lineInput.checkSyntax(lineInput.inputProps.value, index)
-            if (lineInput.inputProps.value) {
-              change(lineInput.inputProps.value, index)
-            }
-          }}
-          className="flex-1 min-w-0 px-1"
-        />
-        {lineInput.syntaxError && (
-          <div className="group relative">
-            <span className="cursor-pointer text-red-700 bg-gray-700 select-none px-1">
-              {" "}
-              !{" "}
-            </span>
-            <p
-              className="
-              absolute left-0 top-full mt-1 z-10
-              max-w-xs whitespace-normal
-              bg-gray-700 text-white text-sm rounded px-2 py-1
-              opacity-0 pointer-events-none
-              group-hover:opacity-100
-              transition-opacity duration-150
-            "
-            >
-              {" "}
-              {lineInput.syntaxError}{" "}
-            </p>
-          </div>
-        )}
-      </div>
-    </React.Fragment>
-  )
-}
+import Line from "./Line"
 
 const NaturalDeductionTask = ({ task }) => {
   const { addAnswer } = useUserActions()
@@ -106,7 +61,14 @@ const NaturalDeductionTask = ({ task }) => {
         <div className="grid border border-black">
           {clauses.lines.map((cl, index) => (
             <React.Fragment key={index}>
-              <Line initValue={cl} index={index} change={clauses.change} />
+              <Line
+                initValue={cl}
+                index={index}
+                change={clauses.change}
+                validateSyntax={true}
+                disableFirstLine={false}
+                fieldType={useNaturalDeductionField}
+              />
             </React.Fragment>
           ))}
         </div>
