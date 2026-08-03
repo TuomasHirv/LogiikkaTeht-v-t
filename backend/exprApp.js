@@ -16,7 +16,7 @@ const notFound = require("./middleware/notFound")
 const errorHandler = require("./middleware/errorHandler")
 const pinoHttp = require("pino-http")
 const logger = require("./config/logger")
-
+app.set("trust proxy", 1)
 app.use(pinoHttp({ logger }))
 app.use(cors(corsOptions))
 app.use(express.json())

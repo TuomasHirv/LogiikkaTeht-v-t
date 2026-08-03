@@ -1,5 +1,9 @@
-require("dotenv").config()
+const path = require("path")
+// Same root .env exprApp.js loads, so seeding and the server always agree
+// on which database they are pointed at.
+require("dotenv").config({ path: path.resolve(__dirname, "../../.env") })
 const db = require("../database/db")
+const initDB = require("../database/initDb")
 const tasks = require("./taskSeed")
 const logger = require("../config/logger")
 // I have designed the database structure my self. Many of the tasks are AI-generated.
@@ -7,6 +11,9 @@ const logger = require("../config/logger")
 const seedDatabase = async () => {
   try {
     logger.info("🔄 Starting database seeding...")
+    // Idempotent, and lets this run against a brand new database without
+    // having to boot the server first just to create the schema.
+    await initDB()
     await db.query("TRUNCATE TABLE tasks CASCADE")
     const qInsert = `
       INSERT INTO tasks (type, module_name, question, correct_answer, metadata) 
