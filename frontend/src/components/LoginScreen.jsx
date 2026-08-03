@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { useUserActions } from "../store"
 import { useSimpleField } from "../hooks"
 import Feedback from "./AnswerFeedback"
@@ -30,9 +31,17 @@ const LoginScreen = () => {
       return
     }
 
-    await loginUser(username.inputProps.value, password.inputProps.value)
-    username.reset()
-    password.reset()
+    const response = await loginUser(
+      username.inputProps.value,
+      password.inputProps.value,
+    )
+    if (response.accepted) {
+      username.reset()
+      password.reset()
+      navigate("/")
+    } else {
+      setFeedback({ correct: false, feedback: response.error })
+    }
   }
   return (
     <>

@@ -26,8 +26,10 @@ const useUserStore = create(
           try {
             const data = await userService.login(username, password)
             set(() => ({ user: data.user, token: data.token }))
+            return { success: true }
           } catch (error) {
             console.log("Error when logging in:", error.message)
+            return { success: false, error: error.message }
           }
         },
         registerUser: async (username, password) => {

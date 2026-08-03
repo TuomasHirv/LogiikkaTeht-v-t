@@ -1,4 +1,5 @@
 // This file is AI-generated
+process.env.NODE_ENV ??= "test"
 const logger = require("../config/logger")
 const { PostgreSqlContainer } = require("@testcontainers/postgresql")
 const jwt = require("jsonwebtoken")
