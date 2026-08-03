@@ -84,6 +84,10 @@ describe("TruthTableTask", () => {
 
   describe("submitting an answer", () => {
     it("sends the grid, taskId, addAnswer and moduleName to submitTaskAnswer", async () => {
+      useUserStore.setState({
+        user: { id: "test", username: "tester" },
+        token: "fake-token",
+      })
       const submitSpy = vi
         .spyOn(submitAnswerModule, "submitTaskAnswer")
         .mockResolvedValue(undefined)
@@ -101,6 +105,18 @@ describe("TruthTableTask", () => {
       ])
       expect(call.moduleName).toBe(task.moduleName)
       expect(call.addAnswer).toBe(useUserStore.getState().actions.addAnswer)
+    })
+    it("Doesn't show a submit button when not logged in", () => {
+      render(<TruthTableTask task={task} />)
+      expect(screen.queryByRole("button", { name: "Submit" })).toBeNull()
+    })
+    it("Shows submit button when logged in", () => {
+      useUserStore.setState({
+        user: { id: "test", username: "tester" },
+        token: "fake-token",
+      })
+      render(<TruthTableTask task={task} />)
+      expect(screen.queryByRole("button", { name: "Submit" }))
     })
   })
 })

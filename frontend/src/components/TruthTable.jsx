@@ -12,6 +12,7 @@ import { buildSavedAnswerFeedback } from "../hooks/savedAnswer"
 
 const TruthTable = ({ task, start, showSubmitButton = true }) => {
   const { addAnswer } = useUserActions()
+  const user = useUserStore((state) => state.user)
   const savedAnswer = useUserStore((state) => state.answers[task.id])
   const [feedback, setFeedback] = useState(null)
 
@@ -132,7 +133,7 @@ const TruthTable = ({ task, start, showSubmitButton = true }) => {
           )),
         )}
       </div>
-      {showSubmitButton && (
+      {user && showSubmitButton && (
         <div className="text-black absolute -right-14 border-black border-2 rounded hover:bg-green-700">
           <button onClick={submitAnswer}>Submit</button>
         </div>
