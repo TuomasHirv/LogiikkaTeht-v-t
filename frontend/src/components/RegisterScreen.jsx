@@ -1,9 +1,11 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { useUserActions } from "../store"
 import { useSimpleField } from "../hooks"
 import Feedback from "./AnswerFeedback"
 
 const RegisterScreen = () => {
+  const navigate = useNavigate()
   const { registerUser } = useUserActions()
   const [feedback, setFeedback] = useState({})
   const username = useSimpleField("text")
@@ -30,9 +32,17 @@ const RegisterScreen = () => {
       return
     }
 
-    await registerUser(username.inputProps.value, password.inputProps.value)
-    username.reset()
-    password.reset()
+    const response = await registerUser(
+      username.inputProps.value,
+      password.inputProps.value,
+    )
+    if (response.success) {
+      navigate("/")
+      username.reset()
+      password.reset()
+    } else {
+      setFeedback({ correct: false, feedback: response.error })
+    }
   }
   return (
     <>

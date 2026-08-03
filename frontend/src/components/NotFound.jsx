@@ -1,5 +1,4 @@
-import { lazy } from "react"
-const notFoundImage = lazy(() => import("../assets/coolPick.jfif"))
+import notFoundImage from "../assets/coolPick.jfif"
 const NotFound = () => {
   return (
     <div>

@@ -19,7 +19,7 @@ const insertAnswer = async (userId, taskId, answer, correct, feedback) => {
     return returnedAnswer
   } catch (error) {
     logger.error(error, "Error when inserting answer")
-    throw new Error(error)
+    throw new Error("Error when inserting answer", { cause: error })
   }
 }
 
@@ -35,7 +35,7 @@ const getAllUserAnswers = async (userId) => {
     return answers
   } catch (error) {
     logger.error(error, "Error getting user answers")
-    throw new Error(error)
+    throw new Error("Error getting user answers", { cause: error })
   }
 }
 
@@ -56,7 +56,7 @@ const insertTask = async (
     return id
   } catch (error) {
     logger.error(error, "Error inserting task")
-    throw new Error(error)
+    throw new Error("Error inserting task", { cause: error })
   }
 }
 
@@ -71,7 +71,7 @@ const insertUser = async (username, passwordHash) => {
     return newUser
   } catch (error) {
     logger.error(error, "Error inserting user")
-    throw new Error(error)
+    throw new Error("Error inserting user", { cause: error })
   }
 }
 
@@ -152,14 +152,11 @@ const getAnswerAndModule = async (task_id) => {
           moduleName: rows.module_name,
         }
       default:
-        logger.error("Module name isnt in presets:", rows.module_name)
+        logger.error("Module name isnt in presets: %s", rows.module_name)
         throw new Error("Module name isnt in presets:", rows.module_name)
     }
   } catch (error) {
-    if (error.message) {
-      throw new Error(error.message)
-    }
-    throw new Error("Module not in Constants:")
+    throw new Error("Module not in constants", { cause: error })
   }
 }
 
@@ -169,8 +166,8 @@ async function getQuestion(taskId) {
     const response = await db.query(q, [taskId])
     return response.rows
   } catch (error) {
-    logger.error(error, "Error in getQuestion")
-    throw new Error(error)
+    logger.error("Error in getQuestion: %s", error)
+    throw new Error("Error in getQuestion", { cause: error })
   }
 }
 
@@ -181,8 +178,8 @@ async function getMetadata(taskId) {
     logger.debug("AT DBFUNC:", response.rows[0].metadata)
     return response.rows[0].metadata
   } catch (error) {
-    logger.error(error, "Error in getQuestion")
-    throw new Error(error)
+    logger.error("Error in getQuestion: %s", error)
+    throw new Error("Error in getMetadata", { cause: error })
   }
 }
 

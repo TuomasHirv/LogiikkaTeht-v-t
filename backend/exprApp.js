@@ -1,8 +1,9 @@
 const path = require("path")
 
-if (process.env.NODE_ENV !== "test" || !process.env.CI) {
+if (process.env.NODE_ENV !== "test" && !process.env.CI) {
   require("dotenv").config({ path: path.resolve(__dirname, "../.env") })
 }
+const rateLimit = require("express-rate-limit")
 const express = require("express")
 const cors = require("cors")
 const app = express()
@@ -27,6 +28,29 @@ if (process.env.NODE_ENV !== "test") {
       process.exit(1)
     })
 }
+const skipInTests = () => process.env.NODE_ENV === "test"
+
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 300,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many attempts, try again later" },
+  skip: skipInTests,
+})
+app.use(globalLimiter)
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  skipSuccessfulRequests: true,
+  message: { error: "Too many attempts, try again later" },
+  skip: skipInTests,
+})
+
+app.use("/api/users/login", authLimiter)
+app.use("/api/users/register", authLimiter)
+
 app.use("/api/tasks", taskRouter)
 app.use("/api/answers", answerRouter)
 app.use("/api/users", userRouter)

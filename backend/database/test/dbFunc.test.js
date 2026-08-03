@@ -94,7 +94,7 @@ test.before(async () => {
       user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       task_id UUID NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
       submitted_answer JSONB NOT NULL,
-      feedback VARCHAR(50),
+      feedback VARCHAR(100),
       is_correct BOOLEAN NOT NULL,
       completed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
 

@@ -7,7 +7,6 @@ const logger = require("../config/logger")
 
 answerRouter.post("/:id", authenticateToken, async (request, response) => {
   const taskId = request.params.id
-  logger.debug("BACKEND RECEIVED TASK ID:", taskId)
 
   const { answer } = request.body
 
@@ -18,7 +17,6 @@ answerRouter.post("/:id", authenticateToken, async (request, response) => {
   } catch (err) {
     return response.status(404).json({ error: err.message })
   }
-  logger.debug("BEFORE SWITCH:", answerModuleName)
   switch (answerModuleName.moduleName) {
     case MODULENAMES.WORDS_TO_PROPOSITIONS:
       return routerHelper.wordsToPropositionsHelper(

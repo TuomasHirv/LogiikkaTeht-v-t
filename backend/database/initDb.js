@@ -16,7 +16,7 @@ const initDB = async () => {
     logger.info("Answers table initialized")
   } catch (err) {
     logger.error(err, "Initializing tables failed")
-    throw new Error("Failed to initialize tables")
+    throw new Error("Failed to initialize tables", { cause: err })
   }
 }
 
@@ -25,7 +25,7 @@ const createExtensions = async () => {
   try {
     await db.query(extensionsQuery)
   } catch (err) {
-    throw new Error(err.message)
+    throw new Error("Couldn't create extensions", { cause: err })
   }
 }
 
@@ -43,7 +43,7 @@ const createTasksTable = async () => {
   try {
     await db.query(createTableQuery)
   } catch (err) {
-    throw new Error(err.message)
+    throw new Error("Couldn't create tasks table", { cause: err })
   }
 }
 
@@ -59,7 +59,7 @@ const createUsersTable = async () => {
   try {
     await db.query(createUserQuery)
   } catch (err) {
-    throw new Error(err.message)
+    throw new Error("Couldn't create users table", { cause: err })
   }
 }
 
@@ -80,7 +80,7 @@ const createAnswersTable = async () => {
   try {
     await db.query(createAnswersQuery)
   } catch (err) {
-    throw new Error(err.message)
+    throw new Error("Couldn't create answers table", { cause: err })
   }
 }
 

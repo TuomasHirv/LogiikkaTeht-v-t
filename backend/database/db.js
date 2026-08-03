@@ -7,10 +7,13 @@ const pool = new Pool({
   password: process.env.PGPASSWORD,
   port: process.env.PGPORT,
 })
-logger.debug("DB CONFIG USED:", {
-  host: process.env.PGHOST,
-  port: process.env.PGPORT,
-})
+logger.debug(
+  {
+    host: process.env.PGHOST,
+    port: process.env.PGPORT,
+  },
+  "DB CONFIG USED:",
+)
 module.exports = {
   query: (text, params) => pool.query(text, params),
   end: () => pool.end(),

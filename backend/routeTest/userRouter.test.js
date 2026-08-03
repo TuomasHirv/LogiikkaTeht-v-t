@@ -108,14 +108,14 @@ describe("userRouter", () => {
       assert.strictEqual(decoded.userId, user.id)
     })
 
-    test("returns 404 for an unknown username", async () => {
+    test("returns 401 for an unknown username", async () => {
       const response = await userHelperFunc.login(
         app,
         "NotRegistered",
         "password",
       )
-      assert.strictEqual(response.status, 404)
-      assert.strictEqual(response.body.error, "Couldn't find the user")
+      assert.strictEqual(response.status, 401)
+      assert.strictEqual(response.body.error, "No correct user")
     })
 
     test("returns 401 for an incorrect password", async () => {
@@ -126,7 +126,7 @@ describe("userRouter", () => {
         "wrong-password",
       )
       assert.strictEqual(response.status, 401)
-      assert.strictEqual(response.body.error, "incorrect password")
+      assert.strictEqual(response.body.error, "No correct user")
     })
   })
 })

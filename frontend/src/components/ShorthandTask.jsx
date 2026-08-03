@@ -62,7 +62,7 @@ const ShorthandExpansionTask = ({ task }) => {
     answer.splice(0, 1, start)
 
     if (answer.length > SHORTHAND_CHAIN_LINE_LIMITS.max) {
-      setFeedback({ correct: false, text: "Too many expansion steps" })
+      setFeedback({ correct: false, feedback: "Too many expansion steps" })
       return
     }
 

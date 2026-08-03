@@ -79,12 +79,12 @@ userRouter.post("/login", async (request, response) => {
     `
     const result = await db.query(checkUsername, [username])
     if (result.rows.length !== 1) {
-      return response.status(404).json({ error: "Couldn't find the user" })
+      return response.status(401).json({ error: "No correct user" })
     }
     const databaseUser = result.rows[0]
     const match = await bcrypt.compare(password, databaseUser.password_hash)
     if (!match) {
-      return response.status(401).json({ error: "incorrect password" })
+      return response.status(401).json({ error: "No correct user" })
     }
     const token = jwt.sign({ userId: databaseUser.id }, JWT_secret, {
       expiresIn: "7d",

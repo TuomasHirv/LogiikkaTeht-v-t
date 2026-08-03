@@ -33,3 +33,5 @@ Tasks is a simple description of what has been completed and doesn't necessarily
 | 28.07 | Tests: N-deduction validation and parsing. FIxed problems. Added validation for some rules |    6 | Next up wire what we have to front   |
 | 29.07 |      Hooked simple N-deduction tasks to front. Tests + fixes. New instruction screen       |    4 | Still need 2 rules. And more tasks   |
 | 30.7  |           N-deduction is complete. 2 new rules. Tasks added. Fixed random stuff            |    7 | Later refractored answerRouterHelper |
+| 01.08 |          Project is mostly getting done. Refractoring alot of things to be better          |    4 |                                      |
+| 03.08 | Fixed alot more things Linted the code mostly and added rate limiting Risky at this stage  |    5 | Can't fix everything sadly           |

@@ -13,7 +13,6 @@ import RegisterScreen from "./components/RegisterScreen"
 import InstructionScreen from "./components/InstructionScreen"
 import UserPage from "./components/UserScreen"
 import ErrorScreen from "./components/ErrorScreen"
-import NaturalDeductionTask from "./components/NaturalDeductionTask"
 
 function App() {
   const token = useUserStore((state) => state.token)
@@ -41,7 +40,6 @@ function App() {
               element={<InstructionScreen />}
             />
             <Route path="/userpage" element={<UserPage />} />
-            <Route path="/testing" element={<NaturalDeductionTask />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>

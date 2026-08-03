@@ -36,10 +36,10 @@ const LoginScreen = () => {
       username.inputProps.value,
       password.inputProps.value,
     )
-    if (response.accepted) {
+    if (response.success) {
+      navigate("/")
       username.reset()
       password.reset()
-      navigate("/")
     } else {
       setFeedback({ correct: false, feedback: response.error })
     }

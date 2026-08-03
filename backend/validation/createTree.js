@@ -161,14 +161,13 @@ function tokenize(input) {
   return tokens
 }
 
-function createTree(input, silent = false) {
+function createTree(input) {
   try {
     const tokens = tokenize(input)
     return parse(tokens)
   } catch (error) {
-    if (!silent) {
-      logger.error(error, "Error when creating tree")
-    }
+    logger.error(error, "Couldn't create tree")
+    return
   }
 }
 
