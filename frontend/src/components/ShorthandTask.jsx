@@ -91,6 +91,7 @@ const ShorthandExpansionTask = ({ task }) => {
                 index={index}
                 change={lines.change}
                 fieldType={useField}
+                disableFirstLine={true}
               />
             </React.Fragment>
           ))}

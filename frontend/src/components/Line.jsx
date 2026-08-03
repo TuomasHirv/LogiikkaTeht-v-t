@@ -1,9 +1,3 @@
-import {
-  useField,
-  useNaturalDeductionField,
-  useResolutionField,
-} from "../hooks"
-
 const Line = ({
   initValue,
   index,
@@ -14,14 +8,7 @@ const Line = ({
 }) => {
   const field = fieldType("text", initValue, index)
   if (index === 0 && disableFirstLine) {
-    return (
-      <div className="flex bg-amber-100 text-black">
-        <span className="inline-block w-5 text-center bg-gray-500">
-          {index}:
-        </span>{" "}
-        {initValue}{" "}
-      </div>
-    )
+    return <div className="flex bg-amber-100 text-black">{initValue}</div>
   }
   return (
     <div className="flex bg-white text-black">
