@@ -41,7 +41,7 @@ const useUserStore = create(
             return { success: true }
           } catch (error) {
             console.log("Error when registering in:", error)
-            return { success: false, error: "whoops" }
+            return { success: false, error: error.message }
           }
         },
         logoutUser: () => set(() => ({ user: null, token: null, answers: {} })),
