@@ -67,10 +67,10 @@ userRouter.post("/login", async (request, response) => {
       .json({ error: "password not of the right type" })
   }
 
-  if (username.lenght < 6) {
+  if (username.length < 6) {
     return response.status(401).json({ error: "Username is too short" })
   }
-  if (password.lenght < 6) {
+  if (password.length < 6) {
     return response.status(401).json({ error: "password is too short" })
   }
   try {

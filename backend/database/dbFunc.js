@@ -166,7 +166,7 @@ async function getQuestion(taskId) {
     const response = await db.query(q, [taskId])
     return response.rows
   } catch (error) {
-    logger.error("Error in getQuestion: %s", error)
+    logger.error(error, "Error in getQuestion")
     throw new Error("Error in getQuestion", { cause: error })
   }
 }
@@ -178,7 +178,7 @@ async function getMetadata(taskId) {
     logger.debug("AT DBFUNC:", response.rows[0].metadata)
     return response.rows[0].metadata
   } catch (error) {
-    logger.error("Error in getQuestion: %s", error)
+    logger.error(error, "Error in getMetadata: %s")
     throw new Error("Error in getMetadata", { cause: error })
   }
 }

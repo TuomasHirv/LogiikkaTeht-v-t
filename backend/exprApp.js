@@ -48,12 +48,9 @@ const authLimiter = rateLimit({
   skip: skipInTests,
 })
 
-app.use("/api/users/login", authLimiter)
-app.use("/api/users/register", authLimiter)
-
 app.use("/api/tasks", taskRouter)
 app.use("/api/answers", answerRouter)
-app.use("/api/users", userRouter)
+app.use("/api/users", authLimiter, userRouter)
 app.use(notFound)
 app.use(errorHandler)
 module.exports = app

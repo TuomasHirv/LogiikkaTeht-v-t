@@ -41,7 +41,10 @@ const RegisterScreen = () => {
       username.reset()
       password.reset()
     } else {
-      setFeedback({ correct: false, feedback: response.error })
+      setFeedback({
+        correct: false,
+        feedback: response.error.response.data.error,
+      })
     }
   }
   return (
