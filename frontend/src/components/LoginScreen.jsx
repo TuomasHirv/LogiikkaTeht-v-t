@@ -5,6 +5,7 @@ import { useSimpleField } from "../hooks"
 import Feedback from "./AnswerFeedback"
 
 const LoginScreen = () => {
+  const navigate = useNavigate()
   const { loginUser } = useUserActions()
   const [feedback, setFeedback] = useState({})
   const username = useSimpleField("text")
