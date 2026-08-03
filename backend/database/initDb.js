@@ -16,6 +16,7 @@ const initDB = async () => {
     logger.info("Answers table initialized")
   } catch (err) {
     logger.error(err, "Initializing tables failed")
+    throw new Error("Failed to initialize tables")
   }
 }
 

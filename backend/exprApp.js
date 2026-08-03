@@ -19,11 +19,14 @@ const logger = require("./config/logger")
 app.use(pinoHttp({ logger }))
 app.use(cors(corsOptions))
 app.use(express.json())
-
-if (process.env.DB_ALREADY_INITIALIZED !== "true") {
+if (process.env.NODE_ENV !== "test") {
   initDB()
+    .then(() => logger.info("DB initialized"))
+    .catch((error) => {
+      logger.error(error, "DB init failed")
+      process.exit(1)
+    })
 }
-
 app.use("/api/tasks", taskRouter)
 app.use("/api/answers", answerRouter)
 app.use("/api/users", userRouter)

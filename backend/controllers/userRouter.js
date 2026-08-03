@@ -9,6 +9,17 @@ const dbFunc = require("../database/dbFunc.js")
 
 userRouter.post("/", async (request, response) => {
   const { username, password } = request.body
+  if (!(typeof username === "string" && username)) {
+    return response
+      .status(401)
+      .json({ error: "username not of the right type" })
+  }
+  if (!(typeof password === "string" && password)) {
+    return response
+      .status(401)
+      .json({ error: "password not of the right type" })
+  }
+
   const normUsername = normalize(username)
   const normPassword = normalize(password)
   if (normUsername.length < 6) {
@@ -45,10 +56,21 @@ userRouter.post("/", async (request, response) => {
 
 userRouter.post("/login", async (request, response) => {
   const { username, password } = request.body
-  if (username < 6) {
+  if (!(typeof username === "string" && username)) {
+    return response
+      .status(401)
+      .json({ error: "username not of the right type" })
+  }
+  if (!(typeof password === "string" && password)) {
+    return response
+      .status(401)
+      .json({ error: "password not of the right type" })
+  }
+
+  if (username.lenght < 6) {
     return response.status(401).json({ error: "Username is too short" })
   }
-  if (password < 6) {
+  if (password.lenght < 6) {
     return response.status(401).json({ error: "password is too short" })
   }
   try {

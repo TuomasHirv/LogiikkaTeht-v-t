@@ -54,7 +54,6 @@ const setupTestDb = async () => {
   // directly (and awaited) so the schema is guaranteed ready before tests run.
   const initDB = require("../database/initDb")
   await initDB()
-  process.env.DB_ALREADY_INITIALIZED = "true"
 
   // Required after the PG* env vars are set so it targets the container.
   // DB_ALREADY_INITIALIZED tells it to skip its own redundant initDB() call.
