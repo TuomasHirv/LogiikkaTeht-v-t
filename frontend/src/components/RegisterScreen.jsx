@@ -43,7 +43,7 @@ const RegisterScreen = () => {
     } else {
       setFeedback({
         correct: false,
-        feedback: response.error.response.data.error,
+        feedback: "Error occurred. Maybe the account is taken?",
       })
     }
   }

@@ -43,7 +43,7 @@ const LoginScreen = () => {
     } else {
       setFeedback({
         correct: false,
-        feedback: response.error.response.data.error,
+        feedback: response.error,
       })
     }
   }
