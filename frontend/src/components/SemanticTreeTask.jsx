@@ -8,6 +8,7 @@ import useUserStore, { useUserActions } from "../store"
 const SemanticTreeTask = ({ task, showSubmitButton = true }) => {
   const { addAnswer } = useUserActions()
   const savedAnswer = useUserStore((state) => state.answers[task.id])
+  const user = useUserStore((state) => state.user)
   const [feedback, setFeedback] = useState(null)
   const createInitialRoot = () => ({
     text: task.question,
@@ -56,7 +57,7 @@ const SemanticTreeTask = ({ task, showSubmitButton = true }) => {
         >
           Reset
         </button>
-        {showSubmitButton && (
+        {user && showSubmitButton && (
           <button
             type="button"
             className="border-black border-2 text-black rounded bg-green-400 hover:bg-green-700 ml-3.5"

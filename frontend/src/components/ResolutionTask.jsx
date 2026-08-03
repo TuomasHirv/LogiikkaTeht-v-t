@@ -13,6 +13,7 @@ const ResolutionTask = ({ task }) => {
   const { addAnswer } = useUserActions()
   const [feedback, setFeedback] = useState(null)
   const savedAnswer = useUserStore((state) => state.answers[task.id])
+  const user = useUserStore((state) => state.user)
   const { ...clauses } = useLineList([""], RESOLUTION_LINE_LIMITS)
 
   const parseAnswer = (x) => x
@@ -88,9 +89,11 @@ const ResolutionTask = ({ task }) => {
               -
             </button>
           )}
-          <div className="text-black ml-auto border-black border-2 rounded bg-green-700 hover:bg-green-400">
-            <button onClick={submitAnswer}>Submit</button>
-          </div>
+          {user && (
+            <div className="text-black ml-auto border-black border-2 rounded bg-green-700 hover:bg-green-400">
+              <button onClick={submitAnswer}>Submit</button>
+            </div>
+          )}
         </div>
       </div>
       <div>

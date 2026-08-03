@@ -10,6 +10,7 @@ import useUserStore, { useUserActions } from "../store"
 const NormalFormTask = ({ task }) => {
   const { addAnswer } = useUserActions()
   const savedAnswer = useUserStore((state) => state.answers[task.id])
+  const user = useUserStore((state) => state.user)
   const normalFormInput = useField("text")
   const [feedback, setFeedback] = useState(null)
 
@@ -56,12 +57,14 @@ const NormalFormTask = ({ task }) => {
           {...normalFormInput.inputProps}
           className="bg-white text-black border-black border rounded px-3 py-2 text-lg min-w-md"
         />
-        <button
-          type="submit"
-          className="border-black border-2 rounded bg-green-700 hover:bg-green-400 text-black px-2 py-1"
-        >
-          Submit answer
-        </button>
+        {user && (
+          <button
+            type="submit"
+            className="border-black border-2 rounded bg-green-700 hover:bg-green-400 text-black px-2 py-1"
+          >
+            Submit answer
+          </button>
+        )}
       </form>
       <AnswerFeedback feedback={feedback} />
     </div>

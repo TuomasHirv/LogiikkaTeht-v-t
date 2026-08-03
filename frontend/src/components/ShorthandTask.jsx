@@ -30,6 +30,7 @@ const ShorthandExpansionTask = ({ task }) => {
   const endGoal = task?.metadata?.end_goal
 
   const savedAnswer = useUserStore((state) => state.answers[task.id])
+  const user = useUserStore((state) => state.user)
   const [feedback, setFeedback] = useState(null)
   const lines = useLineList([start, ""], SHORTHAND_CHAIN_LINE_LIMITS)
 
@@ -96,9 +97,11 @@ const ShorthandExpansionTask = ({ task }) => {
             </React.Fragment>
           ))}
         </div>
-        <div className="text-black absolute -right-14 border-black border-2 rounded bg-green-700 hover:bg-green-400">
-          <button onClick={submitAnswer}>Submit</button>
-        </div>
+        {user && (
+          <div className="text-black absolute -right-14 border-black border-2 rounded bg-green-700 hover:bg-green-400">
+            <button onClick={submitAnswer}>Submit</button>
+          </div>
+        )}
         <button
           onClick={resetLines}
           className="absolute right-0 bg-red-500 text-black border-black border-2 rounded hover:bg-red-700"

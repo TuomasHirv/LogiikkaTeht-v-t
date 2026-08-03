@@ -9,6 +9,7 @@ const MultipleChoiseTask = ({ task }) => {
   const { addAnswer } = useUserActions()
   const [answer, setAnswer] = useState("")
   const [feedback, setFeedback] = useState(null)
+  const user = useUserStore((state) => state.user)
   const savedAnswer = useUserStore((state) => state.answers[task.id])
 
   const parseAnswer = (x) => x
@@ -22,14 +23,21 @@ const MultipleChoiseTask = ({ task }) => {
   })
 
   const submitAnswer = async (event, submitted) => {
-    await submitTaskAnswer({
-      event,
-      taskId: task.id,
-      submittedAnswer: submitted,
-      addAnswer,
-      setFeedback,
-      moduleName: task.moduleName,
-    })
+    if (user) {
+      await submitTaskAnswer({
+        event,
+        taskId: task.id,
+        submittedAnswer: submitted,
+        addAnswer,
+        setFeedback,
+        moduleName: task.moduleName,
+      })
+    } else {
+      setFeedback({
+        correct: false,
+        feeback: "You need to be logged to submit!",
+      })
+    }
   }
   return (
     <div className="task-card">

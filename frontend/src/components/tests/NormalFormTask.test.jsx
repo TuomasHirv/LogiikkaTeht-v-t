@@ -52,9 +52,7 @@ describe("NormalFormTask", () => {
           task={{ ...task, metadata: { start: task.metadata.start } }}
         />,
       )
-      expect(
-        screen.queryByText(task.metadata.end_goal),
-      ).not.toBeInTheDocument()
+      expect(screen.queryByText(task.metadata.end_goal)).not.toBeInTheDocument()
     })
   })
 
@@ -92,6 +90,8 @@ describe("NormalFormTask", () => {
             module_name: task.moduleName,
           },
         },
+        user: { id: "test", username: "tester" },
+        token: "fake-token",
       })
 
       render(<NormalFormTask task={task} />)
@@ -110,6 +110,10 @@ describe("NormalFormTask", () => {
     })
 
     it("leaves its own input empty when the store has no saved answer", () => {
+      useUserStore.setState({
+        user: { id: "test", username: "tester" },
+        token: "fake-token",
+      })
       render(<NormalFormTask task={task} />)
 
       const submitButton = screen.getByRole("button", {
@@ -122,6 +126,10 @@ describe("NormalFormTask", () => {
 
   describe("submitting an answer", () => {
     it("sends the typed answer, taskId, addAnswer and moduleName to submitTaskAnswer", async () => {
+      useUserStore.setState({
+        user: { id: "test", username: "tester" },
+        token: "fake-token",
+      })
       const submitSpy = vi
         .spyOn(submitAnswerModule, "submitTaskAnswer")
         .mockResolvedValue(undefined)
@@ -141,6 +149,18 @@ describe("NormalFormTask", () => {
       expect(call.submittedAnswer).toBe("P ∨ Q")
       expect(call.moduleName).toBe(task.moduleName)
       expect(call.addAnswer).toBe(useUserStore.getState().actions.addAnswer)
+    })
+    it("Doesn't show a submit button when not logged in", () => {
+      render(<NormalFormTask task={task} />)
+      expect(screen.queryByRole("button", { name: "Submit" })).toBeNull()
+    })
+    it("Shows submit button when logged in", () => {
+      useUserStore.setState({
+        user: { id: "test", username: "tester" },
+        token: "fake-token",
+      })
+      render(<NormalFormTask task={task} />)
+      expect(screen.queryByRole("button", { name: "Submit" }))
     })
   })
 })

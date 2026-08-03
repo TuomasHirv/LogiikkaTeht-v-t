@@ -99,6 +99,10 @@ describe("SemanticTreeTask", () => {
 
   describe("submitting an answer", () => {
     it("sends the current root and taskId to submitTaskAnswer, without a moduleName", async () => {
+      useUserStore.setState({
+        user: { id: "test", username: "tester" },
+        token: "fake-token",
+      })
       const submitSpy = vi
         .spyOn(submitAnswerModule, "submitTaskAnswer")
         .mockResolvedValue(undefined)
@@ -117,6 +121,18 @@ describe("SemanticTreeTask", () => {
       })
       expect(call.addAnswer).toBe(useUserStore.getState().actions.addAnswer)
       expect(call.moduleName).toBeUndefined()
+    })
+    it("Doesn't show a submit button when not logged in", () => {
+      render(<SemanticTreeTask task={task} />)
+      expect(screen.queryByRole("button", { name: "Submit" })).toBeNull()
+    })
+    it("Shows submit button when logged in", () => {
+      useUserStore.setState({
+        user: { id: "test", username: "tester" },
+        token: "fake-token",
+      })
+      render(<SemanticTreeTask task={task} />)
+      expect(screen.queryByRole("button", { name: "Submit" }))
     })
   })
 })

@@ -101,6 +101,10 @@ describe("TaskItem", () => {
 
   describe("submitting an answer", () => {
     it("sends the typed answer, taskId, addAnswer and moduleName to submitTaskAnswer", async () => {
+      useUserStore.setState({
+        user: { id: "test", username: "tester" },
+        token: "fake-token",
+      })
       const submitSpy = vi
         .spyOn(submitAnswerModule, "submitTaskAnswer")
         .mockResolvedValue(undefined)
@@ -117,6 +121,18 @@ describe("TaskItem", () => {
       expect(call.moduleName).toBe(task.moduleName)
       expect(call.addAnswer).toBe(useUserStore.getState().actions.addAnswer)
       expect(typeof call.setFeedback).toBe("function")
+    })
+    it("Doesn't show a submit button when not logged in", () => {
+      render(<TaskItem task={task} />)
+      expect(screen.queryByRole("button", { name: "Submit" })).toBeNull()
+    })
+    it("Shows submit button when logged in", () => {
+      useUserStore.setState({
+        user: { id: "test", username: "tester" },
+        token: "fake-token",
+      })
+      render(<TaskItem task={task} />)
+      expect(screen.queryByRole("button", { name: "Submit" }))
     })
   })
 })

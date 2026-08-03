@@ -100,6 +100,10 @@ describe("EliminationTask", () => {
       const submitSpy = vi
         .spyOn(submitAnswerModule, "submitTaskAnswer")
         .mockResolvedValue(undefined)
+      useUserStore.setState({
+        user: { id: "test", username: "tester" },
+        token: "fake-token",
+      })
       const user = userEvent.setup()
 
       render(<EliminationTask task={task} />)
@@ -114,6 +118,18 @@ describe("EliminationTask", () => {
       expect(call.submittedAnswer).toEqual([task.question, "Q"])
       expect(call.moduleName).toBe(task.moduleName)
       expect(call.addAnswer).toBe(useUserStore.getState().actions.addAnswer)
+    })
+    it("Doesn't show a submit button when not logged in", () => {
+      render(<EliminationTask task={task} />)
+      expect(screen.queryByRole("button", { name: "Submit" })).toBeNull()
+    })
+    it("Shows submit button when logged in", () => {
+      useUserStore.setState({
+        user: { id: "test", username: "tester" },
+        token: "fake-token",
+      })
+      render(<EliminationTask task={task} />)
+      expect(screen.queryByRole("button", { name: "Submit" }))
     })
   })
 })

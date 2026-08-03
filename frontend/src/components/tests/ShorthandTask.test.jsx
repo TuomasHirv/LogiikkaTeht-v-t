@@ -96,6 +96,10 @@ describe("ShorthandTask", () => {
 
   describe("submitting an answer", () => {
     it("sends the completed lines, taskId, addAnswer and moduleName to submitTaskAnswer", async () => {
+      useUserStore.setState({
+        user: { id: "test", username: "tester" },
+        token: "fake-token",
+      })
       const submitSpy = vi
         .spyOn(submitAnswerModule, "submitTaskAnswer")
         .mockResolvedValue(undefined)
@@ -113,6 +117,18 @@ describe("ShorthandTask", () => {
       expect(call.submittedAnswer).toEqual([task.question, "(p0 → p1)"])
       expect(call.moduleName).toBe(task.moduleName)
       expect(call.addAnswer).toBe(useUserStore.getState().actions.addAnswer)
+    })
+    it("Doesn't show a submit button when not logged in", () => {
+      render(<ShorthandTask task={task} />)
+      expect(screen.queryByRole("button", { name: "Submit" })).toBeNull()
+    })
+    it("Shows submit button when logged in", () => {
+      useUserStore.setState({
+        user: { id: "test", username: "tester" },
+        token: "fake-token",
+      })
+      render(<ShorthandTask task={task} />)
+      expect(screen.queryByRole("button", { name: "Submit" }))
     })
   })
 })

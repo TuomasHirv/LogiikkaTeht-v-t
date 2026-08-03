@@ -15,6 +15,7 @@ const EliminationTask = ({ task }) => {
   const start = task?.question || ""
   const taskId = task?.id
   const savedAnswer = useUserStore((state) => state.answers[taskId])
+  const user = useUserStore((state) => state.user)
   const [feedback, setFeedback] = useState(null)
   const { ...propositions } = useLineList([start, ""], ELIMINATION_LINE_LIMITS)
 
@@ -80,9 +81,11 @@ const EliminationTask = ({ task }) => {
             </React.Fragment>
           ))}
         </div>
-        <div className="text-black absolute -right-14 border-black border-2 rounded bg-green-700 hover:bg-green-400">
-          <button onClick={submitAnswer}>Submit</button>
-        </div>
+        {user && (
+          <div className="text-black absolute -right-14 border-black border-2 rounded bg-green-700 hover:bg-green-400">
+            <button onClick={submitAnswer}>Submit</button>
+          </div>
+        )}
         <button
           onClick={resetPropositions}
           className="absolute right-0  bg-red-500 text-black border-black border-2 rounded hover:bg-red-700"

@@ -88,6 +88,10 @@ describe("ResolutionTask", () => {
 
   describe("submitting an answer", () => {
     it("sends the completed clauses, taskId, addAnswer and moduleName to submitTaskAnswer", async () => {
+      useUserStore.setState({
+        user: { id: "test", username: "tester" },
+        token: "fake-token",
+      })
       const submitSpy = vi
         .spyOn(submitAnswerModule, "submitTaskAnswer")
         .mockResolvedValue(undefined)
@@ -117,6 +121,10 @@ describe("ResolutionTask", () => {
     })
 
     it("does not call submitTaskAnswer when below the minimum line count", async () => {
+      useUserStore.setState({
+        user: { id: "test", username: "tester" },
+        token: "fake-token",
+      })
       const submitSpy = vi
         .spyOn(submitAnswerModule, "submitTaskAnswer")
         .mockResolvedValue(undefined)
@@ -126,6 +134,18 @@ describe("ResolutionTask", () => {
       await user.click(screen.getByRole("button", { name: "Submit" }))
 
       expect(submitSpy).not.toHaveBeenCalled()
+    })
+    it("Doesn't show a submit button when not logged in", () => {
+      render(<ResolutionTask task={task} />)
+      expect(screen.queryByRole("button", { name: "Submit" })).toBeNull()
+    })
+    it("Shows submit button when logged in", () => {
+      useUserStore.setState({
+        user: { id: "test", username: "tester" },
+        token: "fake-token",
+      })
+      render(<ResolutionTask task={task} />)
+      expect(screen.queryByRole("button", { name: "Submit" }))
     })
   })
 })

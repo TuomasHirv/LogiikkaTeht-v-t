@@ -11,6 +11,7 @@ const TaskItem = ({ task }) => {
   const answerInput = useField("text")
   const [feedback, setFeedback] = useState(null)
   const savedAnswer = useUserStore((state) => state.answers[task.id])
+  const user = useUserStore((state) => state.user)
 
   const parseAnswer = (x) => {
     return {
@@ -50,13 +51,15 @@ const TaskItem = ({ task }) => {
       </div>
       <form onSubmit={submitAnswer}>
         <input {...answerInput.inputProps} className="bg-white text-black" />
-        <button
-          type="submit"
-          className="border-black border-2 rounded hover:bg-green-700"
-        >
-          {" "}
-          Submit Answer{" "}
-        </button>
+        {user && (
+          <button
+            type="submit"
+            className="border-black border-2 rounded hover:bg-green-700"
+          >
+            {" "}
+            Submit Answer{" "}
+          </button>
+        )}
       </form>
       <AnswerFeedback feedback={feedback} />
     </div>
