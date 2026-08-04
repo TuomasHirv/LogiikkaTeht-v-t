@@ -17,7 +17,7 @@
 ## Consistent code validation
 
 - In all of my excitement and speed I often made fixes and features that would regress in other ways.
-- In fact the best features I made were the opposite of this: validation directory is the opposite of this creating incremental changes that is tested before more is written.
+- In fact the best features I made were the opposite of this: validation directory was made by creating incremental changes that were tested before more was written.
 - Fixing bugs should always include new strict test cases that directly test the bug.
 - This is also a habit I picked up on later at the same instance as that 'lenght' typo.
 
