@@ -30,5 +30,6 @@
 # Looking forward
 
 - If I had to add one thing to this it would be better accessibility. This project doesn't include any labels that could help screen readers and such.
+- I would also add localisation for language and make it uniform.
 - Consistently building features from individual functions that can be Validated and tested.
 - While i did spend the most of this document on weaknesses it is important to note that it was a large piece of work and it's deployed and working.
