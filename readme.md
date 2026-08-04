@@ -29,3 +29,6 @@ https://logiikka-teht-v-t.vercel.app/
 - Some files and parts of files are AI-generated because I think it's a valuable tool.
 - I have marked files, and sometimes individual functions, as AI-generated. I do this if I feel that a large portion of the code is AI-generated.
 - AI has mostly been used for code review and for looking up information.
+
+
+# Note that because this is hosted as a free service the first request you take might take 30s this is because RENDER has to spin up the backend.
