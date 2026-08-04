@@ -58,7 +58,7 @@ const setupTestDb = async () => {
   await initDB()
 
   // Required after the PG* env vars are set so it targets the container.
-  // DB_ALREADY_INITIALIZED tells it to skip its own redundant initDB() call.
+  // process.env.NODE_ENV being test tells it to skip its own redundant initDB() call.
   app = require("../exprApp")
 
   return { app, db }

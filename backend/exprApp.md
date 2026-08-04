@@ -1,0 +1,5 @@
+- exprApp.js holds the express setup used for this backend.
+- For local testing i use dotenv config that is overwritten in production.
+- If NODE_ENV isn't "test" it runs initDB. This function isn't awaited, so if it does crash it will do it after it has started to run. This is fine for now but not ideal.
+- I use a rateLimit on all of my routes but a stricter one on /api/user. Since there a user can maliciously test for correct login information.
+- After setting that up it plugs the answerRouters in to the app like in the course.
