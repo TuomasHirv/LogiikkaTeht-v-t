@@ -34,26 +34,30 @@ function toTokens(proposition, shorthandSymbols) {
 function validateDifference(prevTokens, currTokens, shorthands) {
   let i = 0
   let j = 0
+  let transforms = 0
   while (i < prevTokens.length) {
+    const prevToken = prevTokens[i]
+    const currToken = currTokens[j]
     if (j >= currTokens.length) {
       throw new Error("Current tokens ended too early")
     }
-    if (prevTokens[i] === currTokens[j]) {
+    if (prevToken === currToken) {
       i++
       j++
       continue
     }
-    if (prevTokens[i] in shorthands) {
-      j = validateShorthandExpansion(shorthands[prevTokens[i]], currTokens, j)
+    if (prevToken in shorthands) {
+      transforms++
+      j = validateShorthandExpansion(shorthands[prevToken], currTokens, j)
       i++
       continue
     }
-    throw new Error(`Token not in shorthands ${prevTokens[i]}`)
+    throw new Error(`Token not in shorthands ${prevToken}`)
   }
   if (j !== currTokens.length) {
     throw new Error("currTokens was too long")
   }
-  return true
+  return transforms === 1 || transforms === 0
 }
 
 function validateShorthandExpansion(shorthandDefinition, currTokens, index) {
@@ -81,7 +85,13 @@ function validatePropositionList(userList, shorthands) {
   let last = toTokens(userList[i - 1], keys)
   while (i < userList.length) {
     const curr = toTokens(userList[i], keys)
-    validateDifference(last, curr, shorthands)
+    const accepted = validateDifference(last, curr, shorthands)
+    if (!accepted) {
+      return {
+        accepted: false,
+        feedback: `Change from ${i - 1} to ${i} not accepted`,
+      }
+    }
     last = curr
     i++
   }

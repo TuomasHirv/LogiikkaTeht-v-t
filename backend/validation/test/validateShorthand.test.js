@@ -82,13 +82,65 @@ describe("Shorthand validation tests", () => {
     )
   })
 
+  test("validatePropositionList accepts long valid proof", () => {
+    const shorthands = {
+      A: ["p0", "∧", "C"],
+      B: ["p1"],
+      C: ["p2"],
+    }
+
+    assert.equal(
+      validatePropositionList(
+        ["A ∧ B", "p0 ∧ C ∧ B", "p0 ∧ p2 ∧ B", "p0 ∧ p2 ∧ p1"],
+        shorthands,
+      ).accepted,
+      true,
+    )
+  })
+
+  test("validatePropositionList rejects double expansion", () => {
+    const shorthands = {
+      A: ["p0", "∧", "C"],
+      B: ["p1"],
+      C: ["p2"],
+    }
+    const validated = validatePropositionList(
+      ["A ∧ B", "p0 ∧ C ∧ p1", "p0 ∧ p2 ∧ p1"],
+      shorthands,
+    )
+    assert.equal(validated.accepted, false)
+    assert.equal(validated.feedback, "Change from 0 to 1 not accepted")
+  })
+
   test("validatePropositionList rejects proof ending with shorthand", () => {
     const shorthands = {
       A: ["p0"],
     }
 
-    assert.throws(() =>
-      assert.equal(validatePropositionList(["p0", "A"], shorthands), false),
+    assert.throws(() => validatePropositionList(["p0", "A"], shorthands))
+  })
+  test("Rejects proof where 2 shorthands are opened at once", () => {
+    const shorthands = {
+      A: ["p0"],
+      B: ["p1"],
+    }
+    assert.equal(
+      validateDifference(["A", "∧", "B"], ["p0", "∧", "p1"], shorthands),
+      false,
+    )
+  })
+  test("accepts proof where shorthands are opened to many parts at once", () => {
+    const shorthands = {
+      A: ["p0", "∧", "A"],
+      B: ["p1"],
+    }
+    assert.equal(
+      validateDifference(
+        ["A", "∧", "B"],
+        ["p0", "∧", "A", "∧", "B"],
+        shorthands,
+      ),
+      true,
     )
   })
 })

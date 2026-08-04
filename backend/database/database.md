@@ -1,7 +1,7 @@
 # Database
 
 - Previously only used env vars of the docker container.
-- After hosting the connection string is instead preferred for opening a pool. (if you comment out the connection string it works as before.)
+- After hosting the connection string is instead preferred for opening a pool.
 - It returns a query option and an end option mostly for tests that have to close the pool at the end.
 
 - I decided to use a postgres docker database (for development) since i am used to it and enjoy it more than relational databases.
