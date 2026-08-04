@@ -35,3 +35,7 @@ Tasks is a simple description of what has been completed and doesn't necessarily
 | 30.7  |           N-deduction is complete. 2 new rules. Tasks added. Fixed random stuff            |    7 | Later refractored answerRouterHelper |
 | 01.08 |          Project is mostly getting done. Refractoring alot of things to be better          |    4 |                                      |
 | 03.08 | Fixed alot more things Linted the code mostly and added rate limiting Risky at this stage  |    5 | Can't fix everything sadly           |
+
+# At that point I reached the 175h mark.
+After it I have done about 5 h of more clean up and hosting work.
+# Total working time is about  179h
