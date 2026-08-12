@@ -7,8 +7,7 @@ const partInstructions = {
     "**OR** statement is represented the by symbol **∨**. If i say 'i either overslept or i am early' it could be represented as",
     "**NOT** statement is represented the by symbol **¬**. I could also say 'i either overslept or i am not late' representing it as",
     "An **IF-THEN** conditional statement is represented by the arrow symbol **→**. If i want to say 'If i oversleep i will be late' i could write",
-    `**IF AND ONLY IF** relationship uses the double-arrow symbol **↔**. This asserts that two statements are both true or both false at the sametime. 
-      If i say 'I am only late when i oversleep and i only oversleep when i am late' i could write`,
+    `**IF AND ONLY IF** relationship uses the double-arrow symbol **↔**. This asserts that two statements are both true or both false at the sametime. If i say 'I am only late when i oversleep and i only oversleep when i am late' i could write`,
     "**Parenthesis change the structure of the proposition.** By adding or changing them we also change the meaning. 'I am either early or i have overslept and i am late'",
     "If i swap the parenthesis we get this. *Can you see why it doesn't make sense?*",
   ],
