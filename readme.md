@@ -26,9 +26,8 @@ https://logiikka-teht-v-t.vercel.app/
 ### Time tracking can be found in the TimeTable.md section
 ### Statement on the use of AI
 - No file is entirely AI-generated. This is because I don't trust code that I don't understand at all.
-- Some files and parts of files are AI-generated because I think it's a valuable tool.
-- I have marked files, and sometimes individual functions, as AI-generated. I do this if I feel that a large portion of the code is AI-generated.
-- AI has mostly been used for code review and for looking up information.
+- I have marked files, and sometimes individual functions (Somewhat generously), as AI-generated. I do this if I feel that a large portion of the code is AI-generated.
+- Most of AI use has been for reviewing code and searching information.
 
 
 # Note that because this is hosted as a free service the first request you take might take 30s this is because RENDER has to spin up the backend.

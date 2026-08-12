@@ -4,6 +4,7 @@ import { taskInstructions } from "../content/taskInstructions"
 import { ROUTES, MODULE_NAMES } from "../constants"
 
 import { taskService } from "../services/taskService"
+import LoadingScreen, { Spinner } from "./LoadingScreen"
 const TaskItem = lazy(() => import("./TaskItem"))
 const SubFormulaTask = lazy(() => import("./SubFormulaTask"))
 const TruthTableTask = lazy(() => import("./TruthTableTask"))
@@ -20,6 +21,7 @@ const TaskScreen = () => {
   const nextSection = Number(section) + 1
   const [tasks, setTasks] = useState([])
   const [loading, setLoading] = useState(true)
+  const [loadingError, setloadingError] = useState(false)
   const [continued, setContinued] = useState(false)
   useEffect(() => {
     function effectFunc() {
@@ -45,14 +47,15 @@ const TaskScreen = () => {
         setTasks(data)
       } catch (err) {
         console.log("Failed to fetch tasks:", err)
+        setloadingError(true)
       } finally {
         setLoading(false)
       }
     }
     fetchTasks()
   }, [moduleName])
-  if (loading) {
-    return <h1>Module: {moduleName} </h1>
+  if (loading || loadingError) {
+    return <LoadingScreen failed={loadingError} />
   }
   const getTaskComponent = () => {
     switch (moduleName) {
@@ -89,11 +92,14 @@ const TaskScreen = () => {
   const TaskComponent = getTaskComponent()
   return (
     <div className="max-w-5xl mx-auto p-6 bg-white shadow rounded-lg border border-gray-200 max-h-[90vh] overflow-y-auto">
-      <h2 className="bg-white rounded text-black w-fit text-4xl">
+      <h2 role="title" className="bg-white rounded text-black w-fit text-4xl">
         {moduleName}
       </h2>
 
-      <p className="text-black w-fit text-xl border-2 border-dotted">
+      <p
+        role="instruction"
+        className="text-black w-fit text-xl border-2 border-dotted"
+      >
         {taskInstructions[moduleName]?.instruction ?? "No instructions found."}
       </p>
 
@@ -107,9 +113,7 @@ const TaskScreen = () => {
               : "bg-gray-500 p-3 border-black border-2"
           }
         >
-          <Suspense
-            fallback={<div className="text-black">Loading task...</div>}
-          >
+          <Suspense fallback={<Spinner />}>
             <TaskComponent task={task} />
           </Suspense>
         </div>
