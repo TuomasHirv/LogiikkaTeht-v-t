@@ -1,9 +1,9 @@
 import { useState } from "react"
-import SemanticTreeNode from "./SemanticTreeNode"
-import { submitTaskAnswer } from "../hooks/submitAnswer"
-import { useLastSavedAnswer } from "../hooks/useTaskHooks"
-import AnswerFeedback from "./AnswerFeedback"
-import useUserStore, { useUserActions } from "../store"
+import SemanticTreeNode from "../SemanticTreeNode"
+import { submitTaskAnswer } from "../../hooks/submitAnswer"
+import { useLastSavedAnswer } from "../../hooks/useTaskHooks"
+import AnswerFeedback from "../AnswerFeedback"
+import useUserStore, { useUserActions } from "../../store"
 
 const SemanticTreeTask = ({ task, showSubmitButton = true }) => {
   const { addAnswer } = useUserActions()

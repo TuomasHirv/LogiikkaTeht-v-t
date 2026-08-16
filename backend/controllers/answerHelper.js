@@ -119,8 +119,8 @@ function TTFormHelper(answer, correctAnswerAndForm, userId, taskId, response) {
   function TTFormEvaluation(evalParams) {
     return evaluator.matchTTFormAnswer(
       evalParams.answer,
-      evalParams.correctAnswer,
       evalParams.form,
+      evalParams.correctAnswer,
     )
   }
   const evalParams = {

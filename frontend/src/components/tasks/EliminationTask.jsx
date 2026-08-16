@@ -1,14 +1,14 @@
 import React from "react"
 import { useEffect, useState } from "react"
-import { useField } from "../hooks"
-import useUserStore, { useUserActions } from "../store"
-import AnswerFeedback from "./AnswerFeedback"
-import { submitTaskAnswer } from "../hooks/submitAnswer"
-import { useLastSavedAnswer } from "../hooks/useTaskHooks"
-import Line from "./Line"
-import { ELIMINATION_LINE_LIMITS } from "../constants"
+import { useField } from "../../hooks"
+import useUserStore, { useUserActions } from "../../store"
+import AnswerFeedback from "../AnswerFeedback"
+import { submitTaskAnswer } from "../../hooks/submitAnswer"
+import { useLastSavedAnswer } from "../../hooks/useTaskHooks"
+import Line from "../Line"
+import { ELIMINATION_LINE_LIMITS } from "../../constants"
 
-import { useLineList } from "../hooks/lineList"
+import { useLineList } from "../../hooks/lineList"
 
 const EliminationTask = ({ task }) => {
   const { addAnswer } = useUserActions()

@@ -1,13 +1,13 @@
 import React from "react"
 import { useEffect, useState } from "react"
-import { useField } from "../hooks"
-import { useLineList } from "../hooks/lineList"
-import useUserStore, { useUserActions } from "../store"
-import AnswerFeedback from "./AnswerFeedback"
-import { submitTaskAnswer } from "../hooks/submitAnswer"
-import { useLastSavedAnswer } from "../hooks/useTaskHooks"
-import { SHORTHAND_CHAIN_LINE_LIMITS } from "../constants"
-import Line from "./Line"
+import { useField } from "../../hooks"
+import { useLineList } from "../../hooks/lineList"
+import useUserStore, { useUserActions } from "../../store"
+import AnswerFeedback from "../AnswerFeedback"
+import { submitTaskAnswer } from "../../hooks/submitAnswer"
+import { useLastSavedAnswer } from "../../hooks/useTaskHooks"
+import { SHORTHAND_CHAIN_LINE_LIMITS } from "../../constants"
+import Line from "../Line"
 
 const ShorthandReference = ({ shorthands }) => (
   <div className="bg-gray-200 border-2 border-black rounded px-3 py-2 w-fit">
