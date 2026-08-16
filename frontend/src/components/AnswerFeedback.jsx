@@ -5,6 +5,7 @@ const AnswerFeedback = ({ feedback }) => {
   return (
     <p
       className={`text-2xl ${feedback.correct ? "text-green-600" : "text-red-600"} bg-gray-800 rounded w-fit`}
+      role="feedback"
     >
       {feedback?.feedback} {feedback?.correct ? " ✓ " : " ✗ "}
     </p>

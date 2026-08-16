@@ -1,5 +1,5 @@
-import TruthTable from "./TruthTable"
-import PreSetSubFormula from "./PreSetSubformula"
+import TruthTable from "../TruthTable"
+import PreSetSubFormula from "../PreSetSubformula"
 
 const TruthTableTask = ({ task }) => {
   return (

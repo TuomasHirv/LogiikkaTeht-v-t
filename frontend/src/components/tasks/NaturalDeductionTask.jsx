@@ -1,13 +1,13 @@
 import React from "react"
 import { useState } from "react"
-import { useNaturalDeductionField } from "../hooks"
-import { submitTaskAnswer } from "../hooks/submitAnswer"
-import useUserStore, { useUserActions } from "../store"
-import { useLineList } from "../hooks/lineList"
-import { NATURALDEDUCTION_LINE_LIMITS } from "../constants"
-import { useLastSavedAnswer } from "../hooks/useTaskHooks"
-import AnswerFeedback from "./AnswerFeedback"
-import Line from "./Line"
+import { useNaturalDeductionField } from "../../hooks"
+import { submitTaskAnswer } from "../../hooks/submitAnswer"
+import useUserStore, { useUserActions } from "../../store"
+import { useLineList } from "../../hooks/lineList"
+import { NATURALDEDUCTION_LINE_LIMITS } from "../../constants"
+import { useLastSavedAnswer } from "../../hooks/useTaskHooks"
+import AnswerFeedback from "../AnswerFeedback"
+import Line from "../Line"
 
 const NaturalDeductionTask = ({ task }) => {
   const { addAnswer } = useUserActions()

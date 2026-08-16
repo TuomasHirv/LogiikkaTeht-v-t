@@ -4,7 +4,8 @@ import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import "@testing-library/jest-dom/vitest"
 
-import SemanticTreeTask from "../SemanticTreeTask"
+import SemanticTreeTask from "../tasks/SemanticTreeTask"
+
 import useUserStore from "../../store"
 import * as submitAnswerModule from "../../hooks/submitAnswer"
 import * as useTaskHooksModule from "../../hooks/useTaskHooks"

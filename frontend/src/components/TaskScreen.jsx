@@ -5,16 +5,16 @@ import { ROUTES, MODULE_NAMES } from "../constants"
 
 import { taskService } from "../services/taskService"
 import LoadingScreen, { Spinner } from "./LoadingScreen"
-const TaskItem = lazy(() => import("./TaskItem"))
-const SubFormulaTask = lazy(() => import("./SubFormulaTask"))
-const TruthTableTask = lazy(() => import("./TruthTableTask"))
-const EliminationTask = lazy(() => import("./EliminationTask"))
-const NormalFormTask = lazy(() => import("./NormalFormTask"))
-const ResolutionTask = lazy(() => import("./ResolutionTask"))
-const ShorthandTask = lazy(() => import("./ShorthandTask"))
-const SemanticTreeTask = lazy(() => import("./SemanticTreeTask"))
-const MultipleChoiseTask = lazy(() => import("./MultipleChoiseTask"))
-const NaturalDeductionTask = lazy(() => import("./NaturalDeductionTask"))
+const TaskItem = lazy(() => import("./tasks/TaskItem"))
+const SubFormulaTask = lazy(() => import("./tasks/SubFormulaTask"))
+const TruthTableTask = lazy(() => import("./tasks/TruthTableTask"))
+const EliminationTask = lazy(() => import("./tasks/EliminationTask"))
+const NormalFormTask = lazy(() => import("./tasks/NormalFormTask"))
+const ResolutionTask = lazy(() => import("./tasks/ResolutionTask"))
+const ShorthandTask = lazy(() => import("./tasks/ShorthandTask"))
+const SemanticTreeTask = lazy(() => import("./tasks/SemanticTreeTask"))
+const MultipleChoiseTask = lazy(() => import("./tasks/MultipleChoiseTask"))
+const NaturalDeductionTask = lazy(() => import("./tasks/NaturalDeductionTask"))
 
 const TaskScreen = () => {
   const { moduleName, id, section } = useParams()

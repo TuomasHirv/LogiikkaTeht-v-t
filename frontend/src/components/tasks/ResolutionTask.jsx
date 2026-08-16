@@ -1,13 +1,13 @@
 import React from "react"
 import { useState } from "react"
-import { useResolutionField } from "../hooks"
-import { submitTaskAnswer } from "../hooks/submitAnswer"
-import useUserStore, { useUserActions } from "../store"
-import { useLineList } from "../hooks/lineList"
-import { RESOLUTION_LINE_LIMITS } from "../constants"
-import { useLastSavedAnswer } from "../hooks/useTaskHooks"
-import AnswerFeedback from "./AnswerFeedback"
-import Line from "./Line"
+import { useResolutionField } from "../../hooks"
+import { submitTaskAnswer } from "../../hooks/submitAnswer"
+import useUserStore, { useUserActions } from "../../store"
+import { useLineList } from "../../hooks/lineList"
+import { RESOLUTION_LINE_LIMITS } from "../../constants"
+import { useLastSavedAnswer } from "../../hooks/useTaskHooks"
+import AnswerFeedback from "../AnswerFeedback"
+import Line from "../Line"
 
 const ResolutionTask = ({ task }) => {
   const { addAnswer } = useUserActions()
