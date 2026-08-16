@@ -1,9 +1,9 @@
 import { useState } from "react"
-import Node from "./Node"
-import { submitTaskAnswer } from "../hooks/submitAnswer"
-import { useLastSavedAnswer } from "../hooks/useTaskHooks"
-import AnswerFeedback from "./AnswerFeedback"
-import useUserStore, { useUserActions } from "../store"
+import Node from "../Node"
+import { submitTaskAnswer } from "../../hooks/submitAnswer"
+import { useLastSavedAnswer } from "../../hooks/useTaskHooks"
+import AnswerFeedback from "../AnswerFeedback"
+import useUserStore, { useUserActions } from "../../store"
 
 const SubFormulaTask = ({ task, showSubmitButton = true }) => {
   const { addAnswer } = useUserActions()

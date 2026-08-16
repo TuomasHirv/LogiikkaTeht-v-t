@@ -4,7 +4,7 @@ import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import "@testing-library/jest-dom/vitest"
 
-import TruthTableTask from "../TruthTableTask"
+import TruthTableTask from "../tasks/TruthTableTask"
 import useUserStore from "../../store"
 import * as submitAnswerModule from "../../hooks/submitAnswer"
 

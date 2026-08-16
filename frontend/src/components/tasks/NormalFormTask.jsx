@@ -1,11 +1,11 @@
 import { useState } from "react"
-import TruthTable from "./TruthTable"
-import PreSetSubFormula from "./PreSetSubformula"
-import { useField } from "../hooks"
-import { submitTaskAnswer } from "../hooks/submitAnswer"
-import { useLastSavedAnswer } from "../hooks/useTaskHooks"
-import AnswerFeedback from "./AnswerFeedback"
-import useUserStore, { useUserActions } from "../store"
+import TruthTable from "../TruthTable"
+import PreSetSubFormula from "../PreSetSubformula"
+import { useField } from "../../hooks"
+import { submitTaskAnswer } from "../../hooks/submitAnswer"
+import { useLastSavedAnswer } from "../../hooks/useTaskHooks"
+import AnswerFeedback from "../AnswerFeedback"
+import useUserStore, { useUserActions } from "../../store"
 
 const NormalFormTask = ({ task }) => {
   const { addAnswer } = useUserActions()

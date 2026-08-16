@@ -322,8 +322,8 @@ describe("POST /api/answers/:id", () => {
       })
       assert.deepEqual(mock.mock.calls[0].arguments, [
         answer,
-        fixture.correct_answer.groups,
         fixture.correct_answer.form,
+        fixture.correct_answer.groups,
       ])
     })
 

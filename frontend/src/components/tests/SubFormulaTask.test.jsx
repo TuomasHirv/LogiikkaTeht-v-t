@@ -4,7 +4,7 @@ import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import "@testing-library/jest-dom/vitest"
 
-import SubFormulaTask from "../SubFormulaTask"
+import SubFormulaTask from "../tasks/SubFormulaTask"
 import useUserStore from "../../store"
 import * as submitAnswerModule from "../../hooks/submitAnswer"
 import * as useTaskHooksModule from "../../hooks/useTaskHooks"

@@ -1,9 +1,9 @@
 import { useState } from "react"
-import { submitTaskAnswer } from "../hooks/submitAnswer"
-import { useLastSavedAnswer } from "../hooks/useTaskHooks"
+import { submitTaskAnswer } from "../../hooks/submitAnswer"
+import { useLastSavedAnswer } from "../../hooks/useTaskHooks"
 
-import AnswerFeedback from "./AnswerFeedback"
-import useUserStore, { useUserActions } from "../store"
+import AnswerFeedback from "../AnswerFeedback"
+import useUserStore, { useUserActions } from "../../store"
 
 const MultipleChoiseTask = ({ task }) => {
   const { addAnswer } = useUserActions()
@@ -41,7 +41,9 @@ const MultipleChoiseTask = ({ task }) => {
   }
   return (
     <div className="task-card">
-      <h3 className="text-2xl">{task.question}</h3>
+      <h3 className="text-2xl" role="question">
+        {task.question}
+      </h3>
       <div className="flex gap-2 py-1 px-1">
         {task?.metadata?.choises.map((choise, index) => (
           <button

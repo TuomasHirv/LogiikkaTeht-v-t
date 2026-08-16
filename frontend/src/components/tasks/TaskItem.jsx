@@ -1,10 +1,10 @@
 import { useState } from "react"
-import { useField } from "../hooks"
-import { submitTaskAnswer } from "../hooks/submitAnswer"
-import { useLastSavedAnswer } from "../hooks/useTaskHooks"
+import { useField } from "../../hooks"
+import { submitTaskAnswer } from "../../hooks/submitAnswer"
+import { useLastSavedAnswer } from "../../hooks/useTaskHooks"
 
-import AnswerFeedback from "./AnswerFeedback"
-import useUserStore, { useUserActions } from "../store"
+import AnswerFeedback from "../AnswerFeedback"
+import useUserStore, { useUserActions } from "../../store"
 
 const TaskItem = ({ task }) => {
   const { addAnswer } = useUserActions()
