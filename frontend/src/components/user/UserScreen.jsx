@@ -1,10 +1,15 @@
-import useUserStore from "../store"
-import { taskService } from "../services/taskService"
+import { useNavigate } from "react-router-dom"
+import useUserStore from "../../store"
+import { taskService } from "../../services/taskService"
 import { useEffect, useState } from "react"
-import { MODULE_ORDER } from "../constants"
+import { MODULE_ORDER } from "../../constants"
 
 const UserPage = () => {
+  const navigate = useNavigate()
   const user = useUserStore((state) => state.user)
+  if (!user) {
+    navigate("/")
+  }
   const answers = useUserStore((state) => state.answers)
 
   const answerList = Object.values(answers)

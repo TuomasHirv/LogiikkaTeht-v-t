@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useUserActions } from "../store"
-import { useSimpleField } from "../hooks"
-import Feedback from "./AnswerFeedback"
+import useUserStore, { useUserActions } from "../../store"
+import { useSimpleField } from "../../hooks"
+import Feedback from "../AnswerFeedback"
 
 const RegisterScreen = () => {
   const navigate = useNavigate()
@@ -10,10 +10,17 @@ const RegisterScreen = () => {
   const [feedback, setFeedback] = useState({})
   const username = useSimpleField("text")
   const password = useSimpleField("password")
+  const user = useUserStore((state) => state.user)
 
   const registerFunc = async (event) => {
     event.preventDefault()
-
+    if (user) {
+      setFeedback({
+        correct: false,
+        feedback: "Log out to create a new account",
+      })
+      return
+    }
     if (!username.inputProps.value || !password.inputProps.value) {
       return
     }
@@ -49,15 +56,26 @@ const RegisterScreen = () => {
   }
   return (
     <>
-      <h2 className="bg-white rounded w-fit text-5xl ml-8 mt-2 text-black pb-2">
+      <h2
+        className="bg-white rounded w-fit text-5xl ml-8 mt-2 text-black pb-2"
+        role="title"
+      >
         Register
       </h2>
       <div className="bg-white rounded border-black border-2 center justify-center max-w-80 min-h-40 ml-8 mt-6">
         <form onSubmit={registerFunc} className="">
           <p className="text-black text-2xl">Username</p>
-          <input {...username.inputProps} className="bg-gray-300 text-black" />
+          <input
+            {...username.inputProps}
+            className="bg-gray-300 text-black"
+            role="usernameField"
+          />
           <p className="text-black text-2xl">Password</p>
-          <input {...password.inputProps} className="bg-gray-300 text-black" />
+          <input
+            {...password.inputProps}
+            className="bg-gray-300 text-black"
+            role="passwordField"
+          />
           <button
             type="submit"
             className="border-black border-2 rounded hover:bg-green-700 text-black w-fit ml-63 mt-4"

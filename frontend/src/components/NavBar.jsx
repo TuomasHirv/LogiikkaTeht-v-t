@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import useUserStore, { useUserActions } from "../store"
-
+import UserIndicator from "./user/UserIndicator"
 const NavBar = () => {
   const user = useUserStore((state) => state.user)
   const { logoutUser } = useUserActions()
@@ -34,6 +34,7 @@ const NavBar = () => {
         <div className="flex ml-auto">
           {!user ? (
             <div style={{ display: "flex", gap: "0.75rem" }}>
+              <UserIndicator className="bg-blue-500 rounded text-black border-2 border-red-400 flex items-center justify-center min-w-20 min-h-10" />
               <Link to="/login" className="nav-btn-primary">
                 {" "}
                 Login{" "}
@@ -45,9 +46,8 @@ const NavBar = () => {
             </div>
           ) : (
             <div className="flex gap-0.5">
-              <Link to="/userpage" className="nav-btn-primary">
-                {" "}
-                Tasks{" "}
+              <Link to="/userpage">
+                <UserIndicator className="nav-btn-primary" />
               </Link>
               <button className="nav-btn-primary" onClick={logoutUser}>
                 {" "}
