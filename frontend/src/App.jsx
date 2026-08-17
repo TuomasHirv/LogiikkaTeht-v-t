@@ -8,10 +8,10 @@ import NotFound from "./components/NotFound"
 import HomeScreen from "./components/HomeScreen"
 import TaskScreen from "./components/TaskScreen"
 import NavBar from "./components/NavBar"
-import LoginScreen from "./components/LoginScreen"
-import RegisterScreen from "./components/RegisterScreen"
+import LoginScreen from "./components/user/LoginScreen"
+import RegisterScreen from "./components/user/RegisterScreen"
 import InstructionScreen from "./components/InstructionScreen"
-import UserPage from "./components/UserScreen"
+import UserPage from "./components/user/UserScreen"
 import ErrorScreen from "./components/ErrorScreen"
 
 function App() {
