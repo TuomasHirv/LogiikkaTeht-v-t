@@ -36,7 +36,7 @@
 
 ## Everything else.
 
-- ErrorScreen is in place so if the error happens the user isn't left guessing.
+- ErrorScreen is in place so if an error happens the user isn't left guessing.
 - HomeScreen that is rendered at "/"
 - InstructionScreen renders the content files for the user with a simple styling component.
 - UserScreen shows the users completed tasks and maps them from the constants.
