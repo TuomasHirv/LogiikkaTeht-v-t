@@ -31,9 +31,42 @@ const WordToProposition = ({ word, symbol }) => {
 const HomeScreen = () => {
   const proposition = useField("text")
   return (
+    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-start p-6 text-slate-100">
+      <div className="text-3xl font-black text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-emerald-400 mb-2">
+        <h1>Propositional Logic Tasks</h1>
+        <p className="text-slate-400 text-sm md:text-base mb-6">
+          This website and it's tasks model the Helsinki University course:
+          Introduction to Logic 1
+        </p>
+        <div className="rounded border-rounded border-2 bg-slate-800">
+          <p className="text-slate-400">There are tasks for topics such as:</p>
+          <div className="grid grid-cols-3 gap-2">
+            <Word text={"Subformulas"} />
+            <Word text={"Truth-Tables"} />
+            <Word text={"Equivalence Rules"} />
+            <Word text={"Semantic Tree"} />
+            <Word text={"Normal Forms"} />
+            <Word text={"Resolution Method"} />
+            <Word text={"Natural Deduction"} />
+          </div>
+          <p className="text-slate-400 text-sm">and more!</p>
+        </div>
+        <div className="rounded border-rounded border-2 bg-slate-800 mt-2">
+          <p className="text-slate-400 md:text-base">
+            To use the website simply log-in and pick a section from the top
+            left.
+          </p>
+        </div>
+        <p className="text-sm font-black text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-emerald-400">
+          created by: Tuomas Hirvonen
+        </p>
+      </div>
+    </div>
+  )
+  return (
     <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-6 text-slate-100">
       <div className="text-3xl font-black text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-emerald-400 mb-2">
-        <h1>Logic tasks found here!</h1>
+        <h1>Turning language into symbols!</h1>
         <p className="text-slate-400 text-sm md:text-base mb-6">
           Type naturally to create symbols automatically:
         </p>
@@ -48,7 +81,6 @@ const HomeScreen = () => {
             <EndResult text={"→"} />
           </div>
           <WordToProposition word={"<->"} symbol={"↔"} />
-          <p className="subtitle">But how do i use them?</p>
         </div>
       </div>
       <textarea
