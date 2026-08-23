@@ -8,17 +8,6 @@ const applyBaseSymbols = (input) =>
 
 const applyFullWordSymbols = (input) =>
   applyBaseSymbols(input)
-    .replace(/\band\b(\s+)/gi, "∧ ")
-    .replace(/\bor\b(\s+)/gi, "∨ ")
-    .replace(/\bimply\b(\s+)/gi, "→ ")
-    .replace(/\bja\b(\s+)/gi, "∧ ")
-    .replace(/\btai\b(\s+)/gi, "∨ ")
-    .replace(/\bsiis\b(\s+)/gi, "→ ")
-    .replace(/<->(\s+)/g, "↔ ")
-    .replace(/->(\s+)/g, "→ ")
-
-const applyNaturalDeduction = (input) =>
-  applyBaseSymbols(input)
     .replace(/\band\b/gi, "∧")
     .replace(/\bor\b/gi, "∨")
     .replace(/\bimply\b/gi, "→")
@@ -27,7 +16,9 @@ const applyNaturalDeduction = (input) =>
     .replace(/\bsiis\b/gi, "→")
     .replace(/<->/g, "↔")
     .replace(/->/g, "→")
-    .replace(/\+/g, "  |")
+
+const applyNaturalDeduction = (input) =>
+  applyFullWordSymbols(input).replace(/\+/g, "  |")
 
 const validateResolutionSyntax = (input, index) => {
   const trimmed = input.trim().replace(/\|/g, "")
@@ -56,7 +47,7 @@ const validateResolutionSyntax = (input, index) => {
   if (lineNumbers) {
     const referenced = lineNumbers.map(Number)
     if (referenced.some((n) => n >= index)) {
-      return "Cant reference the current line or later lines"
+      return "Can't reference the current line or later lines"
     }
   }
 
@@ -152,3 +143,11 @@ export const useNaturalDeductionField = (type, initValue = "") =>
 
 export const useSimpleField = (type) =>
   useTextField(type, "", { trackInitValue: false })
+
+export const _forTests = {
+  applyBaseSymbols,
+  applyFullWordSymbols,
+  applyNaturalDeduction,
+  validateResolutionSyntax,
+  validateNaturalDeductionSyntax,
+}
